@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
-import * as AppState from 'store/App';
+import * as AppStore from 'store/AppStore';
 import { ApplicationState } from 'store';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -112,5 +112,5 @@ const DrawerMenu = (props: any) => {
 
 export default connect(
     (state: ApplicationState) => state.app,
-    AppState.actionCreators
+    AppStore.actionCreators
 )(DrawerMenu);

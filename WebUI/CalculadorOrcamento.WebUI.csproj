@@ -10,7 +10,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.1" />
+    <PackageReference Include="MediatR" Version="8.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
+    <PackageReference Include="Swashbuckle.Core" Version="5.6.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +32,12 @@
 
   <ItemGroup>
     <None Remove="ClientApp\src\components\app\NavMenu.tsx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CalculadorOrcamento.Application\CalculadorOrcamento.Application.csproj" />
+    <ProjectReference Include="..\CalculadorOrcamento.Domain\CalculadorOrcamento.Domain.csproj" />
+    <ProjectReference Include="..\CalculadorOrcamento.Persistence\CalculadorOrcamento.Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>

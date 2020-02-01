@@ -1,6 +1,6 @@
 using System;
 
-namespace WebUI
+namespace CalculadorOrcamento.WebUI
 {
     public class WeatherForecast
     {

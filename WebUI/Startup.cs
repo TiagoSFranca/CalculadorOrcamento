@@ -1,27 +1,64 @@
+using CalculadorOrcamento.Application.Orcamentos.Models;
+using CalculadorOrcamento.Application.Settings.Models;
+using CalculadorOrcamento.Persistence;
+using CalculadorOrcamento.WebUI.Filters;
+using CalculadorOrcamento.WebUI.Helpers;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace WebUI
+namespace CalculadorOrcamento.WebUI
 {
     public class Startup
     {
+        private const string _appSettingsSectionName = "AppSettings";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            _appSettingsSection = Configuration
+                .GetSection(_appSettingsSectionName);
+
+            _appSettings = _appSettingsSection.Get<AppSettings>();
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        private readonly IConfigurationSection _appSettingsSection;
+
+        private readonly AppSettings _appSettings;
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            DependencyInjectionHelper.Configure(services);
+
+            //services
+            //    .AddMediatR(typeof(GetGenerosPetQuery).GetTypeInfo().Assembly);
+
+            services
+                .AddCors();
+
+            services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add(typeof(CustomExceptionFilterAttribute));
+                //var policy = new AuthorizationPolicyBuilder()
+                //       .RequireAuthenticatedUser()
+                //       .RequireScope(Config._apiName).Build();
+                //options.Filters.Add(new AuthorizeFilter(policy));
+            })
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<OrcamentoViewModel>());
+
+            services.AddDbContext<CalculadorOrcamentoContext>(options =>
+                options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("CalculadorOrcamentoConnection")));
+
+            services
+                .Configure<AppSettings>(_appSettingsSection);
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
