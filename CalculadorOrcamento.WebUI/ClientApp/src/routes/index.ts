@@ -2,29 +2,41 @@
 import Counter from "components/Counter";
 import FetchData from "components/FetchData";
 import OrcamentoIndex from "views/orcamento/index/OrcamentoIndex";
+import OrcamentoAdicionar from "views/orcamento/adicionar/OrcamentoAdicionar"
 
 export interface RouteItem {
     exact?: boolean | false,
     path: string,
-    component: any
+    component: any,
+    isPrivate: boolean
 }
 
 export const routes: RouteItem[] = [
     {
         exact: true,
         path: '/',
-        component: Home
+        component: Home,
+        isPrivate: true
     },
     {
         path: '/counter',
-        component: Counter
+        component: Counter,
+        isPrivate: false
     },
     {
         path: '/fetch-data/:startDateIndex?',
-        component: FetchData
+        component: FetchData,
+        isPrivate: true
     },
     {
+        exact: true,
         path: '/orcamento',
-        component: OrcamentoIndex
+        component: OrcamentoIndex,
+        isPrivate: true
+    },
+    {
+        path: '/orcamento/adicionar',
+        component: OrcamentoAdicionar,
+        isPrivate: true
     }
 ]

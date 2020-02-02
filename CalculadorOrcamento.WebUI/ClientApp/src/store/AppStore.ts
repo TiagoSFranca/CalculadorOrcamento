@@ -1,4 +1,4 @@
-﻿import { Action, Reducer, AnyAction } from 'redux';
+﻿import { AnyAction, Reducer } from 'redux';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.

@@ -1,5 +1,7 @@
 ﻿import { Action, Reducer } from 'redux';
 import { AppThunkAction } from './';
+import HTTP from 'http/index';
+import ConsultaPaginada from 'utils/consultaPaginada'
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -16,6 +18,7 @@ export interface Orcamento {
     temperatureF: number;
     summary: string;
 }
+
 
 // -----------------
 // ACTIONS - These are serializable (hence replayable) descriptions of state transitions.
@@ -45,10 +48,11 @@ export const actionCreators = {
         // Only load data if it's something we don't already have (and are not already loading)
         const appState = getState();
         if (appState && appState.weatherForecasts && startDateIndex !== appState.weatherForecasts.startDateIndex) {
-            fetch(`api/orcamentos`)
-                .then(response => response.json() as Promise<Orcamento[]>)
+            HTTP.get(`/orcamentos`)
+                .then(response => response.data as Promise<ConsultaPaginada<Orcamento>>)
                 .then(data => {
-                    dispatch({ type: 'RECEIVE_ORCAMENTOS', startDateIndex: startDateIndex, orcamentos: data });
+                    console.log(data);
+                    dispatch({ type: 'RECEIVE_ORCAMENTOS', startDateIndex: startDateIndex, orcamentos: data.itens });
                 });
 
             dispatch({ type: 'REQUEST_ORCAMENTOS', startDateIndex: startDateIndex });
