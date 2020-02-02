@@ -1,14 +1,14 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import * as AppState from 'store/AppStore';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
-import Button from '@material-ui/core/Button';
+import * as AppStore from 'store/AppStore';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -27,16 +27,18 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const NavMenu = (props: any) => {
     const classes = useStyles();
+    const appStore = useSelector((s: ApplicationState) => s.app);
+    const dispatch = useDispatch();
 
     return (
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={() => { props.toggleDrawerAction() }}>
+                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={() => { dispatch(AppStore.actionCreators.toggleDrawerAction()) }}>
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
-                        {props.pageTitle}
+                        {appStore.pageTitle}
                     </Typography>
                     <Button color="inherit">Login</Button>
                 </Toolbar>
@@ -45,7 +47,4 @@ const NavMenu = (props: any) => {
     );
 };
 
-export default connect(
-    (state: ApplicationState) => state.app,
-    AppState.actionCreators
-)(NavMenu);
+export default NavMenu;

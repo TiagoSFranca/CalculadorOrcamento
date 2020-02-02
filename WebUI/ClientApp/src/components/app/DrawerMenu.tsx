@@ -1,19 +1,19 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
-import * as AppStore from 'store/AppStore';
-import { ApplicationState } from 'store';
+import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-import { Link } from 'react-router-dom';
-import HomeIcon from '@material-ui/icons/Home';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import HomeIcon from '@material-ui/icons/Home';
+import MailIcon from '@material-ui/icons/Mail';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { ApplicationState } from 'store';
+import * as AppStore from 'store/AppStore';
 
 export interface DrawerRouteItem {
     title: string,
@@ -33,8 +33,11 @@ const useStyles = makeStyles(() =>
 );
 
 const DrawerMenu = (props: any) => {
-    const toggle = props.toggleDrawer;
+    const appStore = useSelector((s: ApplicationState) => s.app);
+    const dispatch = useDispatch();
     const classes = useStyles();
+
+    const { toggleDrawer } = appStore;
 
     const drawerRoutes: DrawerRouteItem[] = [
         {
@@ -59,7 +62,7 @@ const DrawerMenu = (props: any) => {
         },
     ]
 
-    const toggleDrawer = () => (
+    const onToggleDrawer = () => (
         event: React.KeyboardEvent | React.MouseEvent,
     ) => {
         if (
@@ -70,19 +73,23 @@ const DrawerMenu = (props: any) => {
             return;
         }
 
-        props.toggleDrawerAction();
+        toggle();
     };
+
+    const toggle = () => {
+        dispatch(AppStore.actionCreators.toggleDrawerAction())
+    }
 
     const sideList = () => (
         <div
             className={classes.list}
             role="presentation"
-            onClick={toggleDrawer()}
-            onKeyDown={toggleDrawer()}
+            onClick={onToggleDrawer()}
+            onKeyDown={onToggleDrawer()}
         >
             <List>
                 {drawerRoutes.map((el, index) => (
-                    <ListItem button key={index} component={Link} to={el.path} onClick={() => { props.changePageTitleAction(el.title) }}>
+                    <ListItem button key={index} component={Link} to={el.path} onClick={() => { dispatch(AppStore.actionCreators.changePageTitleAction(el.title)) }}>
                         {el.icon ?
                             <ListItemIcon>{el.icon}</ListItemIcon> :
                             null}
@@ -104,13 +111,10 @@ const DrawerMenu = (props: any) => {
 
 
     return (
-        <Drawer anchor="left" open={toggle} onClose={toggleDrawer()}>
+        <Drawer anchor="left" open={toggleDrawer} onClose={onToggleDrawer()}>
             {sideList()}
         </Drawer>
     );
 };
 
-export default connect(
-    (state: ApplicationState) => state.app,
-    AppStore.actionCreators
-)(DrawerMenu);
+export default DrawerMenu;

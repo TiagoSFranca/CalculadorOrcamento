@@ -1,20 +1,25 @@
-﻿import * as React from 'react';
-import LoadingCard from 'components/common/loadingCard/LoadingCardComponent';
+﻿import LoadingCard from 'components/common/loadingCard/LoadingCardComponent';
+import * as React from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
 import * as OrcamentoStore from 'store/OrcamentoStore';
-import { connect } from 'react-redux';
-import { useEffect } from 'react';
 
 const OrcamentoListComponent = (props: any) => {
 
+    const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
+    const dispatch = useDispatch();
+
+    const { isLoading, orcamentos } = orcamentoStore;
+
     useEffect(() => {
-        if (!props.isLoading) {
-            props.requestOrcamentos(1)
+        if (!isLoading) {
+            dispatch(OrcamentoStore.actionCreators.requestOrcamentos(1));
         }
     }, []);
 
     useEffect(() => {
-        console.log(props.orcamentos);
+        console.log(orcamentos);
     })
 
     return (
@@ -26,7 +31,4 @@ const OrcamentoListComponent = (props: any) => {
     )
 };
 
-export default connect(
-    (state: ApplicationState) => state.orcamento,
-    OrcamentoStore.actionCreators
-)(OrcamentoListComponent);
+export default OrcamentoListComponent;

@@ -7,7 +7,7 @@ import * as Orcamento  from './OrcamentoStore';
 export interface ApplicationState {
     counter: Counter.CounterState | undefined;
     weatherForecasts: WeatherForecasts.WeatherForecastsState | undefined;
-    app: App.AppState | undefined;
+    app: App.AppState;
     orcamento: Orcamento.OrcamentoState;
 }
 
