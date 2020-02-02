@@ -12,6 +12,7 @@ HTTP.interceptors.request.use((config: AxiosRequestConfig) => {
     if (token) {
         config.headers.Authorization = `Bearer ${token}`
     }
+    config.headers['Content-type'] = 'application/json'
     return config;
 }, error => {
     Promise.reject(error)

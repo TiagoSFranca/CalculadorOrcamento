@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CalculadorOrcamento.Application.Orcamentos.Commands.Adicionar;
 using CalculadorOrcamento.Application.Orcamentos.Models;
 using CalculadorOrcamento.Application.Settings.AutoMapper;
 using CalculadorOrcamento.Domain.Entities;
@@ -15,6 +16,8 @@ namespace CalculadorOrcamento.Application.Orcamentos
         protected override void Map(Profile profile)
         {
             profile.CreateMap<Orcamento, OrcamentoViewModel>();
+            profile.CreateMap<AdicionarOrcamento, AdicionarOrcamentoCommand>();
+            profile.CreateMap<AdicionarOrcamentoCommand, Orcamento>();
         }
     }
 }

@@ -13,10 +13,6 @@ const PrivateRoute = (props: any) => {
         dispatch(AuthStore.actionCreators.checkIsAuthAction())
     }, [])
 
-    useEffect(() => {
-        console.log(isAuth)
-    }, [isAuth])
-
     return (
         <Route
             {...props}

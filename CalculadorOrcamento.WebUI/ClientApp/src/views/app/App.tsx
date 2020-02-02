@@ -8,7 +8,6 @@ const privateRoutes = routes.filter(e => e.isPrivate);
 const publicRoutes = routes.filter(e => !e.isPrivate);
 
 const App = () => {
-    console.log(privateRoutes)
     return (
         <Layout>
             <Switch>

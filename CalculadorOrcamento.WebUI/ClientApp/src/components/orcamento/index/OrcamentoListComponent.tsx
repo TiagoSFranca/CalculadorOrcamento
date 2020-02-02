@@ -18,10 +18,6 @@ const OrcamentoListComponent = (props: any) => {
         }
     }, []);
 
-    useEffect(() => {
-        console.log(orcamentos);
-    })
-
     return (
         <div>
             <LoadingCard isLoading={props.isLoading}>

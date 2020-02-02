@@ -10,6 +10,7 @@ export interface OrcamentoState {
     isLoading: boolean;
     startDateIndex?: number;
     orcamentos: Orcamento[];
+    orcamento?: Orcamento;
 }
 
 export interface Orcamento {
@@ -19,6 +20,10 @@ export interface Orcamento {
     summary: string;
 }
 
+export interface AdicionarOrcamento {
+    nome: string;
+    descricao?: string;
+}
 
 // -----------------
 // ACTIONS - These are serializable (hence replayable) descriptions of state transitions.
@@ -35,9 +40,17 @@ interface ReceiveOrcamentosAction {
     orcamentos: Orcamento[];
 }
 
-// Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
-// declared type strings (and not any other arbitrary string).
-type KnownAction = RequestOrcamentosAction | ReceiveOrcamentosAction;
+interface AdicionarOrcamentoAction {
+    type: 'ADICIONAR_ORCAMENTO';
+    orcamento?: Orcamento;
+}
+
+interface IsLoadingAction {
+    type: 'IS_LOADING_ORCAMENTO',
+    value: boolean
+}
+
+type KnownAction = RequestOrcamentosAction | ReceiveOrcamentosAction | AdicionarOrcamentoAction | IsLoadingAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -45,7 +58,7 @@ type KnownAction = RequestOrcamentosAction | ReceiveOrcamentosAction;
 
 export const actionCreators = {
     requestOrcamentos: (startDateIndex: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        // Only load data if it's something we don't already have (and are not already loading)
+        dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
         const appState = getState();
         if (appState && appState.weatherForecasts && startDateIndex !== appState.weatherForecasts.startDateIndex) {
             HTTP.get(`/orcamentos`)
@@ -53,10 +66,28 @@ export const actionCreators = {
                 .then(data => {
                     console.log(data);
                     dispatch({ type: 'RECEIVE_ORCAMENTOS', startDateIndex: startDateIndex, orcamentos: data.itens });
+                    dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+                }, error => {
+                    dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
                 });
 
             dispatch({ type: 'REQUEST_ORCAMENTOS', startDateIndex: startDateIndex });
         }
+    },
+
+    adicionarOrcamento: (data: AdicionarOrcamento, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
+        dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
+
+        HTTP.post(`/orcamentos`, JSON.stringify(data))
+            .then(response => response.data as Promise<Orcamento>)
+            .then(data => {
+                dispatch({ type: 'ADICIONAR_ORCAMENTO', orcamento: data });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+                callback();
+            }, error => {
+                callback(error);
+                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+            });
     }
 };
 
@@ -74,22 +105,27 @@ export const reducer: Reducer<OrcamentoState> = (state: OrcamentoState | undefin
     switch (action.type) {
         case 'REQUEST_ORCAMENTOS':
             return {
+                ...state,
                 startDateIndex: action.startDateIndex,
                 orcamentos: state.orcamentos,
-                isLoading: true
             };
         case 'RECEIVE_ORCAMENTOS':
-            // Only accept the incoming data if it matches the most recent request. This ensures we correctly
-            // handle out-of-order responses.
-            if (action.startDateIndex === state.startDateIndex) {
-                return {
-                    startDateIndex: action.startDateIndex,
-                    orcamentos: action.orcamentos,
-                    isLoading: false
-                };
+            return {
+                ...state,
+                startDateIndex: action.startDateIndex,
+                orcamentos: action.orcamentos,
+            };
+        case 'ADICIONAR_ORCAMENTO':
+            return {
+                ...state,
+                orcamento: action.orcamento
             }
-            break;
+        case 'IS_LOADING_ORCAMENTO':
+            return {
+                ...state,
+                isLoading: action.value
+            }
+        default:
+            return state;
     }
-
-    return state;
 };
