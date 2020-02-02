@@ -3,6 +3,7 @@ import NavMenu from './NavMenu';
 import { Container } from '@material-ui/core';
 import DrawerMenu from './DrawerMenu';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import CustomSnackBar from 'components/common/snackBar/SnackBarComponent'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -20,6 +21,7 @@ export default (props: { children?: React.ReactNode }) => {
             <DrawerMenu />
             <Container maxWidth='xl' className={classes.container}>
                 {props.children}
+                <CustomSnackBar />
             </Container>
         </React.Fragment>);
 };

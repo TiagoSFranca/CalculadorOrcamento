@@ -1,11 +1,15 @@
-﻿import React from "react";
-import { useForm, Controller, ErrorMessage } from "react-hook-form";
-import TextField from '@material-ui/core/TextField';
-import { Card, CardContent, Grid, CardHeader, CardActions, Button } from "@material-ui/core";
-import { useDispatch } from "react-redux";
-import * as OrcamentoStore from 'store/OrcamentoStore';
-import SaveIcon from '@material-ui/icons/Save';
+﻿import { Button, Card, CardActions, CardContent, CardHeader, Grid } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import SaveIcon from '@material-ui/icons/Save';
+import React, { useState, useEffect } from "react";
+import { Controller, ErrorMessage, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { Redirect } from 'react-router';
+import * as AppStore from 'store/AppStore';
+import * as OrcamentoStore from 'store/OrcamentoStore';
+import messages from 'utils/messages';
+import { ISnackBarType } from 'utils/snackBar';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -20,24 +24,30 @@ type OrcamentoAdicionarForm = {
     descricao: string;
 };
 
-const OrcamentoAdicionarComponent = () => {
+const OrcamentoAdicionarComponent = (props: any) => {
     const classes = useStyles();
     const { register, control, errors, handleSubmit } = useForm<OrcamentoAdicionarForm>();
     const dispatch = useDispatch();
 
-    const callback = (error: any) => {
+    const [redirect, setRedirect] = useState(false);
 
-        if (error)
-            console.log(error)
-        else
-            console.log("SUCESSO");
+    const callback = (error: any) => {
+        if (error) {
+            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
+        }
+        else {
+            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+            setRedirect(true);
+        }
     }
+
 
     const onSubmit = (data: any) => {
         dispatch(OrcamentoStore.actionCreators.adicionarOrcamento(data as OrcamentoStore.AdicionarOrcamento, callback));
     };
 
-    return (
+    return (<>
+        {redirect ? <Redirect to='/orcamento' /> : null}
         <Grid container justify="center">
             <Grid item xs={6} >
                 <Card>
@@ -96,7 +106,8 @@ const OrcamentoAdicionarComponent = () => {
                 </Card>
             </Grid>
         </Grid>
-    );
+
+    </>);
 };
 
 export default OrcamentoAdicionarComponent;
