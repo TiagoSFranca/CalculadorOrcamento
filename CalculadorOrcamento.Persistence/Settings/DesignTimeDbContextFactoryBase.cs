@@ -15,7 +15,7 @@ namespace CalculadorOrcamento.Persistence.Settings
 
         public TContext CreateDbContext(string[] args)
         {
-            var basePath = Directory.GetCurrentDirectory() + string.Format("{0}..{0}{1}.API", Path.DirectorySeparatorChar, ProjectName);
+            var basePath = Directory.GetCurrentDirectory() + string.Format("{0}..{0}{1}.WebUI", Path.DirectorySeparatorChar, ProjectName);
             return Create(basePath, Environment.GetEnvironmentVariable(AspNetCoreEnvironment));
         }
 

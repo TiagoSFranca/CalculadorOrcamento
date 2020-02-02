@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using CalculadorOrcamento.Application.BaseApplications;
+using CalculadorOrcamento.Application.Interfaces.BaseApplications;
 using CalculadorOrcamento.Application.Settings;
 using CalculadorOrcamento.Application.Settings.AutoMapper;
 using MediatR;
@@ -15,7 +17,7 @@ namespace CalculadorOrcamento.WebUI.Helpers
             //services.AddTransient<IAuthBaseApplication, AuthBaseApplication>();
             //services.AddTransient<IFileService, FileService>();
             //services.AddTransient<IIdentityServerAuthService, IdentityServerAuthService>();
-            //services.AddTransient(typeof(IPaginacaoBaseApplication<,>), typeof(PaginacaoBaseApplication<,>));
+            services.AddTransient(typeof(IPaginacaoBaseApplication<,>), typeof(PaginacaoBaseApplication<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
             //services.AddTransient<UserManager<ApplicationUser>, ApplicationUserManager>();

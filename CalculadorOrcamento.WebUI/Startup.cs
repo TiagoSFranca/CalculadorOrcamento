@@ -1,9 +1,11 @@
 using CalculadorOrcamento.Application.Orcamentos.Models;
+using CalculadorOrcamento.Application.Orcamentos.Queries.Search;
 using CalculadorOrcamento.Application.Settings.Models;
 using CalculadorOrcamento.Persistence;
 using CalculadorOrcamento.WebUI.Filters;
 using CalculadorOrcamento.WebUI.Helpers;
 using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -11,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Reflection;
 
 namespace CalculadorOrcamento.WebUI
 {
@@ -38,8 +41,8 @@ namespace CalculadorOrcamento.WebUI
         {
             DependencyInjectionHelper.Configure(services);
 
-            //services
-            //    .AddMediatR(typeof(GetGenerosPetQuery).GetTypeInfo().Assembly);
+            services
+                .AddMediatR(typeof(SearchOrcamentoQuery).GetTypeInfo().Assembly);
 
             services
                 .AddCors();

@@ -13,8 +13,23 @@ namespace CalculadorOrcamento.Persistence.EntityConfigurations
             builder.HasKey(e => e.Id);
 
             builder.Property(e => e.Id)
-                .ValueGeneratedNever();
+                .ValueGeneratedOnAdd();
 
+            builder.Property(e => e.Codigo)
+                .IsRequired();
+
+            builder.Property(e => e.DataAtualizacao)
+                .IsRequired();
+
+            builder.Property(e => e.DataCriacao)
+                .IsRequired();
+
+            builder.Property(e => e.Descricao)
+                .HasMaxLength(512);
+
+            builder.Property(e => e.Nome)
+                .IsRequired()
+                .HasMaxLength(128);
         }
     }
 }

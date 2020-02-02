@@ -7,17 +7,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{A70C033D-150
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Presentation", "0 - Presentation", "{35129F47-8BFE-4B43-A333-94661485EF90}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalculadorOrcamento.WebUI", "WebUI\CalculadorOrcamento.WebUI.csproj", "{F4F7D44A-4D88-4AC9-B367-AD5533FA73E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalculadorOrcamento.WebUI", "CalculadorOrcamento.WebUI\CalculadorOrcamento.WebUI.csproj", "{F4F7D44A-4D88-4AC9-B367-AD5533FA73E6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Core", "1 - Core", "{733B255F-4840-4DBF-9839-7DD6F7A8870A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculadorOrcamento.Domain", "CalculadorOrcamento.Domain\CalculadorOrcamento.Domain.csproj", "{B819B514-CE0F-405F-8E2D-02FAF1E156C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalculadorOrcamento.Domain", "CalculadorOrcamento.Domain\CalculadorOrcamento.Domain.csproj", "{B819B514-CE0F-405F-8E2D-02FAF1E156C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculadorOrcamento.Application", "CalculadorOrcamento.Application\CalculadorOrcamento.Application.csproj", "{CD013E01-9DA9-42F5-BE76-1E45830ABC91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalculadorOrcamento.Application", "CalculadorOrcamento.Application\CalculadorOrcamento.Application.csproj", "{CD013E01-9DA9-42F5-BE76-1E45830ABC91}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Infra", "2 - Infra", "{8E7A5E25-2870-42D3-8970-36494C70BC56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculadorOrcamento.Persistence", "CalculadorOrcamento.Persistence\CalculadorOrcamento.Persistence.csproj", "{D91DAA3D-7E5E-42AE-9CA4-FA71EC88CAA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalculadorOrcamento.Persistence", "CalculadorOrcamento.Persistence\CalculadorOrcamento.Persistence.csproj", "{D91DAA3D-7E5E-42AE-9CA4-FA71EC88CAA2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Common", "3 - Common", "{334C9B7E-244E-4AC0-AAEF-03EF5B217CE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculadorOrcamento.Common", "CalculadorOrcamento.Common\CalculadorOrcamento.Common.csproj", "{038FC855-144D-4303-A6A6-45C0E263C419}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,10 @@ Global
 		{D91DAA3D-7E5E-42AE-9CA4-FA71EC88CAA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D91DAA3D-7E5E-42AE-9CA4-FA71EC88CAA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D91DAA3D-7E5E-42AE-9CA4-FA71EC88CAA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{038FC855-144D-4303-A6A6-45C0E263C419}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{038FC855-144D-4303-A6A6-45C0E263C419}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{038FC855-144D-4303-A6A6-45C0E263C419}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{038FC855-144D-4303-A6A6-45C0E263C419}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +61,8 @@ Global
 		{CD013E01-9DA9-42F5-BE76-1E45830ABC91} = {733B255F-4840-4DBF-9839-7DD6F7A8870A}
 		{8E7A5E25-2870-42D3-8970-36494C70BC56} = {A70C033D-1509-4DD1-AED1-020DCFBF52A7}
 		{D91DAA3D-7E5E-42AE-9CA4-FA71EC88CAA2} = {8E7A5E25-2870-42D3-8970-36494C70BC56}
+		{334C9B7E-244E-4AC0-AAEF-03EF5B217CE5} = {A70C033D-1509-4DD1-AED1-020DCFBF52A7}
+		{038FC855-144D-4303-A6A6-45C0E263C419} = {334C9B7E-244E-4AC0-AAEF-03EF5B217CE5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7EDA1C0-2E26-473F-8148-65929786D31E}
