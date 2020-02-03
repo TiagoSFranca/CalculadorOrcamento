@@ -9,15 +9,17 @@ import ConsultaPaginada from 'utils/consultaPaginada'
 export interface OrcamentoState {
     isLoading: boolean;
     startDateIndex?: number;
-    orcamentos: Orcamento[];
+    orcamentos?: ConsultaPaginada<Orcamento>;
     orcamento?: Orcamento;
 }
 
 export interface Orcamento {
-    date: string;
-    temperatureC: number;
-    temperatureF: number;
-    summary: string;
+    id: number;
+    codigo: string;
+    nome: string;
+    descricao: string;
+    dataCriacao: string;
+    dataAtualizacao: string;
 }
 
 export interface AdicionarOrcamento {
@@ -36,8 +38,7 @@ interface RequestOrcamentosAction {
 
 interface ReceiveOrcamentosAction {
     type: 'RECEIVE_ORCAMENTOS';
-    startDateIndex: number;
-    orcamentos: Orcamento[];
+    orcamentos: ConsultaPaginada<Orcamento>;
 }
 
 interface AdicionarOrcamentoAction {
@@ -57,17 +58,18 @@ type KnownAction = RequestOrcamentosAction | ReceiveOrcamentosAction | Adicionar
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    requestOrcamentos: (startDateIndex: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    requestOrcamentos: (startDateIndex: number, callback: Function): AppThunkAction<KnownAction> => (dispatch, getState) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
         const appState = getState();
         if (appState && appState.weatherForecasts && startDateIndex !== appState.weatherForecasts.startDateIndex) {
             HTTP.get(`/orcamentos`)
                 .then(response => response.data as Promise<ConsultaPaginada<Orcamento>>)
                 .then(data => {
-                    console.log(data);
-                    dispatch({ type: 'RECEIVE_ORCAMENTOS', startDateIndex: startDateIndex, orcamentos: data.itens });
+                    dispatch({ type: 'RECEIVE_ORCAMENTOS', orcamentos: data });
                     dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+                    callback();
                 }, error => {
+                    callback(error);
                     dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
                 });
 
@@ -94,7 +96,7 @@ export const actionCreators = {
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
-const unloadedState: OrcamentoState = { orcamentos: [], isLoading: false };
+const unloadedState: OrcamentoState = { isLoading: false };
 
 export const reducer: Reducer<OrcamentoState> = (state: OrcamentoState | undefined, incomingAction: Action): OrcamentoState => {
     if (state === undefined) {
@@ -112,7 +114,6 @@ export const reducer: Reducer<OrcamentoState> = (state: OrcamentoState | undefin
         case 'RECEIVE_ORCAMENTOS':
             return {
                 ...state,
-                startDateIndex: action.startDateIndex,
                 orcamentos: action.orcamentos,
             };
         case 'ADICIONAR_ORCAMENTO':

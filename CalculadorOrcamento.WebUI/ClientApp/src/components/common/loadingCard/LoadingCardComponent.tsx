@@ -1,7 +1,7 @@
-﻿import Card from '@material-ui/core/Card';
+﻿import { CardContent, LinearProgress } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React from 'react';
-import { CircularProgress, Grid, CardContent } from '@material-ui/core';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -19,14 +19,10 @@ export default function LoadingCard(props: { children?: React.ReactNode, size?: 
     return (
         <>
             <Card >
+                {props.isLoading &&
+                    <LinearProgress color="primary" />}
                 <CardContent>
-                    {props.isLoading ?
-                        <Grid className={classes.root} justify="center"
-                            alignItems="center">
-                            <CircularProgress color="secondary" size={props.size ? props.size : 100} />
-                        </Grid>
-                        :
-                        props.children}
+                    {props.children}
                 </CardContent>
             </Card>
         </>
