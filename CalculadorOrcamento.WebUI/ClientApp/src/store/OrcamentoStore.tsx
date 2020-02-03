@@ -1,16 +1,16 @@
 ﻿import { Action, Reducer } from 'redux';
 import { AppThunkAction } from './';
 import HTTP from 'http/index';
-import ConsultaPaginada from 'utils/consultaPaginada'
+import { ConsultaPaginada, Quantidades, QtdPadrao } from 'utils/consultaPaginada'
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface OrcamentoState {
     isLoading: boolean;
-    startDateIndex?: number;
     orcamentos?: ConsultaPaginada<Orcamento>;
     orcamento?: Orcamento;
+    pagina: number;
 }
 
 export interface Orcamento {
@@ -33,7 +33,7 @@ export interface AdicionarOrcamento {
 
 interface RequestOrcamentosAction {
     type: 'REQUEST_ORCAMENTOS';
-    startDateIndex: number;
+    pagina: number;
 }
 
 interface ReceiveOrcamentosAction {
@@ -58,23 +58,20 @@ type KnownAction = RequestOrcamentosAction | ReceiveOrcamentosAction | Adicionar
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    requestOrcamentos: (startDateIndex: number, callback: Function): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    requestOrcamentos: (callback: Function, pagina?: number | null, qtdPorPagina?: number | null): AppThunkAction<KnownAction> => (dispatch, getState) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
-        const appState = getState();
-        if (appState && appState.weatherForecasts && startDateIndex !== appState.weatherForecasts.startDateIndex) {
-            HTTP.get(`/orcamentos`)
-                .then(response => response.data as Promise<ConsultaPaginada<Orcamento>>)
-                .then(data => {
-                    dispatch({ type: 'RECEIVE_ORCAMENTOS', orcamentos: data });
-                    dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
-                    callback();
-                }, error => {
-                    callback(error);
-                    dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
-                });
 
-            dispatch({ type: 'REQUEST_ORCAMENTOS', startDateIndex: startDateIndex });
-        }
+        HTTP.get(`/orcamentos?itensPorPagina=${qtdPorPagina ? qtdPorPagina : QtdPadrao.qtd}&pagina=${pagina ? pagina : 1}`)
+            .then(response => response.data as Promise<ConsultaPaginada<Orcamento>>)
+            .then(data => {
+                dispatch({ type: 'RECEIVE_ORCAMENTOS', orcamentos: data });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+                callback();
+            }, error => {
+                callback(error);
+                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+            });
+
     },
 
     adicionarOrcamento: (data: AdicionarOrcamento, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
@@ -96,7 +93,7 @@ export const actionCreators = {
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
-const unloadedState: OrcamentoState = { isLoading: false };
+const unloadedState: OrcamentoState = { isLoading: false, pagina: 1 };
 
 export const reducer: Reducer<OrcamentoState> = (state: OrcamentoState | undefined, incomingAction: Action): OrcamentoState => {
     if (state === undefined) {
@@ -108,8 +105,7 @@ export const reducer: Reducer<OrcamentoState> = (state: OrcamentoState | undefin
         case 'REQUEST_ORCAMENTOS':
             return {
                 ...state,
-                startDateIndex: action.startDateIndex,
-                orcamentos: state.orcamentos,
+                pagina: action.pagina,
             };
         case 'RECEIVE_ORCAMENTOS':
             return {
