@@ -10,6 +10,7 @@ import { ApplicationState } from 'store';
 import * as OrcamentoStore from 'store/OrcamentoStore';
 import formatter from 'utils/formatter';
 import * as ConsultaPaginada from 'utils/consultaPaginada';
+import { Route, Redirect, withRouter } from 'react-router';
 
 const columns: Column<OrcamentoStore.Orcamento>[] = [
     { field: 'codigo', title: 'Código' },
@@ -44,20 +45,22 @@ const OrcamentoListComponent = (props: any) => {
     const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
     const dispatch = useDispatch();
 
-    const { isLoading, orcamentos } = orcamentoStore;
+    const { isLoading, orcamentos, search } = orcamentoStore;
 
     const callback = (error: any) => {
 
     }
 
     useEffect(() => {
-        if (!isLoading) {
+        if (search) {
+            console.log("SEARCH")
             dispatch(OrcamentoStore.actionCreators.requestOrcamentos(callback));
         }
-    }, []);
+    }, [search]);
 
     useEffect(() => {
-        console.log(orcamentos)
+        if (orcamentos)
+            console.log(orcamentos.itens)
     }, [orcamentos]);
 
     const classes = useStyles();
@@ -71,60 +74,82 @@ const OrcamentoListComponent = (props: any) => {
         dispatch(OrcamentoStore.actionCreators.requestOrcamentos(callback, null, row));
     };
 
+    const handleEdit = (id: number) => {
+        props.history.push(`/orcamento/${id}`)
+    }
+
     return (
         <div>
             <LoadingCard isLoading={isLoading}>
-                {!orcamentos && !isLoading && <div>Not Found</div>}
                 {orcamentos && (
                     <>
-                        <Paper className={classes.root}>
-                            <MaterialTable
-                                columns={columns}
-                                data={orcamentos.itens}
-                                title="Resultado"
-                                options={{
-                                    search: false,
-                                    exportButton: true,
-                                    pageSize: orcamentos.itens.length,
-                                    selection: true
-                                }}
-                                components={{
-                                    Pagination: props => (
-                                        <TablePagination
-                                            {...props}
-                                            rowsPerPageOptions={ConsultaPaginada.Quantidades.map(e => e.qtd)}
-                                            rowsPerPage={orcamentos.itensPorPagina}
-                                            count={orcamentos.totalItens}
-                                            page={orcamentos.pagina - 1}
-                                            onChangePage={(e, page) =>
-                                                handleChangePage(page + 1)
-                                            }
-                                            onChangeRowsPerPage={event => {
-                                                handleChangeRowsPerPage(event);
-                                            }}
-                                        />
-                                    ),
-                                }}
-                                localization={{
-                                    pagination: {
-                                        labelRowsSelect: 'Itens',
-                                        labelDisplayedRows: '{from}-{to} de {count}'
-                                    },
-                                    toolbar: {
-                                        nRowsSelected: '{0} linha(s) selecionada(s)'
-                                    },
-                                    header: {
-                                        actions: 'Actions'
-                                    },
-                                    body: {
-                                        emptyDataSourceMessage: 'Nenhum registro encontrado',
-                                        filterRow: {
-                                            filterTooltip: 'Filter'
-                                        }
+                        <MaterialTable
+                            columns={columns}
+                            data={orcamentos.itens}
+                            title="Resultado"
+                            options={{
+                                search: false,
+                                exportButton: true,
+                                pageSize: orcamentos.itensPorPagina,
+                                selection: true,
+                            }}
+                            actions={[
+                                {
+                                    position: "row",
+                                    icon: 'edit',
+                                    tooltip: 'Editar',
+                                    onClick: (event, rowData) => {
+                                        let orcamento = rowData as OrcamentoStore.Orcamento
+                                        handleEdit(orcamento.id);
                                     }
-                                }}
-                            />
-                        </Paper>
+                                },
+                                {
+                                    position: "toolbarOnSelect",
+                                    icon: 'delete',
+                                    tooltip: 'Excluir',
+                                    onClick: (event, rowData) => {
+                                        let orcamento = rowData as OrcamentoStore.Orcamento[]
+                                        let ids = orcamento.map(e => e.id);
+                                        alert("You want to delete " + ids)
+                                    }
+                                }
+                            ]}
+                            components={{
+                                Pagination: props => (
+                                    <TablePagination
+                                        {...props}
+                                        rowsPerPageOptions={ConsultaPaginada.Quantidades.map(e => e.qtd)}
+                                        rowsPerPage={orcamentos.itensPorPagina}
+                                        count={orcamentos.totalItens}
+                                        page={orcamentos.pagina - 1}
+                                        onChangePage={(e, page) =>
+                                            handleChangePage(page + 1)
+                                        }
+                                        onChangeRowsPerPage={event => {
+                                            handleChangeRowsPerPage(event);
+                                        }}
+                                    />
+                                ),
+                            }}
+                            localization={{
+                                pagination: {
+                                    labelRowsSelect: 'Itens',
+                                    labelDisplayedRows: '{from}-{to} de {count}'
+                                },
+                                toolbar: {
+                                    nRowsSelected: '{0} linha(s) selecionada(s)'
+                                },
+                                header: {
+                                    actions: 'Actions'
+                                },
+                                body: {
+                                    emptyDataSourceMessage: 'Nenhum registro encontrado',
+                                    filterRow: {
+                                        filterTooltip: 'Filter'
+                                    }
+                                }
+                            }}
+                        />
                     </>)
                 }
             </LoadingCard>
@@ -132,4 +157,4 @@ const OrcamentoListComponent = (props: any) => {
     )
 };
 
-export default OrcamentoListComponent;
+export default withRouter(OrcamentoListComponent);

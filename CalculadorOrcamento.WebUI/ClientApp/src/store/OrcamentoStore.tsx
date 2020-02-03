@@ -10,7 +10,7 @@ export interface OrcamentoState {
     isLoading: boolean;
     orcamentos?: ConsultaPaginada<Orcamento>;
     orcamento?: Orcamento;
-    pagina: number;
+    search: boolean;
 }
 
 export interface Orcamento {
@@ -27,15 +27,6 @@ export interface AdicionarOrcamento {
     descricao?: string;
 }
 
-// -----------------
-// ACTIONS - These are serializable (hence replayable) descriptions of state transitions.
-// They do not themselves have any side-effects; they just describe something that is going to happen.
-
-interface RequestOrcamentosAction {
-    type: 'REQUEST_ORCAMENTOS';
-    pagina: number;
-}
-
 interface ReceiveOrcamentosAction {
     type: 'RECEIVE_ORCAMENTOS';
     orcamentos: ConsultaPaginada<Orcamento>;
@@ -46,12 +37,17 @@ interface AdicionarOrcamentoAction {
     orcamento?: Orcamento;
 }
 
-interface IsLoadingAction {
+interface IsLoadingOrcamentoAction {
     type: 'IS_LOADING_ORCAMENTO',
     value: boolean
 }
 
-type KnownAction = RequestOrcamentosAction | ReceiveOrcamentosAction | AdicionarOrcamentoAction | IsLoadingAction;
+interface SearchOrcamentoAction {
+    type: 'IS_SEARCH_ORCAMENTO',
+    value: boolean
+}
+
+type KnownAction = ReceiveOrcamentosAction | AdicionarOrcamentoAction | IsLoadingOrcamentoAction | SearchOrcamentoAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -60,6 +56,7 @@ type KnownAction = RequestOrcamentosAction | ReceiveOrcamentosAction | Adicionar
 export const actionCreators = {
     requestOrcamentos: (callback: Function, pagina?: number | null, qtdPorPagina?: number | null): AppThunkAction<KnownAction> => (dispatch, getState) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
+        dispatch({ type: 'IS_SEARCH_ORCAMENTO', value: false });
 
         HTTP.get(`/orcamentos?itensPorPagina=${qtdPorPagina ? qtdPorPagina : QtdPadrao.qtd}&pagina=${pagina ? pagina : 1}`)
             .then(response => response.data as Promise<ConsultaPaginada<Orcamento>>)
@@ -76,6 +73,7 @@ export const actionCreators = {
 
     adicionarOrcamento: (data: AdicionarOrcamento, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
+        dispatch({ type: 'IS_SEARCH_ORCAMENTO', value: true });
 
         HTTP.post(`/orcamentos`, JSON.stringify(data))
             .then(response => response.data as Promise<Orcamento>)
@@ -93,7 +91,7 @@ export const actionCreators = {
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
-const unloadedState: OrcamentoState = { isLoading: false, pagina: 1 };
+const unloadedState: OrcamentoState = { isLoading: false, search: true };
 
 export const reducer: Reducer<OrcamentoState> = (state: OrcamentoState | undefined, incomingAction: Action): OrcamentoState => {
     if (state === undefined) {
@@ -102,11 +100,6 @@ export const reducer: Reducer<OrcamentoState> = (state: OrcamentoState | undefin
 
     const action = incomingAction as KnownAction;
     switch (action.type) {
-        case 'REQUEST_ORCAMENTOS':
-            return {
-                ...state,
-                pagina: action.pagina,
-            };
         case 'RECEIVE_ORCAMENTOS':
             return {
                 ...state,
@@ -121,6 +114,11 @@ export const reducer: Reducer<OrcamentoState> = (state: OrcamentoState | undefin
             return {
                 ...state,
                 isLoading: action.value
+            }
+        case 'IS_SEARCH_ORCAMENTO':
+            return {
+                ...state,
+                search: action.value
             }
         default:
             return state;

@@ -5,7 +5,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import React, { useState, useEffect } from "react";
 import { Controller, ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { Redirect } from 'react-router';
+import { Redirect, withRouter } from 'react-router';
 import * as AppStore from 'store/AppStore';
 import * as OrcamentoStore from 'store/OrcamentoStore';
 import messages from 'utils/messages';
@@ -29,7 +29,6 @@ const OrcamentoAdicionarComponent = (props: any) => {
     const { register, control, errors, handleSubmit } = useForm<OrcamentoAdicionarForm>();
     const dispatch = useDispatch();
 
-    const [redirect, setRedirect] = useState(false);
 
     const callback = (error: any) => {
         if (error) {
@@ -37,7 +36,7 @@ const OrcamentoAdicionarComponent = (props: any) => {
         }
         else {
             dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
-            setRedirect(true);
+            props.history.push('/orcamento');
         }
     }
 
@@ -47,7 +46,6 @@ const OrcamentoAdicionarComponent = (props: any) => {
     };
 
     return (<>
-        {redirect ? <Redirect to='/orcamento' /> : null}
         <Grid container justify="center">
             <Grid item xs={6} >
                 <Card>
@@ -110,4 +108,4 @@ const OrcamentoAdicionarComponent = (props: any) => {
     </>);
 };
 
-export default OrcamentoAdicionarComponent;
+export default withRouter(OrcamentoAdicionarComponent);
