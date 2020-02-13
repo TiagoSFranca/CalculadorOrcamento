@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import LoadingCard from 'components/common/loadingCard/LoadingCardComponent';
 import MaterialTable, { Column } from 'material-table';
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
 import * as OrcamentoStore from 'store/OrcamentoStore';
@@ -12,24 +12,6 @@ import formatter from 'utils/formatter';
 import * as ConsultaPaginada from 'utils/consultaPaginada';
 import { Route, Redirect, withRouter } from 'react-router';
 
-const columns: Column<OrcamentoStore.Orcamento>[] = [
-    { field: 'codigo', title: 'Código' },
-    { field: 'nome', title: 'Nome' },
-    {
-        field: 'descricao',
-        title: 'Descrição',
-    },
-    {
-        field: 'dataCriacao',
-        title: 'Cadastrado em',
-        render: rowData => formatter.formatarData(rowData.dataCriacao)
-    },
-    {
-        field: 'dataAtualizacao',
-        title: 'Atualizado em',
-        render: rowData => formatter.formatarData(rowData.dataAtualizacao)
-    },
-];
 
 
 const useStyles = makeStyles({
@@ -41,6 +23,28 @@ const useStyles = makeStyles({
 });
 
 const OrcamentoListComponent = (props: any) => {
+
+    const columns: Column<OrcamentoStore.Orcamento>[] = [
+        {
+            field: 'codigo',
+            title: 'Código'
+        },
+        { field: 'nome', title: 'Nome' },
+        {
+            field: 'descricao',
+            title: 'Descrição',
+        },
+        {
+            field: 'dataCriacao',
+            title: 'Cadastrado em',
+            render: rowData => formatter.formatarData(rowData.dataCriacao)
+        },
+        {
+            field: 'dataAtualizacao',
+            title: 'Atualizado em',
+            render: rowData => formatter.formatarData(rowData.dataAtualizacao)
+        },
+    ];
 
     const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
     const dispatch = useDispatch();
@@ -59,9 +63,11 @@ const OrcamentoListComponent = (props: any) => {
     }, [search]);
 
     useEffect(() => {
-        if (orcamentos)
-            console.log(orcamentos.itens)
+        if (orcamentos) {
+            console.log(orcamentos)
+        }
     }, [orcamentos]);
+
 
     const classes = useStyles();
 
@@ -90,9 +96,12 @@ const OrcamentoListComponent = (props: any) => {
                             options={{
                                 search: false,
                                 exportButton: true,
-                                pageSize: orcamentos.itensPorPagina,
                                 selection: true,
+                                pageSize: orcamentos.itensPorPagina,
+                                sorting: false,
+                                pageSizeOptions: ConsultaPaginada.Quantidades.map(e => e.qtd),
                             }}
+                            isLoading={isLoading}
                             actions={[
                                 {
                                     position: "row",
@@ -118,8 +127,8 @@ const OrcamentoListComponent = (props: any) => {
                                 Pagination: props => (
                                     <TablePagination
                                         {...props}
-                                        rowsPerPageOptions={ConsultaPaginada.Quantidades.map(e => e.qtd)}
                                         rowsPerPage={orcamentos.itensPorPagina}
+                                        rowsPerPageOptions={ConsultaPaginada.Quantidades.map(e => e.qtd)}
                                         count={orcamentos.totalItens}
                                         page={orcamentos.pagina - 1}
                                         onChangePage={(e, page) =>
