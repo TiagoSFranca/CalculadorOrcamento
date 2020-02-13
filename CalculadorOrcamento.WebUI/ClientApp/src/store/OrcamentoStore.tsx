@@ -2,6 +2,7 @@
 import { AppThunkAction } from './';
 import HTTP from 'http/index';
 import { ConsultaPaginada, Quantidades, QtdPadrao } from 'utils/consultaPaginada'
+import { QueryResult, Query } from 'material-table';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -54,18 +55,35 @@ type KnownAction = ReceiveOrcamentosAction | AdicionarOrcamentoAction | IsLoadin
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    requestOrcamentos: (callback: Function, pagina?: number | null, qtdPorPagina?: number | null): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    requestOrcamentos: (callback: Function, query: Query<Orcamento>, resolve?: any): AppThunkAction<KnownAction> => (dispatch, getState) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
         dispatch({ type: 'IS_SEARCH_ORCAMENTO', value: false });
 
-        HTTP.get(`/orcamentos?itensPorPagina=${qtdPorPagina ? qtdPorPagina : QtdPadrao.qtd}&pagina=${pagina ? pagina : 1}`)
+        let qtdPorPagina = query.pageSize || query.pageSize >= QtdPadrao.qtd ? query.pageSize : QtdPadrao.qtd;
+        let pagina = query.page + 1;
+
+        HTTP.get(`/orcamentos?itensPorPagina=${qtdPorPagina}&pagina=${pagina}`)
             .then(response => response.data as Promise<ConsultaPaginada<Orcamento>>)
-            .then(data => {
-                dispatch({ type: 'RECEIVE_ORCAMENTOS', orcamentos: data });
+            .then(result => {
+                dispatch({ type: 'RECEIVE_ORCAMENTOS', orcamentos: result });
                 dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+                
+                if (resolve) {
+                    resolve({
+                        data: result.itens,
+                        page: result.pagina - 1,
+                        totalCount: result.totalItens,
+                    })
+                }
+
                 callback();
             }, error => {
                 callback(error);
+                if (resolve)
+                    resolve({
+                        page: 0,
+                        totalCount: 0,
+                    })
                 dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
             });
 

@@ -11,6 +11,12 @@ const useStyles = makeStyles((theme: Theme) =>
                 marginLeft: theme.spacing(2),
             },
         },
+        none: {
+            opacity: 0
+        },
+        default: {
+
+        }
     }),
 );
 
@@ -19,8 +25,7 @@ export default function LoadingCard(props: { children?: React.ReactNode, size?: 
     return (
         <>
             <Card >
-                {props.isLoading &&
-                    <LinearProgress color="primary" />}
+                <LinearProgress color="primary" className={props.isLoading ? classes.default : classes.none} />
                 <CardContent>
                     {props.children}
                 </CardContent>
