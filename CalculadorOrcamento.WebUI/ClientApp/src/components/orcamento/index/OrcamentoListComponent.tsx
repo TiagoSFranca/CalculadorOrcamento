@@ -1,5 +1,6 @@
-﻿import LoadingCard from 'components/common/loadingCard/LoadingCardComponent';
-import MaterialTable, { Column } from 'material-table';
+﻿import CustomTable from 'components/common/customTable/CustomTableComponent';
+import LoadingCard from 'components/common/loadingCard/LoadingCardComponent';
+import { Column } from 'material-table';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -60,7 +61,7 @@ const OrcamentoListComponent = (props: any) => {
         <div>
             <LoadingCard isLoading={isLoading}>
                 <>
-                    <MaterialTable
+                    <CustomTable<OrcamentoStore.Orcamento>
                         columns={columns}
                         data={query =>
                             new Promise((resolve, reject) => {
@@ -68,13 +69,8 @@ const OrcamentoListComponent = (props: any) => {
                             })
                         }
                         title="Resultado"
-                        options={{
-                            search: false,
-                            exportButton: true,
-                            selection: true,
-                            pageSize: pageSize,
-                            pageSizeOptions: ConsultaPaginada.Quantidades.map(e => e.qtd),
-                        }}
+                        pageSize={pageSize}
+                        pageSizeOptions={ConsultaPaginada.Quantidades.map(e => e.qtd)}
                         isLoading={isLoading}
                         actions={[
                             {
@@ -97,24 +93,6 @@ const OrcamentoListComponent = (props: any) => {
                                 }
                             }
                         ]}
-                        localization={{
-                            pagination: {
-                                labelRowsSelect: 'Itens',
-                                labelDisplayedRows: '{from}-{to} de {count}'
-                            },
-                            toolbar: {
-                                nRowsSelected: '{0} linha(s) selecionada(s)'
-                            },
-                            header: {
-                                actions: 'Actions'
-                            },
-                            body: {
-                                emptyDataSourceMessage: 'Nenhum registro encontrado',
-                                filterRow: {
-                                    filterTooltip: 'Filter'
-                                }
-                            }
-                        }}
                     />
                 </>
             </LoadingCard>

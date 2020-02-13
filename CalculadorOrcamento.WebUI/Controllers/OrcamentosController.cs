@@ -14,10 +14,13 @@ namespace CalculadorOrcamento.WebUI.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ConsultaPaginadaViewModel<OrcamentoViewModel>))]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]
-        public async Task<ActionResult<ConsultaPaginadaViewModel<OrcamentoViewModel>>> Get([FromQuery]int? pagina, [FromQuery]int? itensPorPagina)
+        public async Task<ActionResult<ConsultaPaginadaViewModel<OrcamentoViewModel>>> Get([FromQuery] string ordenarPor, [FromQuery] bool? asc,
+            [FromQuery]int? pagina, [FromQuery]int? itensPorPagina)
         {
             return Ok(await Mediator.Send(new SearchOrcamentoQuery()
             {
+                Ordenar = ordenarPor,
+                Asc = asc.HasValue ? (bool)asc : true,
                 Paginacao = new PaginacaoViewModel(pagina, itensPorPagina)
             }));
         }

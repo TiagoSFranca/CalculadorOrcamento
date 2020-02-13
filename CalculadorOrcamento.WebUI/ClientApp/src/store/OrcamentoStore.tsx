@@ -62,12 +62,12 @@ export const actionCreators = {
         let qtdPorPagina = query.pageSize || query.pageSize >= QtdPadrao.qtd ? query.pageSize : QtdPadrao.qtd;
         let pagina = query.page + 1;
 
-        HTTP.get(`/orcamentos?itensPorPagina=${qtdPorPagina}&pagina=${pagina}`)
+        HTTP.get(`/orcamentos?itensPorPagina=${qtdPorPagina}&pagina=${pagina}&asc=${query.orderDirection !== "desc" ? true : false}&ordenarPor=${query.orderBy && query.orderBy.field ? query.orderBy.field : ""}`)
             .then(response => response.data as Promise<ConsultaPaginada<Orcamento>>)
             .then(result => {
                 dispatch({ type: 'RECEIVE_ORCAMENTOS', orcamentos: result });
                 dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
-                
+
                 if (resolve) {
                     resolve({
                         data: result.itens,

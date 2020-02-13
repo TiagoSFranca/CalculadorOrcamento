@@ -6,6 +6,18 @@ namespace CalculadorOrcamento.Application.Orcamentos.Queries.Search
 {
     public class SearchOrcamentoQuery : IRequest<ConsultaPaginadaViewModel<OrcamentoViewModel>>
     {
+        public string Ordenar { get; set; }
+        public bool Asc { get; set; }
         public PaginacaoViewModel Paginacao { get; set; }
+    }
+
+    public enum OrdenacaoOrcamento
+    {
+        Id,
+        Codigo,
+        Nome,
+        Descricao,
+        DataCriacao,
+        DataAtualizacao
     }
 }
