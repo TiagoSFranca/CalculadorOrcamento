@@ -9,15 +9,17 @@ type Props<T extends object> = {
     isLoading: boolean,
     actions?: (Action<T> | ((rowData: T) => Action<T>))[],
     title?: string,
-    filtering: boolean,
 }
 
 export default function CustomTable<T extends object>(props: Props<T>) {
+    const tableRef = React.createRef();
+
     return (
         <>
             <MaterialTable
                 columns={props.columns}
                 data={props.data}
+                tableRef={tableRef}
                 title={props.title ? props.title : "Resultado"}
                 options={{
                     search: false,
@@ -25,10 +27,20 @@ export default function CustomTable<T extends object>(props: Props<T>) {
                     selection: true,
                     pageSize: props.pageSize,
                     pageSizeOptions: props.pageSizeOptions,
-                    filtering: props.filtering,
                 }}
                 isLoading={props.isLoading}
-                actions={props.actions}
+                actions={[
+
+                    {
+                        icon: 'refresh',
+                        tooltip: 'Refresh Data',
+                        isFreeAction: true,
+                        onClick: () => {
+                            //tableRef.current && tableRef.current.onQueryChange()
+                            console.log(tableRef.current)
+                        },
+                    }
+                ]}
                 localization={{
                     pagination: {
                         labelRowsSelect: 'Itens',
