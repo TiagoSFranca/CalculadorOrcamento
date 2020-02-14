@@ -8,7 +8,8 @@ type Props<T extends object> = {
     pageSizeOptions: number[],
     isLoading: boolean,
     actions?: (Action<T> | ((rowData: T) => Action<T>))[],
-    title?: string
+    title?: string,
+    filtering: boolean,
 }
 
 export default function CustomTable<T extends object>(props: Props<T>) {
@@ -24,6 +25,7 @@ export default function CustomTable<T extends object>(props: Props<T>) {
                     selection: true,
                     pageSize: props.pageSize,
                     pageSizeOptions: props.pageSizeOptions,
+                    filtering: props.filtering,
                 }}
                 isLoading={props.isLoading}
                 actions={props.actions}

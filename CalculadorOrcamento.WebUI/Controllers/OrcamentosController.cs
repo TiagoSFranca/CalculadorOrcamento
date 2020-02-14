@@ -4,6 +4,7 @@ using CalculadorOrcamento.Application.Orcamentos.Models;
 using CalculadorOrcamento.Application.Orcamentos.Queries.Search;
 using CalculadorOrcamento.Application.Paginacoes.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -15,13 +16,14 @@ namespace CalculadorOrcamento.WebUI.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ConsultaPaginadaViewModel<OrcamentoViewModel>))]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]
         public async Task<ActionResult<ConsultaPaginadaViewModel<OrcamentoViewModel>>> Get([FromQuery] string ordenarPor, [FromQuery] bool? asc,
-            [FromQuery]int? pagina, [FromQuery]int? itensPorPagina)
+            [FromQuery]int? pagina, [FromQuery]int? itensPorPagina, [FromQuery(Name = "filtros")] Dictionary<string, string> filtros)
         {
             return Ok(await Mediator.Send(new SearchOrcamentoQuery()
             {
                 Ordenar = ordenarPor,
                 Asc = asc.HasValue ? (bool)asc : true,
-                Paginacao = new PaginacaoViewModel(pagina, itensPorPagina)
+                Paginacao = new PaginacaoViewModel(pagina, itensPorPagina),
+                Filtros = filtros
             }));
         }
 

@@ -93,6 +93,7 @@ const OrcamentoListComponent = (props: any) => {
                                 }
                             }
                         ]}
+                        filtering={true}
                     />
                 </>
             </LoadingCard>

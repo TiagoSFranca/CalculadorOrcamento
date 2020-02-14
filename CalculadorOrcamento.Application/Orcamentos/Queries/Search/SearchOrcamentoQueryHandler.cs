@@ -5,6 +5,7 @@ using CalculadorOrcamento.Domain.Entities;
 using CalculadorOrcamento.Persistence;
 using MediatR;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,6 +26,43 @@ namespace CalculadorOrcamento.Application.Orcamentos.Queries.Search
         public async Task<ConsultaPaginadaViewModel<OrcamentoViewModel>> Handle(SearchOrcamentoQuery request, CancellationToken cancellationToken)
         {
             var query = _context.Orcamentos.AsQueryable();
+
+            var filtros = request.Filtros;
+
+            if ((filtros ?? new Dictionary<string, string>()).Any())
+            {
+                foreach (var item in filtros)
+                {
+                    if (Enum.TryParse(item.Key, true, out OrdenacaoOrcamento filtroEnum) && !string.IsNullOrEmpty(item.Value))
+                    {
+
+                        switch (filtroEnum)
+                        {
+                            case OrdenacaoOrcamento.Id:
+                                if (Int32.TryParse(item.Value, out int id))
+                                    query = query.Where(e => e.Id == id);
+                                break;
+                            case OrdenacaoOrcamento.Codigo:
+                                query = query.Where(e => e.Codigo.ToString().ToLower().Contains(item.Value.ToLower()));
+                                break;
+                            case OrdenacaoOrcamento.Nome:
+                                query = query.Where(e => e.Nome.ToString().ToLower().Contains(item.Value.ToLower()));
+                                break;
+                            case OrdenacaoOrcamento.Descricao:
+                                query = query.Where(e => e.Descricao.ToString().ToLower().Contains(item.Value.ToLower()));
+                                break;
+                            case OrdenacaoOrcamento.DataCriacao:
+                                break;
+                            case OrdenacaoOrcamento.DataAtualizacao:
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+
+            }
+
 
             var ordenar = OrdenacaoOrcamento.Id;
 
