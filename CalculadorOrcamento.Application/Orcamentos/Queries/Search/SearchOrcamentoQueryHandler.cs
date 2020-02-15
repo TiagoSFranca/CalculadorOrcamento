@@ -27,42 +27,26 @@ namespace CalculadorOrcamento.Application.Orcamentos.Queries.Search
         {
             var query = _context.Orcamentos.AsQueryable();
 
-            var filtros = request.Filtros;
+            if (!string.IsNullOrEmpty(request.Codigo))
+                query = query.Where(e => e.Codigo.ToString().ToLower().Contains(request.Codigo.ToLower()));
 
-            if ((filtros ?? new Dictionary<string, string>()).Any())
-            {
-                foreach (var item in filtros)
-                {
-                    if (Enum.TryParse(item.Key, true, out OrdenacaoOrcamento filtroEnum) && !string.IsNullOrEmpty(item.Value))
-                    {
+            if (!string.IsNullOrEmpty(request.Nome))
+                query = query.Where(e => e.Nome.ToLower().Contains(request.Nome.ToLower()));
 
-                        switch (filtroEnum)
-                        {
-                            case OrdenacaoOrcamento.Id:
-                                if (Int32.TryParse(item.Value, out int id))
-                                    query = query.Where(e => e.Id == id);
-                                break;
-                            case OrdenacaoOrcamento.Codigo:
-                                query = query.Where(e => e.Codigo.ToString().ToLower().Contains(item.Value.ToLower()));
-                                break;
-                            case OrdenacaoOrcamento.Nome:
-                                query = query.Where(e => e.Nome.ToString().ToLower().Contains(item.Value.ToLower()));
-                                break;
-                            case OrdenacaoOrcamento.Descricao:
-                                query = query.Where(e => e.Descricao.ToString().ToLower().Contains(item.Value.ToLower()));
-                                break;
-                            case OrdenacaoOrcamento.DataCriacao:
-                                break;
-                            case OrdenacaoOrcamento.DataAtualizacao:
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }
+            if (!string.IsNullOrEmpty(request.Descricao))
+                query = query.Where(e => e.Descricao.ToLower().Contains(request.Descricao.ToLower()));
 
-            }
+            if (request.DataCriacaoInicial.HasValue)
+                query = query.Where(e => e.DataCriacao >= request.DataCriacaoInicial.Value);
 
+            if (request.DataCriacaoFinal.HasValue)
+                query = query.Where(e => e.DataCriacao <= request.DataCriacaoFinal.Value);
+
+            if (request.DataAtualizacaoInicial.HasValue)
+                query = query.Where(e => e.DataAtualizacao >= request.DataAtualizacaoInicial.Value);
+
+            if (request.DataAtualizacaoFinal.HasValue)
+                query = query.Where(e => e.DataAtualizacao <= request.DataAtualizacaoFinal.Value);
 
             var ordenar = OrdenacaoOrcamento.Id;
 

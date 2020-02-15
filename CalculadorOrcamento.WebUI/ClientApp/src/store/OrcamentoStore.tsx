@@ -62,20 +62,7 @@ export const actionCreators = {
         let qtdPorPagina = query.pageSize || query.pageSize >= QtdPadrao.qtd ? query.pageSize : QtdPadrao.qtd;
         let pagina = query.page + 1;
 
-        let filters = query.filters;
-        let filt = '';
-
-        if (filters) {
-            filters.forEach((element, index) => {
-                if (element.column.field !== undefined)
-                    filt += `&filtros[${encodeURIComponent(element.column.field)}]=${encodeURIComponent(element.value)}`;
-            });
-            console.log("FILTER", filt);
-        } else {
-            filt += "&filtros="
-        }
-
-        HTTP.get(`/orcamentos?itensPorPagina=${qtdPorPagina}&pagina=${pagina}&asc=${query.orderDirection !== "desc" ? true : false}&ordenarPor=${encodeURIComponent(query.orderBy && query.orderBy.field ? query.orderBy.field : "")}${filt}`)
+        HTTP.get(`/orcamentos?itensPorPagina=${qtdPorPagina}&pagina=${pagina}&asc=${query.orderDirection !== "desc" ? true : false}&ordenarPor=${encodeURIComponent(query.orderBy && query.orderBy.field ? query.orderBy.field : "")}`)
             .then(response => response.data as Promise<ConsultaPaginada<Orcamento>>)
             .then(result => {
                 dispatch({ type: 'RECEIVE_ORCAMENTOS', orcamentos: result });
