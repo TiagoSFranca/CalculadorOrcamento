@@ -3,6 +3,8 @@ import { AppThunkAction } from './';
 import HTTP from 'http/index';
 import { ConsultaPaginada, Quantidades, QtdPadrao } from 'utils/consultaPaginada'
 import { QueryResult, Query } from 'material-table';
+import { callbackify } from 'util';
+import formatter from 'utils/formatter';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -11,6 +13,7 @@ export interface OrcamentoState {
     isLoading: boolean;
     orcamentos?: ConsultaPaginada<Orcamento>;
     orcamento?: Orcamento;
+    filtro: FiltroOrcamento;
     search: boolean;
 }
 
@@ -28,6 +31,16 @@ export interface AdicionarOrcamento {
     descricao?: string;
 }
 
+export interface FiltroOrcamento {
+    codigo: string;
+    nome: string;
+    descricao: string;
+    dataCriacaoInicial: Date | null;
+    dataCriacaoFinal: Date | null;
+    dataAtualizacaoInicial: Date | null;
+    dataAtualizacaoFinal: Date | null;
+};
+
 interface ReceiveOrcamentosAction {
     type: 'RECEIVE_ORCAMENTOS';
     orcamentos: ConsultaPaginada<Orcamento>;
@@ -43,26 +56,33 @@ interface IsLoadingOrcamentoAction {
     value: boolean
 }
 
-interface SearchOrcamentoAction {
-    type: 'IS_SEARCH_ORCAMENTO',
-    value: boolean
+interface FiltrarOrcamentoAction {
+    type: 'FILTAR_ORCAMENTO',
+    filtro: FiltroOrcamento
 }
 
-type KnownAction = ReceiveOrcamentosAction | AdicionarOrcamentoAction | IsLoadingOrcamentoAction | SearchOrcamentoAction;
+type KnownAction = ReceiveOrcamentosAction | AdicionarOrcamentoAction | IsLoadingOrcamentoAction | FiltrarOrcamentoAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
+    filtrarOrcamentos: (filtro: FiltroOrcamento): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        dispatch({ type: 'FILTAR_ORCAMENTO', filtro: filtro });
+    },
     requestOrcamentos: (callback: Function, query: Query<Orcamento>, resolve?: any): AppThunkAction<KnownAction> => (dispatch, getState) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
-        dispatch({ type: 'IS_SEARCH_ORCAMENTO', value: false });
 
+        let filtro = getState().orcamento.filtro;
+        console.log(filtro);
         let qtdPorPagina = query.pageSize || query.pageSize >= QtdPadrao.qtd ? query.pageSize : QtdPadrao.qtd;
-        let pagina = query.page + 1;
+        let pagina = getState().orcamento.search ? 1 : query.page + 1;
 
-        HTTP.get(`/orcamentos?itensPorPagina=${qtdPorPagina}&pagina=${pagina}&asc=${query.orderDirection !== "desc" ? true : false}&ordenarPor=${encodeURIComponent(query.orderBy && query.orderBy.field ? query.orderBy.field : "")}`)
+        HTTP.get(`/orcamentos?itensPorPagina=${qtdPorPagina}&pagina=${pagina}&asc=${query.orderDirection !== "desc" ? true : false}
+&ordenarPor=${encodeURIComponent(query.orderBy && query.orderBy.field ? query.orderBy.field : "")}&codigo=${encodeURIComponent(filtro.codigo)}
+&nome=${encodeURIComponent(filtro.nome)}&descricao=${encodeURIComponent(filtro.descricao)}&dataCriacaoInicial=${formatter.formatarDataRequest(filtro.dataCriacaoInicial)}
+&dataCriacaoFinal=${formatter.formatarDataRequest(filtro.dataCriacaoFinal)}&dataAtualizacaoInicial=${formatter.formatarDataRequest(filtro.dataAtualizacaoInicial)}&dataAtualizacaoFinal=${formatter.formatarDataRequest(filtro.dataAtualizacaoFinal)}`)
             .then(response => response.data as Promise<ConsultaPaginada<Orcamento>>)
             .then(result => {
                 dispatch({ type: 'RECEIVE_ORCAMENTOS', orcamentos: result });
@@ -81,6 +101,7 @@ export const actionCreators = {
                 callback(error);
                 if (resolve)
                     resolve({
+                        data: [],
                         page: 0,
                         totalCount: 0,
                     })
@@ -91,7 +112,6 @@ export const actionCreators = {
 
     adicionarOrcamento: (data: AdicionarOrcamento, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
-        dispatch({ type: 'IS_SEARCH_ORCAMENTO', value: true });
 
         HTTP.post(`/orcamentos`, JSON.stringify(data))
             .then(response => response.data as Promise<Orcamento>)
@@ -109,7 +129,19 @@ export const actionCreators = {
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
-const unloadedState: OrcamentoState = { isLoading: false, search: true };
+const unloadedState: OrcamentoState = {
+    isLoading: false,
+    filtro: {
+        codigo: '',
+        nome: '',
+        descricao: '',
+        dataAtualizacaoFinal: null,
+        dataAtualizacaoInicial: null,
+        dataCriacaoFinal: null,
+        dataCriacaoInicial: null,
+    },
+    search: false
+};
 
 export const reducer: Reducer<OrcamentoState> = (state: OrcamentoState | undefined, incomingAction: Action): OrcamentoState => {
     if (state === undefined) {
@@ -122,6 +154,7 @@ export const reducer: Reducer<OrcamentoState> = (state: OrcamentoState | undefin
             return {
                 ...state,
                 orcamentos: action.orcamentos,
+                search: false,
             };
         case 'ADICIONAR_ORCAMENTO':
             return {
@@ -133,10 +166,11 @@ export const reducer: Reducer<OrcamentoState> = (state: OrcamentoState | undefin
                 ...state,
                 isLoading: action.value
             }
-        case 'IS_SEARCH_ORCAMENTO':
+        case 'FILTAR_ORCAMENTO':
             return {
                 ...state,
-                search: action.value
+                filtro: action.filtro,
+                search: true,
             }
         default:
             return state;

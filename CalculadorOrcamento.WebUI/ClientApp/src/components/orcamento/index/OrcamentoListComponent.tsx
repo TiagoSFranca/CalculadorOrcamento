@@ -62,6 +62,7 @@ const OrcamentoListComponent = (props: any) => {
             <LoadingCard isLoading={isLoading}>
                 <>
                     <CustomTable<OrcamentoStore.Orcamento>
+                        refresh={search}
                         columns={columns}
                         data={query =>
                             new Promise((resolve, reject) => {

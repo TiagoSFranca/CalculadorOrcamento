@@ -1,5 +1,6 @@
-﻿import MaterialTable, { Action, Column, Query, QueryResult } from 'material-table';
+﻿import MaterialTable, { Action, Column, Query, QueryResult, MaterialTableProps } from 'material-table';
 import * as React from 'react';
+import { useEffect } from 'react';
 
 type Props<T extends object> = {
     columns: Column<T>[],
@@ -9,10 +10,30 @@ type Props<T extends object> = {
     isLoading: boolean,
     actions?: (Action<T> | ((rowData: T) => Action<T>))[],
     title?: string,
+    refresh: boolean
 }
 
 export default function CustomTable<T extends object>(props: Props<T>) {
     const tableRef = React.createRef();
+
+    const refresh = () => {
+        let t = tableRef.current as MaterialTableProps<T>;
+        if (t && t.onQueryChange)
+            t.onQueryChange({
+                page: 0,
+                pageSize: props.pageSize,
+                filters: [],
+                orderBy: {
+                },
+                orderDirection: "asc",
+                search: ''
+            })
+    }
+
+    useEffect(() => {
+        if (props.refresh)
+            refresh();
+    }, [props.refresh]);
 
     return (
         <>
@@ -33,12 +54,9 @@ export default function CustomTable<T extends object>(props: Props<T>) {
 
                     {
                         icon: 'refresh',
-                        tooltip: 'Refresh Data',
+                        tooltip: 'Recarregar',
                         isFreeAction: true,
-                        onClick: () => {
-                            //tableRef.current && tableRef.current.onQueryChange()
-                            console.log(tableRef.current)
-                        },
+                        onClick: () => { refresh() },
                     }
                 ]}
                 localization={{

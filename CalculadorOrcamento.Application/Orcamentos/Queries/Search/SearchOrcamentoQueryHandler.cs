@@ -37,16 +37,16 @@ namespace CalculadorOrcamento.Application.Orcamentos.Queries.Search
                 query = query.Where(e => e.Descricao.ToLower().Contains(request.Descricao.ToLower()));
 
             if (request.DataCriacaoInicial.HasValue)
-                query = query.Where(e => e.DataCriacao >= request.DataCriacaoInicial.Value);
+                query = query.Where(e => e.DataCriacao.Date >= request.DataCriacaoInicial.Value.Date);
 
             if (request.DataCriacaoFinal.HasValue)
-                query = query.Where(e => e.DataCriacao <= request.DataCriacaoFinal.Value);
+                query = query.Where(e => e.DataCriacao.Date <= request.DataCriacaoFinal.Value.Date);
 
             if (request.DataAtualizacaoInicial.HasValue)
-                query = query.Where(e => e.DataAtualizacao >= request.DataAtualizacaoInicial.Value);
+                query = query.Where(e => e.DataAtualizacao.Date >= request.DataAtualizacaoInicial.Value.Date);
 
             if (request.DataAtualizacaoFinal.HasValue)
-                query = query.Where(e => e.DataAtualizacao <= request.DataAtualizacaoFinal.Value);
+                query = query.Where(e => e.DataAtualizacao.Date <= request.DataAtualizacaoFinal.Value.Date);
 
             var ordenar = OrdenacaoOrcamento.Id;
 

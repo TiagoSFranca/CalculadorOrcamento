@@ -8,11 +8,14 @@ using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 
 namespace CalculadorOrcamento.WebUI
@@ -55,6 +58,10 @@ namespace CalculadorOrcamento.WebUI
                 //       .RequireScope(Config._apiName).Build();
                 //options.Filters.Add(new AuthorizeFilter(policy));
             })
+                .AddMvcOptions(options =>
+                {
+                    options.ModelBinderProviders.Insert(0, new DateTimeModelBinderProvider());
+                })
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<OrcamentoViewModel>());
 
             services.AddDbContext<CalculadorOrcamentoContext>(options =>
@@ -86,6 +93,15 @@ namespace CalculadorOrcamento.WebUI
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            var defaultCulture = new CultureInfo("pt-BR");
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(defaultCulture),
+                SupportedCultures = new List<CultureInfo> { defaultCulture },
+                SupportedUICultures = new List<CultureInfo> { defaultCulture }
+            });
+
             app.UseSpaStaticFiles();
 
             app.UseRouting();

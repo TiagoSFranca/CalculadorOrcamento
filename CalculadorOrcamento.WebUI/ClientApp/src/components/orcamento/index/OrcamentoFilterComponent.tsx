@@ -1,32 +1,73 @@
-﻿import { Button, Card, CardActions, CardContent, Grid, TextField } from '@material-ui/core';
+﻿import DateFnsUtils from '@date-io/date-fns';
+import { Button, Card, CardActions, CardContent, Grid, TextField } from '@material-ui/core';
+import FindReplaceIcon from '@material-ui/icons/FindReplace';
 import SearchIcon from '@material-ui/icons/Search';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import 'date-fns';
+import ptLocale from "date-fns/locale/pt-BR";
 import * as React from 'react';
-import { Controller, ErrorMessage, useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
+import * as OrcamentoStore from 'store/OrcamentoStore';
 
-type OrcamentoAdicionarForm = {
-    codigo?: string;
-    nome?: string;
-    descricao?: string;
+type OrcamentoFiltrarForm = {
+    codigo: string;
+    nome: string;
+    descricao: string;
+    dataCriacaoInicial: Date | null;
+    dataCriacaoFinal: Date | null;
+    dataAtualizacaoInicial: Date | null;
+    dataAtualizacaoFinal: Date | null;
 };
 
 const OrcamentoFilter = (props: any) => {
     const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
     const dispatch = useDispatch();
-    const { isLoading, orcamentos, search } = orcamentoStore;
-    const { register, control, errors, handleSubmit } = useForm<OrcamentoAdicionarForm>();
+    const { isLoading } = orcamentoStore;
+    const { control, handleSubmit, reset, getValues } = useForm<OrcamentoFiltrarForm>();
 
-    const onSubmit = (data: any) => {
-        console.log(data);
+    const [dataCriacaoInicial, setDataCriacaoInicial] = React.useState<Date | null>(null);
+    const [dataCriacaoFinal, setDataCriacaoFinal] = React.useState<Date | null>(null);
+    const [dataAtualizacaoInicial, setDataAtualizacaoInicial] = React.useState<Date | null>(null);
+    const [dataAtualizacaoFinal, setDataAtualizacaoFinal] = React.useState<Date | null>(null);
+
+    const onSubmit = (data: OrcamentoFiltrarForm, reset: boolean) => {
+        if (!reset) {
+            data.dataCriacaoInicial = dataCriacaoInicial;
+            data.dataCriacaoFinal = dataCriacaoFinal;
+            data.dataAtualizacaoInicial = dataAtualizacaoInicial;
+            data.dataAtualizacaoFinal = dataAtualizacaoFinal;
+        }
+
+        dispatch(OrcamentoStore.actionCreators.filtrarOrcamentos(data as OrcamentoStore.FiltroOrcamento));
     };
+
+    const onLimpar = () => {
+        reset({
+            codigo: '',
+            nome: '',
+            descricao: '',
+            dataAtualizacaoFinal: null,
+            dataAtualizacaoInicial: null,
+            dataCriacaoFinal: null,
+            dataCriacaoInicial: null,
+        });
+
+        setDataCriacaoInicial(null);
+        setDataCriacaoFinal(null);
+        setDataAtualizacaoInicial(null);
+        setDataAtualizacaoFinal(null);
+
+        onSubmit(getValues(), true)
+    }
 
     return (
         <>
             <div>
                 <Card>
                     <CardContent>
-                        <form onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
+                        <form onSubmit={handleSubmit((data) => onSubmit(data, false))} noValidate autoComplete="off">
                             <Grid container spacing={3}>
                                 <Grid item xs={3}>
                                     <Controller as={
@@ -43,16 +84,97 @@ const OrcamentoFilter = (props: any) => {
                                         <TextField label="Descrição" fullWidth />
                                     } name="descricao" control={control} defaultValue="" />
                                 </Grid>
+                                <Grid item xs={3} >
+                                    <Controller as={
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptLocale}>
+                                            <KeyboardDatePicker
+                                                fullWidth
+                                                disableToolbar
+                                                variant="inline"
+                                                format="dd/MM/yyyy"
+                                                margin="normal"
+                                                label="Data de Criação Inicial"
+                                                value={dataCriacaoInicial}
+                                                onChange={setDataCriacaoInicial}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change date',
+                                                }}
+                                            />
+                                        </MuiPickersUtilsProvider>
+                                    } name="dataCriacaoInicial" control={control} defaultValue="" />
+                                </Grid>
+                                <Grid item xs={3} >
+                                    <Controller as={
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptLocale}>
+                                            <KeyboardDatePicker
+                                                fullWidth
+                                                disableToolbar
+                                                variant="inline"
+                                                format="dd/MM/yyyy"
+                                                margin="normal"
+                                                label="Data de Criação Final"
+                                                value={dataCriacaoFinal}
+                                                onChange={setDataCriacaoFinal}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change date',
+                                                }}
+                                            />
+                                        </MuiPickersUtilsProvider>
+                                    } name="dataCriacaoFinal" control={control} defaultValue="" />
+                                </Grid>
+                                <Grid item xs={3} >
+                                    <Controller as={
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptLocale}>
+                                            <KeyboardDatePicker
+                                                fullWidth
+                                                disableToolbar
+                                                variant="inline"
+                                                format="dd/MM/yyyy"
+                                                margin="normal"
+                                                label="Data de Atualização Inicial"
+                                                value={dataAtualizacaoInicial}
+                                                onChange={setDataAtualizacaoInicial}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change date',
+                                                }}
+                                            />
+                                        </MuiPickersUtilsProvider>
+                                    } name="dataAtualizacaoInicial" control={control} defaultValue="" />
+                                </Grid>
+                                <Grid item xs={3} >
+                                    <Controller as={
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptLocale}>
+                                            <KeyboardDatePicker
+                                                fullWidth
+                                                disableToolbar
+                                                variant="inline"
+                                                format="dd/MM/yyyy"
+                                                margin="normal"
+                                                label="Data de Atualização Final"
+                                                value={dataAtualizacaoFinal}
+                                                onChange={setDataAtualizacaoFinal}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change date',
+                                                }}
+                                            />
+                                        </MuiPickersUtilsProvider>
+                                    } name="dataAtualizacaoFinal" control={control} defaultValue="" />
+                                </Grid>
                                 <Grid item xs={12} >
+                                    <Button
+                                        variant="outlined"
+                                        color="primary"
+                                        size="large"
+                                        startIcon={<FindReplaceIcon />}
+                                        onClick={() => onLimpar()}
+                                    >Limpar</Button>
                                     <Button
                                         type="submit"
                                         variant="outlined"
                                         color="primary"
                                         size="large"
                                         startIcon={<SearchIcon />}
-                                    >
-                                        Pesquisar
-      </Button>
+                                    >Pesquisar</Button>
                                 </Grid>
                             </Grid>
                             <CardActions>

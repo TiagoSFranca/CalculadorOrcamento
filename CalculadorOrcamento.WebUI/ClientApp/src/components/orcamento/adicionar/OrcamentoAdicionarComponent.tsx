@@ -29,7 +29,6 @@ const OrcamentoAdicionarComponent = (props: any) => {
     const { register, control, errors, handleSubmit } = useForm<OrcamentoAdicionarForm>();
     const dispatch = useDispatch();
 
-
     const callback = (error: any) => {
         if (error) {
             dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
