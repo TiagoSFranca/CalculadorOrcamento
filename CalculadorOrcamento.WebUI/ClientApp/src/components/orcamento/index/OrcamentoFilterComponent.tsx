@@ -1,8 +1,9 @@
 ﻿import DateFnsUtils from '@date-io/date-fns';
-import { Button, Card, CardActions, CardContent, Grid, TextField } from '@material-ui/core';
+import { Card, CardActions, CardContent, createStyles, Grid, makeStyles, TextField, Theme } from '@material-ui/core';
 import FindReplaceIcon from '@material-ui/icons/FindReplace';
 import SearchIcon from '@material-ui/icons/Search';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import 'date-fns';
 import ptLocale from "date-fns/locale/pt-BR";
 import * as React from 'react';
@@ -10,7 +11,14 @@ import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
 import * as OrcamentoStore from 'store/OrcamentoStore';
-import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent'
+
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        marginLeft: {
+            marginLeft: theme.spacing(2),
+        },
+    }),
+);
 
 type OrcamentoFiltrarForm = {
     codigo: string;
@@ -23,6 +31,8 @@ type OrcamentoFiltrarForm = {
 };
 
 const OrcamentoFilter = (props: any) => {
+    const classes = useStyles();
+
     const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
     const dispatch = useDispatch();
     const { isLoading, search } = orcamentoStore;
@@ -171,6 +181,7 @@ const OrcamentoFilter = (props: any) => {
                                         startIcon={<FindReplaceIcon />}
                                         onClick={() => onLimpar()} />
                                     <LoadingButton
+                                        className={classes.marginLeft}
                                         text="Pesquisar"
                                         loading={isLoading && search}
                                         type="submit"

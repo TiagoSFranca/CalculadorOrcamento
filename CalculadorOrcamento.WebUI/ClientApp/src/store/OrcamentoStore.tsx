@@ -1,10 +1,9 @@
-﻿import { Action, Reducer } from 'redux';
-import { AppThunkAction } from './';
-import HTTP from 'http/index';
-import { ConsultaPaginada, Quantidades, QtdPadrao } from 'utils/consultaPaginada'
-import { QueryResult, Query } from 'material-table';
-import { callbackify } from 'util';
+﻿import HTTP from 'http/index';
+import { Query } from 'material-table';
+import { Action, Reducer } from 'redux';
+import { ConsultaPaginada, QtdPadrao } from 'utils/consultaPaginada';
 import formatter from 'utils/formatter';
+import { AppThunkAction } from './';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -31,6 +30,12 @@ export interface AdicionarOrcamento {
     descricao?: string;
 }
 
+export interface EditarOrcamento {
+    id: number;
+    nome: string;
+    descricao?: string;
+}
+
 export interface FiltroOrcamento {
     codigo: string;
     nome: string;
@@ -52,16 +57,21 @@ interface AdicionarOrcamentoAction {
 }
 
 interface IsLoadingOrcamentoAction {
-    type: 'IS_LOADING_ORCAMENTO',
-    value: boolean
+    type: 'IS_LOADING_ORCAMENTO';
+    value: boolean;
 }
 
 interface FiltrarOrcamentoAction {
-    type: 'FILTAR_ORCAMENTO',
-    filtro: FiltroOrcamento
+    type: 'FILTAR_ORCAMENTO';
+    filtro: FiltroOrcamento;
 }
 
-type KnownAction = ReceiveOrcamentosAction | AdicionarOrcamentoAction | IsLoadingOrcamentoAction | FiltrarOrcamentoAction;
+interface SelecionarOrcamentoAction {
+    type: 'SELECIONAR_ORCAMENTO';
+    orcamento?: Orcamento;
+}
+
+type KnownAction = ReceiveOrcamentosAction | AdicionarOrcamentoAction | IsLoadingOrcamentoAction | FiltrarOrcamentoAction | SelecionarOrcamentoAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -107,7 +117,6 @@ export const actionCreators = {
                     })
                 dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
             });
-
     },
 
     adicionarOrcamento: (data: AdicionarOrcamento, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
@@ -123,7 +132,38 @@ export const actionCreators = {
                 callback(error);
                 dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
             });
-    }
+    },
+
+    selecionarOrcamento: (id: number, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
+        dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
+
+        HTTP.get(`/orcamentos/${id}`)
+            .then(response => response.data as Promise<Orcamento>)
+            .then(result => {
+                dispatch({ type: 'ADICIONAR_ORCAMENTO', orcamento: result });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+
+                callback();
+            }, error => {
+                callback(error);
+                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+            });
+    },
+
+    editarOrcamento: (id: number, data: EditarOrcamento, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
+        dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
+
+        HTTP.put(`/orcamentos/${id}`, JSON.stringify(data))
+            .then(response => response.data as Promise<Orcamento>)
+            .then(data => {
+                dispatch({ type: 'ADICIONAR_ORCAMENTO', orcamento: data });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+                callback();
+            }, error => {
+                callback(error);
+                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+            });
+    },
 };
 
 // ----------------

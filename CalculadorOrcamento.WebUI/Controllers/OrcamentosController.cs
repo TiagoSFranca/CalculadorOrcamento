@@ -1,6 +1,8 @@
 ﻿using CalculadorOrcamento.Application.Exceptions;
 using CalculadorOrcamento.Application.Orcamentos.Commands.Adicionar;
+using CalculadorOrcamento.Application.Orcamentos.Commands.Editar;
 using CalculadorOrcamento.Application.Orcamentos.Models;
+using CalculadorOrcamento.Application.Orcamentos.Queries.Get;
 using CalculadorOrcamento.Application.Orcamentos.Queries.Search;
 using CalculadorOrcamento.Application.Paginacoes.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +17,7 @@ namespace CalculadorOrcamento.WebUI.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ConsultaPaginadaViewModel<OrcamentoViewModel>))]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]
-        public async Task<ActionResult<ConsultaPaginadaViewModel<OrcamentoViewModel>>> Get([FromQuery] string codigo, [FromQuery] string nome, [FromQuery] string descricao,
+        public async Task<ActionResult<ConsultaPaginadaViewModel<OrcamentoViewModel>>> Search([FromQuery] string codigo, [FromQuery] string nome, [FromQuery] string descricao,
             [FromQuery] DateTime? dataCriacaoInicial, [FromQuery] DateTime? dataCriacaoFinal, [FromQuery] DateTime? dataAtualizacaoInicial, [FromQuery] DateTime? dataAtualizacaoFinal,
             [FromQuery] string ordenarPor, [FromQuery] bool? asc, [FromQuery]int? pagina, [FromQuery]int? itensPorPagina)
         {
@@ -43,6 +45,28 @@ namespace CalculadorOrcamento.WebUI.Controllers
         public async Task<ActionResult<OrcamentoViewModel>> Adicionar([FromBody]AdicionarOrcamento model)
         {
             var command = Mapper.Map<AdicionarOrcamentoCommand>(model);
+
+            return Ok(await Mediator.Send(command));
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ConsultaPaginadaViewModel<OrcamentoViewModel>))]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]
+        public async Task<ActionResult<OrcamentoViewModel>> Get(int id)
+        {
+            return Ok(await Mediator.Send(new GetOrcamentoQuery()
+            {
+                Id = id
+            }));
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ConsultaPaginadaViewModel<OrcamentoViewModel>))]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]
+        public async Task<ActionResult<OrcamentoViewModel>> Editar(int id, [FromBody]EditarOrcamento model)
+        {
+            var command = Mapper.Map<EditarOrcamentoCommand>(model);
+            command.Id = id;
 
             return Ok(await Mediator.Send(command));
         }

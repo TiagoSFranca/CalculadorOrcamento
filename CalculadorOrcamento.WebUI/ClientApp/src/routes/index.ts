@@ -3,6 +3,7 @@ import Counter from "components/Counter";
 import FetchData from "components/FetchData";
 import OrcamentoIndex from "views/orcamento/index/OrcamentoIndex";
 import OrcamentoAdicionar from "views/orcamento/adicionar/OrcamentoAdicionar"
+import OrcamentoEditar from "views/orcamento/editar/OrcamentoEditar"
 
 export interface RouteItem {
     exact?: boolean | false,
@@ -38,5 +39,10 @@ export const routes: RouteItem[] = [
         path: '/orcamento/adicionar',
         component: OrcamentoAdicionar,
         isPrivate: true
-    }
+    },
+    {
+        path: '/orcamento/editar/:id',
+        component: OrcamentoEditar,
+        isPrivate: true
+    },
 ]
