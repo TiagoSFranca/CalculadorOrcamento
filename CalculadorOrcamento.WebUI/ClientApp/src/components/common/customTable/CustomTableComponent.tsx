@@ -35,6 +35,23 @@ export default function CustomTable<T extends object>(props: Props<T>) {
             refresh();
     }, [props.refresh]);
 
+    const mountActions = () => {
+
+        var refreshAction = {
+            icon: 'refresh',
+            tooltip: 'Recarregar',
+            isFreeAction: true,
+            onClick: () => { refresh() },
+        };
+
+        if (!props.actions)
+            return [refreshAction];
+
+        props.actions.push(refreshAction);
+
+        return props.actions;
+    }
+
     return (
         <>
             <MaterialTable
@@ -50,15 +67,7 @@ export default function CustomTable<T extends object>(props: Props<T>) {
                     pageSizeOptions: props.pageSizeOptions,
                 }}
                 isLoading={props.isLoading}
-                actions={[
-
-                    {
-                        icon: 'refresh',
-                        tooltip: 'Recarregar',
-                        isFreeAction: true,
-                        onClick: () => { refresh() },
-                    }
-                ]}
+                actions={mountActions()}
                 localization={{
                     pagination: {
                         labelRowsSelect: 'Itens',

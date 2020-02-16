@@ -2,14 +2,16 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import SaveIcon from '@material-ui/icons/Save';
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Controller, ErrorMessage, useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { Redirect, withRouter } from 'react-router';
+import { useDispatch, useSelector } from "react-redux";
+import { withRouter } from 'react-router';
 import * as AppStore from 'store/AppStore';
 import * as OrcamentoStore from 'store/OrcamentoStore';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
+import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent'
+import { ApplicationState } from 'store';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -26,7 +28,12 @@ type OrcamentoAdicionarForm = {
 
 const OrcamentoAdicionarComponent = (props: any) => {
     const classes = useStyles();
+
+    const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
+    const { isLoading } = orcamentoStore;
+
     const { register, control, errors, handleSubmit } = useForm<OrcamentoAdicionarForm>();
+
     const dispatch = useDispatch();
 
     const callback = (error: any) => {
@@ -87,15 +94,14 @@ const OrcamentoAdicionarComponent = (props: any) => {
                             <CardActions
                                 className={classes.container}>
                                 <Grid item xs={12} >
-                                    <Button
+                                    <LoadingButton
+                                        loading={isLoading}
                                         type="submit"
                                         variant="outlined"
                                         color="primary"
                                         size="large"
                                         startIcon={<SaveIcon />}
-                                    >
-                                        Adicionar
-      </Button>
+                                        text="Adicionar" />
                                 </Grid>
                             </CardActions>
                         </form>

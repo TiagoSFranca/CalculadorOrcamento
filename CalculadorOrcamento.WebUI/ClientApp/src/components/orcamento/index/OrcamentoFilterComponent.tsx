@@ -10,6 +10,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
 import * as OrcamentoStore from 'store/OrcamentoStore';
+import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent'
 
 type OrcamentoFiltrarForm = {
     codigo: string;
@@ -24,7 +25,7 @@ type OrcamentoFiltrarForm = {
 const OrcamentoFilter = (props: any) => {
     const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
     const dispatch = useDispatch();
-    const { isLoading } = orcamentoStore;
+    const { isLoading, search } = orcamentoStore;
     const { control, handleSubmit, reset, getValues } = useForm<OrcamentoFiltrarForm>();
 
     const [dataCriacaoInicial, setDataCriacaoInicial] = React.useState<Date | null>(null);
@@ -161,20 +162,22 @@ const OrcamentoFilter = (props: any) => {
                                     } name="dataAtualizacaoFinal" control={control} defaultValue="" />
                                 </Grid>
                                 <Grid item xs={12} >
-                                    <Button
+                                    <LoadingButton
+                                        text="Limpar"
+                                        loading={isLoading && search}
                                         variant="outlined"
                                         color="primary"
                                         size="large"
                                         startIcon={<FindReplaceIcon />}
-                                        onClick={() => onLimpar()}
-                                    >Limpar</Button>
-                                    <Button
+                                        onClick={() => onLimpar()} />
+                                    <LoadingButton
+                                        text="Pesquisar"
+                                        loading={isLoading && search}
                                         type="submit"
                                         variant="outlined"
                                         color="primary"
                                         size="large"
-                                        startIcon={<SearchIcon />}
-                                    >Pesquisar</Button>
+                                        startIcon={<SearchIcon />} />
                                 </Grid>
                             </Grid>
                             <CardActions>
