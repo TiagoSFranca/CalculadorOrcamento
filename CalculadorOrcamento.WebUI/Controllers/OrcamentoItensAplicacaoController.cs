@@ -4,6 +4,7 @@ using CalculadorOrcamento.Application.OrcamentoItensAplicacao.Models;
 using CalculadorOrcamento.Application.OrcamentoItensAplicacao.Queries.Search;
 using CalculadorOrcamento.Application.Paginacoes.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -12,9 +13,9 @@ namespace CalculadorOrcamento.WebUI.Controllers
     public class OrcamentoItensAplicacaoController : BaseController
     {
         [HttpGet]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ConsultaPaginadaViewModel<OrcamentoItemAplicacaoViewModel>))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(List<OrcamentoItemAplicacaoViewModel>))]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]
-        public async Task<ActionResult<ConsultaPaginadaViewModel<OrcamentoItemAplicacaoViewModel>>> Search([FromQuery] int idOrcamento)
+        public async Task<ActionResult<List<OrcamentoItemAplicacaoViewModel>>> Search([FromQuery] int idOrcamento)
         {
             return Ok(await Mediator.Send(new SearchOrcamentoItemAplicacaoQuery()
             {

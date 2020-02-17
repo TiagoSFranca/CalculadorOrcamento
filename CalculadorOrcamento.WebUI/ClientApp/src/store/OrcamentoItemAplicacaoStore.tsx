@@ -10,8 +10,8 @@ import { AppThunkAction } from './';
 
 export interface OrcamentoItemAplicacaoState {
     isLoading: boolean;
-    orcamentos?: ConsultaPaginada<OrcamentoItemAplicacao>;
-    orcamento?: OrcamentoItemAplicacao;
+    orcamentoItens?: OrcamentoItemAplicacao[];
+    orcamentoItem?: OrcamentoItemAplicacao;
     search: boolean;
     editarTabPrev: number;
     editarTabAct: number;
@@ -42,12 +42,12 @@ export interface AdicionarOrcamentoItem {
 
 interface ReceiveOrcamentoItensAction {
     type: 'RECEIVE_ORCAMENTOS';
-    orcamentos: ConsultaPaginada<OrcamentoItemAplicacao>;
+    orcamentoItens: OrcamentoItemAplicacao[];
 }
 
 interface AdicionarOrcamentoItemAction {
     type: 'ADICIONAR_ORCAMENTO';
-    orcamento?: OrcamentoItemAplicacao;
+    orcamentoItem?: OrcamentoItemAplicacao;
 }
 
 interface IsLoadingOrcamentoItemAction {
@@ -62,40 +62,18 @@ type KnownAction = ReceiveOrcamentoItensAction | AdicionarOrcamentoItemAction | 
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    requestOrcamentos: (callback: Function, query: Query<OrcamentoItemAplicacao>, resolve?: any): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    requestOrcamentos: (callback: Function, idOrcamento: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
 
-        let filtro = getState().orcamento.filtro;
-        console.log(filtro);
-        let qtdPorPagina = query.pageSize || query.pageSize >= QtdPadrao.qtd ? query.pageSize : QtdPadrao.qtd;
-        let pagina = getState().orcamento.search ? 1 : query.page + 1;
-
-        HTTP.get(`/orcamentos?itensPorPagina=${qtdPorPagina}&pagina=${pagina}&asc=${query.orderDirection !== "desc" ? true : false}
-&ordenarPor=${encodeURIComponent(query.orderBy && query.orderBy.field ? query.orderBy.field : "")}&codigo=${encodeURIComponent(filtro.codigo)}
-&nome=${encodeURIComponent(filtro.nome)}&descricao=${encodeURIComponent(filtro.descricao)}&dataCriacaoInicial=${formatter.formatarDataRequest(filtro.dataCriacaoInicial)}
-&dataCriacaoFinal=${formatter.formatarDataRequest(filtro.dataCriacaoFinal)}&dataAtualizacaoInicial=${formatter.formatarDataRequest(filtro.dataAtualizacaoInicial)}&dataAtualizacaoFinal=${formatter.formatarDataRequest(filtro.dataAtualizacaoFinal)}`)
-            .then(response => response.data as Promise<ConsultaPaginada<OrcamentoItemAplicacao>>)
+        HTTP.get(`/orcamentoitensaplicacao?idOrcamento=${idOrcamento}`)
+            .then(response => response.data as Promise<OrcamentoItemAplicacao[]>)
             .then(result => {
-                dispatch({ type: 'RECEIVE_ORCAMENTOS', orcamentos: result });
+                dispatch({ type: 'RECEIVE_ORCAMENTOS', orcamentoItens: result });
                 dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
-
-                if (resolve) {
-                    resolve({
-                        data: result.itens,
-                        page: result.pagina - 1,
-                        totalCount: result.totalItens,
-                    })
-                }
 
                 callback();
             }, error => {
                 callback(error);
-                if (resolve)
-                    resolve({
-                        data: [],
-                        page: 0,
-                        totalCount: 0,
-                    })
                 dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
             });
     },
@@ -106,7 +84,7 @@ export const actionCreators = {
         HTTP.post(`/orcamentoitensaplicacao`, JSON.stringify(data))
             .then(response => response.data as Promise<OrcamentoItemAplicacao>)
             .then(data => {
-                dispatch({ type: 'ADICIONAR_ORCAMENTO', orcamento: data });
+                dispatch({ type: 'ADICIONAR_ORCAMENTO', orcamentoItem: data });
                 dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
                 callback();
             }, error => {
@@ -121,7 +99,7 @@ export const actionCreators = {
 
 const unloadedState: OrcamentoItemAplicacaoState = {
     isLoading: false,
-    search: false,
+    search: true,
     editarTabPrev: 0,
     editarTabAct: 0,
 };
@@ -136,13 +114,14 @@ export const reducer: Reducer<OrcamentoItemAplicacaoState> = (state: OrcamentoIt
         case 'RECEIVE_ORCAMENTOS':
             return {
                 ...state,
-                orcamentos: action.orcamentos,
+                orcamentoItens: action.orcamentoItens,
                 search: false,
             };
         case 'ADICIONAR_ORCAMENTO':
             return {
                 ...state,
-                orcamento: action.orcamento
+                orcamentoItem: action.orcamentoItem,
+                search: true
             }
         case 'IS_LOADING_ORCAMENTO':
             return {

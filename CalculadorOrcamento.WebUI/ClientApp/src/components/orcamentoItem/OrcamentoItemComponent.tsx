@@ -10,6 +10,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+import { OrcamentoItemAplicacao } from 'store/OrcamentoItemAplicacaoStore';
+import { Grid } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -48,48 +50,40 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const OrcamentoItemComponent = () => {
+type Props = {
+    orcamentoItemAplicacao: OrcamentoItemAplicacao
+}
+
+const OrcamentoItemComponent = (props: Props) => {
     const classes = useStyles();
 
     return (
-        <div className={classes.root}>
-            <ExpansionPanel defaultExpanded>
-                <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1c-content"
-                    id="panel1c-header"
-                >
-                    <div className={classes.column}>
-                        <Typography className={classes.heading}>Location</Typography>
-                    </div>
-                    <div className={classes.column}>
-                        <Typography className={classes.secondaryHeading}>Select trip destination</Typography>
-                    </div>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails className={classes.details}>
-                    <div className={classes.column} />
-                    <div className={classes.column}>
-                        <Chip label="Barbados" onDelete={() => { }} />
-                    </div>
-                    <div className={clsx(classes.column, classes.helper)}>
-                        <Typography variant="caption">
-                            Select your destination of choice
-              <br />
-                            <a href="#secondary-heading-and-columns" className={classes.link}>
-                                Learn more
-              </a>
-                        </Typography>
-                    </div>
-                </ExpansionPanelDetails>
-                <Divider />
-                <ExpansionPanelActions>
-                    <Button size="small">Cancel</Button>
-                    <Button size="small" color="primary">
-                        Save
+        <ExpansionPanel>
+            <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel2a-content"
+                id="panel2a-header"
+            >
+                <Typography className={classes.heading}>{props.orcamentoItemAplicacao.nome}</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+                <Grid item xs={12} >
+                    <Grid item xs={12}>
+                        <Typography variant="body2">{props.orcamentoItemAplicacao.descricao}</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography variant="caption">{props.orcamentoItemAplicacao.observacao}</Typography>
+                    </Grid>
+                </Grid>
+            </ExpansionPanelDetails>
+            <Divider />
+            <ExpansionPanelActions>
+                <Button size="small">Cancel</Button>
+                <Button size="small" color="primary">
+                    Save
           </Button>
-                </ExpansionPanelActions>
-            </ExpansionPanel>
-        </div>
+            </ExpansionPanelActions>
+        </ExpansionPanel>
     );
 }
 

@@ -27,6 +27,8 @@ type OrcamentoItemAdicionarForm = {
     idOrcamento: number;
     nome: string;
     descricao: string;
+    observacao: string;
+    duracaoBack?: number;
 };
 
 const OrcamentoItemAdicionarComponent = (props: Props) => {
@@ -107,6 +109,41 @@ const OrcamentoItemAdicionarComponent = (props: Props) => {
                                         message: "Tamanho máxio de 512 chars"
                                     }
                                 }} />
+                            </Grid>
+
+                            <Grid item xs={12} >
+                                <Controller as={
+                                    <TextField label="Observações" error={errors.observacao ? true : false}
+                                        fullWidth
+                                        helperText={
+                                            <ErrorMessage errors={errors} name="observacao" >
+                                                {({ message }) => message}
+                                            </ErrorMessage>
+                                        }
+                                        multiline
+                                        rows={2}
+                                        rowsMax={6}
+                                    />
+                                } name="observacao" control={control} defaultValue="" rules={{
+                                    maxLength: {
+                                        value: 1024,
+                                        message: "Tamanho máxio de 1024 chars"
+                                    }
+                                }} />
+                            </Grid>
+
+                            <Grid item xs={4} >
+                                <Controller as={
+                                    <TextField label="Duração Back-end" error={errors.duracaoBack ? true : false}
+                                        fullWidth
+                                        helperText={
+                                            <ErrorMessage errors={errors} name="duracaoBack" >
+                                                {({ message }) => message}
+                                            </ErrorMessage>
+                                        }
+                                        type="number"
+                                    />
+                                } name="duracaoBack" control={control} defaultValue="" />
                             </Grid>
                         </Grid>
                     </DialogContent>

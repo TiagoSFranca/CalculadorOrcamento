@@ -1,4 +1,4 @@
-﻿import { Grid, IconButton } from '@material-ui/core';
+﻿import { Grid } from '@material-ui/core';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -7,7 +7,13 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import LoadingCard from 'components/common/loadingCard/LoadingCardComponent';
 import OrcamentoItemAdicionar from 'components/orcamentoItem/OrcamentoItemAdicionarComponent';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { withRouter } from 'react-router';
+import { ApplicationState } from 'store';
+import * as OrcamentoStore from 'store/OrcamentoItemAplicacaoStore';
+import OrcamentoItemComponent from './OrcamentoItemComponent';
+
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -30,49 +36,39 @@ const useStyles = makeStyles((theme: Theme) =>
 const OrcamentoItemListComponent = (props: any) => {
     const classes = useStyles();
 
-    const addClick = () => {
-        console.log("SHOW MODAL");
+    const id = props.match.params.id;
+
+    const orcamentoItemStore = useSelector((s: ApplicationState) => s.orcamentoItemAplicacao);
+    const dispatch = useDispatch();
+
+    const { isLoading, orcamentoItens, search } = orcamentoItemStore;
+
+    const callback = (error: any) => {
+
     }
+
+    useEffect(() => {
+        if (search)
+            dispatch(OrcamentoStore.actionCreators.requestOrcamentos(callback, id))
+    }, [search])
+
+    useEffect(() => {
+        console.log(orcamentoItens);
+    }, [orcamentoItens]);
 
     return (
         <div className={classes.marginTop}>
-            <LoadingCard>
+            <LoadingCard isLoading={isLoading}>
                 <Grid container justify="flex-end">
-                    <OrcamentoItemAdicionar buttonClassName={classes.button}/>
+                    <OrcamentoItemAdicionar buttonClassName={classes.button} />
                 </Grid>
-                <ExpansionPanel>
-                    <ExpansionPanelSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography className={classes.heading}>Expansion Panel 1</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                        <Typography>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                            sit amet blandit leo lobortis eget.
-          </Typography>
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
-                <ExpansionPanel>
-                    <ExpansionPanelSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel2a-content"
-                        id="panel2a-header"
-                    >
-                        <Typography className={classes.heading}>Expansion Panel 2</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                        <Typography>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                            sit amet blandit leo lobortis eget.
-          </Typography>
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
+
+                {orcamentoItens &&
+                    orcamentoItens.map((el, index) => (
+                        <OrcamentoItemComponent orcamentoItemAplicacao={el} />))}
             </LoadingCard>
         </ div>
     );
 }
 
-export default OrcamentoItemListComponent;
+export default withRouter(OrcamentoItemListComponent);
