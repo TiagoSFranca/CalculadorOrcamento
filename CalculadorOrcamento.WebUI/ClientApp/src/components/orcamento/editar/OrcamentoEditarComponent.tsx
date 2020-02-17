@@ -1,4 +1,4 @@
-﻿import { CardContent, Grid } from "@material-ui/core";
+﻿import { Grid } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import EditIcon from '@material-ui/icons/Edit';
@@ -14,7 +14,6 @@ import * as OrcamentoStore from 'store/OrcamentoStore';
 import formatter from "utils/formatter";
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
-import OrcamentoItemList from 'components/orcamentoItem/OrcamentoItemListComponent'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -163,8 +162,6 @@ const OrcamentoAdicionarComponent = (props: any) => {
                 </form>
             }
         </LoadingCard>
-
-        <OrcamentoItemList />
     </>);
 };
 

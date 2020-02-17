@@ -1,11 +1,13 @@
-﻿import React from 'react';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+﻿import { Grid, IconButton } from '@material-ui/core';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import LoadingCard from 'components/common/loadingCard/LoadingCardComponent';
+import OrcamentoItemAdicionar from 'components/orcamentoItem/OrcamentoItemAdicionarComponent';
+import React from 'react';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -18,16 +20,26 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         marginTop: {
             marginTop: theme.spacing(3)
-        }
+        },
+        button: {
+            marginBottom: theme.spacing(1)
+        },
     }),
 );
 
 const OrcamentoItemListComponent = (props: any) => {
     const classes = useStyles();
 
+    const addClick = () => {
+        console.log("SHOW MODAL");
+    }
+
     return (
         <div className={classes.marginTop}>
-            <LoadingCard title="Itens">
+            <LoadingCard>
+                <Grid container justify="flex-end">
+                    <OrcamentoItemAdicionar buttonClassName={classes.button}/>
+                </Grid>
                 <ExpansionPanel>
                     <ExpansionPanelSummary
                         expandIcon={<ExpandMoreIcon />}
