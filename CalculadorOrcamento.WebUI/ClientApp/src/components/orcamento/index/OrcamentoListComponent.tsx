@@ -54,7 +54,7 @@ const OrcamentoListComponent = (props: any) => {
     }, [orcamentos]);
 
     const handleEdit = (id: number) => {
-        props.history.push(`/orcamento/editar/${id}`)
+        props.history.push(`/orcamento/editar/${id}/dados`)
     }
 
     return (

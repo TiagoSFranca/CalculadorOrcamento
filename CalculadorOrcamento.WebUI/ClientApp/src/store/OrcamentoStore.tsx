@@ -14,6 +14,8 @@ export interface OrcamentoState {
     orcamento?: Orcamento;
     filtro: FiltroOrcamento;
     search: boolean;
+    editarTabPrev: number;
+    editarTabAct: number;
 }
 
 export interface Orcamento {
@@ -71,7 +73,13 @@ interface SelecionarOrcamentoAction {
     orcamento?: Orcamento;
 }
 
-type KnownAction = ReceiveOrcamentosAction | AdicionarOrcamentoAction | IsLoadingOrcamentoAction | FiltrarOrcamentoAction | SelecionarOrcamentoAction;
+interface SetTabAction {
+    type: 'SET_TAB_ORCAMENTO';
+    prevTab: number;
+    actTab: number;
+}
+
+type KnownAction = ReceiveOrcamentosAction | AdicionarOrcamentoAction | IsLoadingOrcamentoAction | FiltrarOrcamentoAction | SelecionarOrcamentoAction | SetTabAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -164,6 +172,10 @@ export const actionCreators = {
                 dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
             });
     },
+
+    setTab: (prevTab: number, actTab: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        dispatch({ type: 'SET_TAB_ORCAMENTO', prevTab: prevTab, actTab: actTab });
+    },
 };
 
 // ----------------
@@ -180,7 +192,9 @@ const unloadedState: OrcamentoState = {
         dataCriacaoFinal: null,
         dataCriacaoInicial: null,
     },
-    search: false
+    search: false,
+    editarTabPrev: 0,
+    editarTabAct: 0,
 };
 
 export const reducer: Reducer<OrcamentoState> = (state: OrcamentoState | undefined, incomingAction: Action): OrcamentoState => {
@@ -211,6 +225,12 @@ export const reducer: Reducer<OrcamentoState> = (state: OrcamentoState | undefin
                 ...state,
                 filtro: action.filtro,
                 search: true,
+            }
+        case 'SET_TAB_ORCAMENTO':
+            return {
+                ...state,
+                editarTabPrev: action.prevTab,
+                editarTabAct: action.actTab,
             }
         default:
             return state;
