@@ -10,13 +10,21 @@ import SaveIcon from '@material-ui/icons/Save';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import React from 'react';
 import { Controller, ErrorMessage, useForm } from "react-hook-form";
+import * as AppStore from 'store/AppStore';
+import * as OrcamentoItemAplicacaoStore from 'store/OrcamentoItemAplicacaoStore';
+import { withRouter } from 'react-router';
+import { ISnackBarType } from 'utils/snackBar';
+import messages from 'utils/messages';
+import { useDispatch, useSelector } from 'react-redux';
+import { ApplicationState } from 'store';
 
 
-type Props = {
+type Props = any & {
     buttonClassName: string
 }
 
-type OrcamentoAdicionarForm = {
+type OrcamentoItemAdicionarForm = {
+    idOrcamento: number;
     nome: string;
     descricao: string;
 };
@@ -24,7 +32,14 @@ type OrcamentoAdicionarForm = {
 const OrcamentoItemAdicionarComponent = (props: Props) => {
     const [open, setOpen] = React.useState(false);
 
-    const { register, control, errors, handleSubmit } = useForm<OrcamentoAdicionarForm>();
+    const { control, errors, handleSubmit } = useForm<OrcamentoItemAdicionarForm>();
+
+    const orcamentoItemStore = useSelector((s: ApplicationState) => s.orcamentoItemAplicacao);
+    const { isLoading } = orcamentoItemStore;
+
+    const dispatch = useDispatch();
+
+    const id = props.match.params.id;
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -34,8 +49,20 @@ const OrcamentoItemAdicionarComponent = (props: Props) => {
         setOpen(false);
     };
 
-    const onSubmit = (data: any) => {
-        console.log("TESTE", data)
+    const callback = (error: any) => {
+        if (error) {
+            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
+        }
+        else {
+            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+            setOpen(false);
+        }
+    }
+
+
+    const onSubmit = (data: OrcamentoItemAdicionarForm) => {
+        data.idOrcamento = +id;
+        dispatch(OrcamentoItemAplicacaoStore.actionCreators.adicionarItem(data as OrcamentoItemAplicacaoStore.AdicionarOrcamentoItem, callback));
     };
 
     return (
@@ -84,8 +111,8 @@ const OrcamentoItemAdicionarComponent = (props: Props) => {
                         </Grid>
                     </DialogContent>
                     <DialogActions>
-                        <LoadingButton onClick={handleClose} color="primary" text="Cancelar" loading={false} />
-                        <LoadingButton color="primary" text="Adicionar" loading={false} type="submit" />
+                        <LoadingButton onClick={handleClose} color="primary" text="Cancelar" loading={isLoading} />
+                        <LoadingButton color="primary" text="Adicionar" loading={isLoading} type="submit" />
                     </DialogActions>
                 </form>
             </Dialog>
@@ -93,4 +120,4 @@ const OrcamentoItemAdicionarComponent = (props: Props) => {
     );
 }
 
-export default OrcamentoItemAdicionarComponent;
+export default withRouter(OrcamentoItemAdicionarComponent);

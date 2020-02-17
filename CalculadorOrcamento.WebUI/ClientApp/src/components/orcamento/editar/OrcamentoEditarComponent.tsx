@@ -65,12 +65,10 @@ const OrcamentoAdicionarComponent = (props: any) => {
     }, []);
 
     const onSubmit = (data: any) => {
-        console.log(data)
         dispatch(OrcamentoStore.actionCreators.editarOrcamento(id, data as OrcamentoStore.EditarOrcamento, callback));
     };
 
     useEffect(() => {
-        console.log(orcamento);
         setForm();
     }, [orcamento]);
 

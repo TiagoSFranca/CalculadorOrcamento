@@ -13,6 +13,7 @@ namespace CalculadorOrcamento.Persistence
         #region [Entidades]
 
         public DbSet<Orcamento> Orcamentos { get; set; }
+        public DbSet<OrcamentoItemAplicacao> orcamentoItemAplicacoes { get; set; }
 
         #endregion
 
