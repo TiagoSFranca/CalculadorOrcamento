@@ -1,23 +1,31 @@
 ﻿import { Grid, IconButton } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import AddIcon from '@material-ui/icons/Add';
-import SaveIcon from '@material-ui/icons/Save';
+import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import React from 'react';
 import { Controller, ErrorMessage, useForm } from "react-hook-form";
+import { useDispatch, useSelector } from 'react-redux';
+import { withRouter } from 'react-router';
+import { ApplicationState } from 'store';
 import * as AppStore from 'store/AppStore';
 import * as OrcamentoItemAplicacaoStore from 'store/OrcamentoItemAplicacaoStore';
-import { withRouter } from 'react-router';
-import { ISnackBarType } from 'utils/snackBar';
 import messages from 'utils/messages';
-import { useDispatch, useSelector } from 'react-redux';
-import { ApplicationState } from 'store';
+import { ISnackBarType } from 'utils/snackBar';
+import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        noMargin: {
+            marginTop: '0',
+            marginBottom: '0'
+        },
+    }),
+);
 
 type Props = any & {
     buttonClassName: string
@@ -28,10 +36,13 @@ type OrcamentoItemAdicionarForm = {
     nome: string;
     descricao: string;
     observacao: string;
-    duracaoBack?: number;
+    duracaoBack: number | null;
+    duracaoFront: number | null;
+    duracaoTotal: number | null;
 };
 
 const OrcamentoItemAdicionarComponent = (props: Props) => {
+    const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
     const { control, errors, handleSubmit } = useForm<OrcamentoItemAdicionarForm>();
@@ -64,6 +75,9 @@ const OrcamentoItemAdicionarComponent = (props: Props) => {
 
     const onSubmit = (data: OrcamentoItemAdicionarForm) => {
         data.idOrcamento = +id;
+        data.duracaoBack = data.duracaoBack != null && data.duracaoBack >= 0 ? +data.duracaoBack : null;
+        data.duracaoFront = data.duracaoFront != null && data.duracaoFront >= 0 ? +data.duracaoFront : null;
+        data.duracaoTotal = data.duracaoTotal != null && data.duracaoTotal >= 0 ? +data.duracaoTotal : null;
         dispatch(OrcamentoItemAplicacaoStore.actionCreators.adicionarItem(data as OrcamentoItemAplicacaoStore.AdicionarOrcamentoItem, callback));
     };
 
@@ -76,7 +90,7 @@ const OrcamentoItemAdicionarComponent = (props: Props) => {
                 <form onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
                     <DialogTitle id="form-dialog-title">Adicionar Item</DialogTitle>
                     <DialogContent>
-                        <Grid item xs={12} >
+                        <Grid container spacing={3} className={classes.noMargin}>
                             <Grid item xs={6} >
                                 <Controller as={
                                     <TextField label="Nome" error={errors.nome ? true : false}
@@ -141,9 +155,37 @@ const OrcamentoItemAdicionarComponent = (props: Props) => {
                                                 {({ message }) => message}
                                             </ErrorMessage>
                                         }
-                                        type="number"
+                                        InputProps={{ inputComponent: NumberFormat as any }}
                                     />
                                 } name="duracaoBack" control={control} defaultValue="" />
+                            </Grid>
+
+                            <Grid item xs={4} >
+                                <Controller as={
+                                    <TextField label="Duração Front-end" error={errors.duracaoFront ? true : false}
+                                        fullWidth
+                                        helperText={
+                                            <ErrorMessage errors={errors} name="duracaoFront" >
+                                                {({ message }) => message}
+                                            </ErrorMessage>
+                                        }
+                                        InputProps={{ inputComponent: NumberFormat as any }}
+                                    />
+                                } name="duracaoFront" control={control} defaultValue="" />
+                            </Grid>
+
+                            <Grid item xs={4} >
+                                <Controller as={
+                                    <TextField label="Duração Total" error={errors.duracaoTotal ? true : false}
+                                        fullWidth
+                                        helperText={
+                                            <ErrorMessage errors={errors} name="duracaoTotal" >
+                                                {({ message }) => message}
+                                            </ErrorMessage>
+                                        }
+                                        InputProps={{ inputComponent: NumberFormat as any }}
+                                    />
+                                } name="duracaoTotal" control={control} defaultValue="" />
                             </Grid>
                         </Grid>
                     </DialogContent>

@@ -2,7 +2,6 @@
 using CalculadorOrcamento.Application.OrcamentoItensAplicacao.Commands.Adicionar;
 using CalculadorOrcamento.Application.OrcamentoItensAplicacao.Models;
 using CalculadorOrcamento.Application.OrcamentoItensAplicacao.Queries.Search;
-using CalculadorOrcamento.Application.Paginacoes.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net;

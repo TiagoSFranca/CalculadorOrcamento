@@ -78,7 +78,7 @@ const OrcamentoItemComponent = (props: Props) => {
             </ExpansionPanelDetails>
             <Divider />
             <ExpansionPanelActions>
-                <Button size="small">Cancel</Button>
+                <Button size="small">Excluir</Button>
                 <Button size="small" color="primary">
                     Save
           </Button>
