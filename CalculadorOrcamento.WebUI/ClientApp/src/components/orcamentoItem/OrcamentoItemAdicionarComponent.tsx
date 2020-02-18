@@ -71,8 +71,7 @@ const OrcamentoItemAdicionarComponent = (props: Props) => {
             setOpen(false);
         }
     }
-
-
+    
     const onSubmit = (data: OrcamentoItemAdicionarForm) => {
         data.idOrcamento = +id;
         data.duracaoBack = data.duracaoBack != null && data.duracaoBack >= 0 ? +data.duracaoBack : null;

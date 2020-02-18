@@ -1,11 +1,14 @@
 ﻿using FluentValidation;
 
-namespace CalculadorOrcamento.Application.OrcamentoItensAplicacao.Commands.Adicionar
+namespace CalculadorOrcamento.Application.OrcamentoItensAplicacao.Commands.Editar
 {
-    public class AdicionarOrcamentoItemAplicacaoCommandValidator : AbstractValidator<AdicionarOrcamentoItemAplicacaoCommand>
+    public class EditarOrcamentoItemAplicacaoCommandValidator : AbstractValidator<EditarOrcamentoItemAplicacaoCommand>
     {
-        public AdicionarOrcamentoItemAplicacaoCommandValidator()
+        public EditarOrcamentoItemAplicacaoCommandValidator()
         {
+            RuleFor(e => e.Id)
+                .GreaterThan(0);
+
             RuleFor(e => e.IdOrcamento)
                 .GreaterThan(0);
 

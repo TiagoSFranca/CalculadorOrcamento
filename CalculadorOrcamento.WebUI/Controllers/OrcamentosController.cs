@@ -50,7 +50,7 @@ namespace CalculadorOrcamento.WebUI.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ConsultaPaginadaViewModel<OrcamentoViewModel>))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(OrcamentoViewModel))]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]
         public async Task<ActionResult<OrcamentoViewModel>> Get(int id)
         {
@@ -61,7 +61,7 @@ namespace CalculadorOrcamento.WebUI.Controllers
         }
 
         [HttpPut("{id}")]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ConsultaPaginadaViewModel<OrcamentoViewModel>))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(OrcamentoViewModel))]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]
         public async Task<ActionResult<OrcamentoViewModel>> Editar(int id, [FromBody]EditarOrcamento model)
         {

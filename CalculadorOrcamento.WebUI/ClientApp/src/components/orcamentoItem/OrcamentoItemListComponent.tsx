@@ -11,7 +11,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
-import * as OrcamentoStore from 'store/OrcamentoItemAplicacaoStore';
+import * as OrcamentoItemAplicacaoStore from 'store/OrcamentoItemAplicacaoStore';
 import OrcamentoItemComponent from './OrcamentoItemComponent';
 
 
@@ -49,7 +49,7 @@ const OrcamentoItemListComponent = (props: any) => {
 
     useEffect(() => {
         if (search)
-            dispatch(OrcamentoStore.actionCreators.requestOrcamentos(callback, id))
+            dispatch(OrcamentoItemAplicacaoStore.actionCreators.requestOrcamentos(callback, id))
     }, [search])
 
     useEffect(() => {

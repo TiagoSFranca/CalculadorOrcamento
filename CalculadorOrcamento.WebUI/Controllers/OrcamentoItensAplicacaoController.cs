@@ -1,5 +1,6 @@
 ﻿using CalculadorOrcamento.Application.Exceptions;
 using CalculadorOrcamento.Application.OrcamentoItensAplicacao.Commands.Adicionar;
+using CalculadorOrcamento.Application.OrcamentoItensAplicacao.Commands.Editar;
 using CalculadorOrcamento.Application.OrcamentoItensAplicacao.Models;
 using CalculadorOrcamento.Application.OrcamentoItensAplicacao.Queries.Search;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,17 @@ namespace CalculadorOrcamento.WebUI.Controllers
         public async Task<ActionResult<OrcamentoItemAplicacaoViewModel>> Adicionar([FromBody]AdicionarOrcamentoItemAplicacao model)
         {
             var command = Mapper.Map<AdicionarOrcamentoItemAplicacaoCommand>(model);
+
+            return Ok(await Mediator.Send(command));
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(OrcamentoItemAplicacaoViewModel))]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]
+        public async Task<ActionResult<OrcamentoItemAplicacaoViewModel>> Editar(int id, [FromBody]EditarOrcamentoItemAplicacao model)
+        {
+            var command = Mapper.Map<EditarOrcamentoItemAplicacaoCommand>(model);
+            command.Id = id;
 
             return Ok(await Mediator.Send(command));
         }

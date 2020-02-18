@@ -32,6 +32,18 @@ export interface OrcamentoItemAplicacao {
 }
 
 export interface AdicionarOrcamentoItem {
+    idOrcamento: number;
+    nome: string;
+    descricao?: string;
+    observavao?: string;
+    duracaoBack?: number;
+    duracaoFront?: number;
+    duracaoTotal?: number;
+}
+
+export interface EditarOrcamentoItem {
+    id: number;
+    idOrcamento: number;
     nome: string;
     descricao?: string;
     observavao?: string;
@@ -82,6 +94,21 @@ export const actionCreators = {
         dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
 
         HTTP.post(`/orcamentoitensaplicacao`, JSON.stringify(data))
+            .then(response => response.data as Promise<OrcamentoItemAplicacao>)
+            .then(data => {
+                dispatch({ type: 'ADICIONAR_ORCAMENTO', orcamentoItem: data });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+                callback();
+            }, error => {
+                callback(error);
+                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+            });
+    },
+
+    editarItem: (id: number, data: EditarOrcamentoItem, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
+        dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
+
+        HTTP.put(`/orcamentoitensaplicacao/${id}`, JSON.stringify(data))
             .then(response => response.data as Promise<OrcamentoItemAplicacao>)
             .then(data => {
                 dispatch({ type: 'ADICIONAR_ORCAMENTO', orcamentoItem: data });

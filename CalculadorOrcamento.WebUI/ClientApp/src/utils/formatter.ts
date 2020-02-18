@@ -11,7 +11,14 @@ export const formatarDataRequest = (data: Date | null) => {
     return "";
 }
 
+export const formatarNumero = (numero: number | undefined | null) => {
+    if (numero)
+        return numero.toLocaleString('pt-BR');
+    return "";
+}
+
 export default {
     formatarData,
-    formatarDataRequest
+    formatarDataRequest,
+    formatarNumero
 }
