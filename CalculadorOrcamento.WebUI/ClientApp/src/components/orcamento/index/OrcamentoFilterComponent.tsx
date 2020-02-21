@@ -174,7 +174,7 @@ const OrcamentoFilter = (props: any) => {
                                 <Grid item xs={12} >
                                     <LoadingButton
                                         text="Limpar"
-                                        loading={isLoading && search}
+                                        isLoading={isLoading && search}
                                         variant="outlined"
                                         color="primary"
                                         size="large"
@@ -183,7 +183,7 @@ const OrcamentoFilter = (props: any) => {
                                     <LoadingButton
                                         className={classes.marginLeft}
                                         text="Pesquisar"
-                                        loading={isLoading && search}
+                                        isLoading={isLoading && search}
                                         type="submit"
                                         variant="outlined"
                                         color="primary"

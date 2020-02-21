@@ -1,8 +1,5 @@
 ﻿import HTTP from 'http/index';
-import { Query } from 'material-table';
 import { Action, Reducer } from 'redux';
-import { ConsultaPaginada, QtdPadrao } from 'utils/consultaPaginada';
-import formatter from 'utils/formatter';
 import { AppThunkAction } from './';
 
 // -----------------

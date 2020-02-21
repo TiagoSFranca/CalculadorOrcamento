@@ -25,20 +25,25 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = ButtonProps & {
-    loading: boolean;
+    isLoading: boolean;
     text: string;
 }
 
 const LoadingButtonComponent = (props: Props) => {
     const classes = useStyles();
+    const buttonProps = { ...props, isLoading: undefined, text: undefined };
+
+    delete buttonProps.isLoading;
+    delete buttonProps.text;
+
     return (
         <>
             <div className={classes.root}>
                 <div className={classes.wrapper}>
-                    <Button {...props} disabled={props.loading}>
+                    <Button {...buttonProps} disabled={props.isLoading}>
                         {props.text}
                     </Button>
-                    {props.loading && <CircularProgress size={24} className={classes.buttonProgress}/>}
+                    {props.isLoading && <CircularProgress size={24} className={classes.buttonProgress}/>}
                 </div>
             </div>
         </>

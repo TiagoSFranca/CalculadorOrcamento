@@ -1,17 +1,17 @@
-﻿import { Button, Card, CardActions, CardContent, CardHeader, Grid } from "@material-ui/core";
+﻿import { Card, CardActions, CardContent, CardHeader, Grid } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import SaveIcon from '@material-ui/icons/Save';
+import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import React from "react";
 import { Controller, ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from 'react-router';
+import { ApplicationState } from 'store';
 import * as AppStore from 'store/AppStore';
 import * as OrcamentoStore from 'store/OrcamentoStore';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
-import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent'
-import { ApplicationState } from 'store';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -32,7 +32,7 @@ const OrcamentoAdicionarComponent = (props: any) => {
     const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
     const { isLoading } = orcamentoStore;
 
-    const { register, control, errors, handleSubmit } = useForm<OrcamentoAdicionarForm>();
+    const { control, errors, handleSubmit } = useForm<OrcamentoAdicionarForm>();
 
     const dispatch = useDispatch();
 
@@ -95,7 +95,7 @@ const OrcamentoAdicionarComponent = (props: any) => {
                                 className={classes.container}>
                                 <Grid item xs={12} >
                                     <LoadingButton
-                                        loading={isLoading}
+                                        isLoading={isLoading}
                                         type="submit"
                                         variant="outlined"
                                         color="primary"

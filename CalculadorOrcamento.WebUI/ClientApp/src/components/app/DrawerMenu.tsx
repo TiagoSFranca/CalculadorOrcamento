@@ -7,8 +7,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import HomeIcon from '@material-ui/icons/Home';
-import MailIcon from '@material-ui/icons/Mail';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -56,7 +54,7 @@ const DrawerMenu = (props: any) => {
             icon: null
         },
         {
-            title: 'Orçamentos',
+            title: 'OrÃ§amentos',
             path: '/orcamento/',
             icon: <AttachMoneyIcon />
         },

@@ -1,28 +1,17 @@
 ﻿import Snackbar from '@material-ui/core/Snackbar';
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import { AlertTitle } from '@material-ui/lab';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
-import React, { useState } from 'react';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
 import * as AppStore from 'store/AppStore';
-import { useSelector, useDispatch } from 'react-redux';
 import { ISnackBarType } from 'utils/snackBar';
 
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={10} variant="filled" {...props} />;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        width: '100%',
-        '& > * + *': {
-            marginTop: theme.spacing(2),
-        },
-    },
-}));
-
 const CustomSnackBar = () => {
-    const classes = useStyles();
     const appStore = useSelector((s: ApplicationState) => s.app);
     const dispatch = useDispatch();
 

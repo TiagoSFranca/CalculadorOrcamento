@@ -1,5 +1,4 @@
 ﻿import { Grid } from "@material-ui/core";
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import EditIcon from '@material-ui/icons/Edit';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
@@ -15,14 +14,6 @@ import formatter from "utils/formatter";
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        container: {
-            marginTop: theme.spacing(2),
-        },
-    }),
-);
-
 type OrcamentoEditarForm = {
     id: number;
     codigo: string;
@@ -33,14 +24,12 @@ type OrcamentoEditarForm = {
 };
 
 const OrcamentoAdicionarComponent = (props: any) => {
-    const classes = useStyles();
-
     const id = props.match.params.id;
 
     const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
     const { isLoading, orcamento } = orcamentoStore;
 
-    const { register, control, errors, handleSubmit, reset } = useForm<OrcamentoEditarForm>();
+    const { control, errors, handleSubmit, reset } = useForm<OrcamentoEditarForm>();
 
     const dispatch = useDispatch();
 
@@ -149,7 +138,7 @@ const OrcamentoAdicionarComponent = (props: any) => {
                         <Grid item xs={12} >
                             <LoadingButton
                                 text="Editar"
-                                loading={isLoading}
+                                isLoading={isLoading}
                                 type="submit"
                                 variant="outlined"
                                 color="primary"

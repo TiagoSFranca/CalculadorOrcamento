@@ -1,4 +1,4 @@
-﻿import axios, { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios';
+﻿import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import localStorageService from "http/localStorageService";
 
 const conf: AxiosRequestConfig = {

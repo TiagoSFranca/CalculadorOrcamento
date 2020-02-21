@@ -95,8 +95,8 @@ const OrcamentoItemComponent = (props: Props) => {
 
     const dialogActions = () => {
         return (<>
-            <LoadingButton size="small" onClick={onCloseDialog} color="inherit" text="Cancelar" loading={isLoading} />
-            <LoadingButton size="small" onClick={confirmDelete} color="secondary" text="Excluir" loading={isLoading} />
+            <LoadingButton size="small" onClick={onCloseDialog} color="inherit" text="Cancelar" isLoading={isLoading} />
+            <LoadingButton size="small" onClick={confirmDelete} color="secondary" text="Excluir" isLoading={isLoading} />
         </>)
     }
 
@@ -267,8 +267,8 @@ const OrcamentoItemComponent = (props: Props) => {
                         )}
                         {edit && (
                             <>
-                                <LoadingButton size="small" onClick={() => setEdit(false)} color="inherit" text="Cancelar" loading={isLoading} />
-                                <LoadingButton size="small" color="primary" text="Salvar" loading={isLoading} type="submit" />
+                                <LoadingButton size="small" onClick={() => setEdit(false)} color="inherit" text="Cancelar" isLoading={isLoading} />
+                                <LoadingButton size="small" color="primary" text="Salvar" isLoading={isLoading} type="submit" />
                             </>
                         )}
                     </ExpansionPanelActions>

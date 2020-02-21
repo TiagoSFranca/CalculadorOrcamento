@@ -40,7 +40,7 @@ const OrcamentoListComponent = (props: any) => {
 
     const { isLoading, orcamentos, search } = orcamentoStore;
 
-    const [pageSize, setPageSize] = useState(0);
+    const [pageSize, setPageSize] = useState(ConsultaPaginada.QtdPadrao.qtd);
 
     const callback = (error: any) => {
 

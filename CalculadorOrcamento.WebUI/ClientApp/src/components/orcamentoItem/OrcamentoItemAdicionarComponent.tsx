@@ -189,8 +189,8 @@ const OrcamentoItemAdicionarComponent = (props: Props) => {
                         </Grid>
                     </DialogContent>
                     <DialogActions>
-                        <LoadingButton onClick={handleClose} color="primary" text="Cancelar" loading={isLoading} />
-                        <LoadingButton color="primary" text="Adicionar" loading={isLoading} type="submit" />
+                        <LoadingButton onClick={handleClose} color="primary" text="Cancelar" isLoading={isLoading} />
+                        <LoadingButton color="primary" text="Adicionar" isLoading={isLoading} type="submit" />
                     </DialogActions>
                 </form>
             </Dialog>
