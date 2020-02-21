@@ -65,7 +65,7 @@ const OrcamentoItemListComponent = (props: any) => {
 
                 {orcamentoItens &&
                     orcamentoItens.map((el, index) => (
-                        <OrcamentoItemComponent orcamentoItemAplicacao={el} />))}
+                        <OrcamentoItemComponent orcamentoItemAplicacao={el} key={el.id}/>))}
             </LoadingCard>
         </ div>
     );

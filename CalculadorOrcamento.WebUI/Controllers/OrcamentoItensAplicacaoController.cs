@@ -1,6 +1,7 @@
 ﻿using CalculadorOrcamento.Application.Exceptions;
 using CalculadorOrcamento.Application.OrcamentoItensAplicacao.Commands.Adicionar;
 using CalculadorOrcamento.Application.OrcamentoItensAplicacao.Commands.Editar;
+using CalculadorOrcamento.Application.OrcamentoItensAplicacao.Commands.Excluir;
 using CalculadorOrcamento.Application.OrcamentoItensAplicacao.Models;
 using CalculadorOrcamento.Application.OrcamentoItensAplicacao.Queries.Search;
 using Microsoft.AspNetCore.Mvc;
@@ -43,6 +44,16 @@ namespace CalculadorOrcamento.WebUI.Controllers
         {
             var command = Mapper.Map<EditarOrcamentoItemAplicacaoCommand>(model);
             command.Id = id;
+
+            return Ok(await Mediator.Send(command));
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]
+        public async Task<IActionResult> Excluir(int id)
+        {
+            var command = new ExcluirOrcamentoItemAplicacaoCommand() { Id = id };
 
             return Ok(await Mediator.Send(command));
         }

@@ -67,7 +67,12 @@ interface IsLoadingOrcamentoItemAction {
     value: boolean;
 }
 
-type KnownAction = ReceiveOrcamentoItensAction | AdicionarOrcamentoItemAction | IsLoadingOrcamentoItemAction;
+interface SetSearchOrcamentoItem {
+    type: 'SET_SEARCH_ORCAMENTO';
+    value: boolean;
+}
+
+type KnownAction = ReceiveOrcamentoItensAction | AdicionarOrcamentoItemAction | IsLoadingOrcamentoItemAction | SetSearchOrcamentoItem;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -119,6 +124,21 @@ export const actionCreators = {
                 dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
             });
     },
+
+    excluirItem: (id: number, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
+        dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
+
+        HTTP.delete(`/orcamentoitensaplicacao/${id}`)
+            .then(response => response.data as Promise<OrcamentoItemAplicacao>)
+            .then(data => {
+                dispatch({ type: 'SET_SEARCH_ORCAMENTO', value: true });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+                callback();
+            }, error => {
+                callback(error);
+                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+            });
+    },
 };
 
 // ----------------
@@ -154,6 +174,11 @@ export const reducer: Reducer<OrcamentoItemAplicacaoState> = (state: OrcamentoIt
             return {
                 ...state,
                 isLoading: action.value
+            }
+        case 'SET_SEARCH_ORCAMENTO':
+            return {
+                ...state,
+                search: action.value
             }
         default:
             return state;

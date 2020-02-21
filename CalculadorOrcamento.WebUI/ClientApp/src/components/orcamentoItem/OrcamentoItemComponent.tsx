@@ -19,6 +19,7 @@ import * as OrcamentoItemAplicacaoStore from 'store/OrcamentoItemAplicacaoStore'
 import { useSelector, useDispatch } from 'react-redux';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
+import ConfirmDialog from 'components/common/confirmDialog/ConfirmDialogComponent'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -60,10 +61,7 @@ const OrcamentoItemComponent = (props: Props) => {
     const dispatch = useDispatch();
 
     const [edit, setEdit] = useState(false);
-
-    const onDelete = () => {
-        console.log("ID", props.orcamentoItemAplicacao.id)
-    }
+    const [openDialogDelete, setOpenDialogDelete] = useState(false);
 
     const callback = (error: any) => {
         if (error) {
@@ -72,6 +70,16 @@ const OrcamentoItemComponent = (props: Props) => {
         else {
             dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
             setEdit(false);
+        }
+    }
+
+    const callbackDelete = (error: any) => {
+        if (error) {
+            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
+        }
+        else {
+            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+            setOpenDialogDelete(false);
         }
     }
 
@@ -85,161 +93,188 @@ const OrcamentoItemComponent = (props: Props) => {
         dispatch(OrcamentoItemAplicacaoStore.actionCreators.editarItem(data.id, data as OrcamentoItemAplicacaoStore.EditarOrcamentoItem, callback));
     };
 
-    return (
-        <ExpansionPanel>
-            <ExpansionPanelSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel-content"
-                id="panel-header"
-            >
-                {!edit && (<Typography className={classes.heading}>{props.orcamentoItemAplicacao.nome}</Typography>)}
+    const dialogActions = () => {
+        return (<>
+            <LoadingButton size="small" onClick={onCloseDialog} color="inherit" text="Cancelar" loading={isLoading} />
+            <LoadingButton size="small" onClick={confirmDelete} color="secondary" text="Excluir" loading={isLoading} />
+        </>)
+    }
 
-            </ExpansionPanelSummary>
-            <form onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
-                <ExpansionPanelDetails>
-                    <Grid container spacing={3}>
-                        {edit &&
+    const onCloseDialog = () => {
+        if (!isLoading)
+            setOpenDialogDelete(false)
+        else
+            console.log("Deixa aberto");
+    }
+
+    const confirmDelete = () => {
+        dispatch(OrcamentoItemAplicacaoStore.actionCreators.excluirItem(props.orcamentoItemAplicacao.id, callbackDelete));
+    }
+
+    const onExpansionPanelChange = (event: React.ChangeEvent<{}>, newExpanded: boolean) => {
+        if (!newExpanded)
+            setEdit(false);
+    }
+
+    return (
+        <>
+            <ConfirmDialog open={openDialogDelete} actions={dialogActions()} description={`Deseja excluir o item ${props.orcamentoItemAplicacao.nome}?`} onClose={onCloseDialog} title={"Excluir"} />
+
+            <ExpansionPanel onChange={onExpansionPanelChange}>
+                <ExpansionPanelSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel-content"
+                    id="panel-header"
+                >
+                    {!edit && (<Typography className={classes.heading}>{props.orcamentoItemAplicacao.nome}</Typography>)}
+
+                </ExpansionPanelSummary>
+                <form onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
+                    <ExpansionPanelDetails>
+                        <Grid container spacing={3}>
+                            {edit &&
+                                <Grid item xs={12}>
+                                    <Controller as={
+                                        <TextField label="Nome" error={errors.nome ? true : false}
+                                            fullWidth
+                                            helperText={
+                                                <ErrorMessage errors={errors} name="nome" >
+                                                    {({ message }) => message}
+                                                </ErrorMessage>
+                                            }
+                                        />
+                                    } name="nome" control={control} defaultValue={props.orcamentoItemAplicacao.nome} rules={{ required: "Campo obrigatório" }} />
+                                </Grid>}
                             <Grid item xs={12}>
-                                <Controller as={
-                                    <TextField label="Nome" error={errors.nome ? true : false}
-                                        fullWidth
-                                        helperText={
-                                            <ErrorMessage errors={errors} name="nome" >
-                                                {({ message }) => message}
-                                            </ErrorMessage>
-                                        }
-                                    />
-                                } name="nome" control={control} defaultValue={props.orcamentoItemAplicacao.nome} rules={{ required: "Campo obrigatório" }} />
-                            </Grid>}
-                        <Grid item xs={12}>
-                            {!edit ? <Typography variant="body2">{props.orcamentoItemAplicacao.descricao}</Typography>
-                                : (
-                                    <Controller as={
-                                        <TextField label="Descrição" error={errors.descricao ? true : false}
-                                            fullWidth
-                                            helperText={
-                                                <ErrorMessage errors={errors} name="descricao" >
-                                                    {({ message }) => message}
-                                                </ErrorMessage>
+                                {!edit ? <Typography variant="body2">{props.orcamentoItemAplicacao.descricao}</Typography>
+                                    : (
+                                        <Controller as={
+                                            <TextField label="Descrição" error={errors.descricao ? true : false}
+                                                fullWidth
+                                                helperText={
+                                                    <ErrorMessage errors={errors} name="descricao" >
+                                                        {({ message }) => message}
+                                                    </ErrorMessage>
+                                                }
+                                                multiline
+                                                rows={2}
+                                                rowsMax={6}
+                                            />
+                                        } name="descricao" control={control} defaultValue={props.orcamentoItemAplicacao.descricao} rules={{
+                                            maxLength: {
+                                                value: 512,
+                                                message: "Tamanho máxio de 512 chars"
                                             }
-                                            multiline
-                                            rows={2}
-                                            rowsMax={6}
-                                        />
-                                    } name="descricao" control={control} defaultValue={props.orcamentoItemAplicacao.descricao} rules={{
-                                        maxLength: {
-                                            value: 512,
-                                            message: "Tamanho máxio de 512 chars"
-                                        }
-                                    }} />
-                                )}
-                        </Grid>
-                        <Grid item xs={12}>
-                            {!edit ? (
-                                <>
-                                    <Typography variant="overline" className={classes.label}>Observações:</Typography>
-                                    <Typography variant="caption" className={classes.marginLeft}>{props.orcamentoItemAplicacao.observacao}</Typography>
-                                </>
-                            ) : (
-                                    <Controller as={
-                                        <TextField label="Observações" error={errors.observacao ? true : false}
-                                            fullWidth
-                                            helperText={
-                                                <ErrorMessage errors={errors} name="observacao" >
-                                                    {({ message }) => message}
-                                                </ErrorMessage>
+                                        }} />
+                                    )}
+                            </Grid>
+                            <Grid item xs={12}>
+                                {!edit ? (
+                                    <>
+                                        <Typography variant="overline" className={classes.label}>Observações:</Typography>
+                                        <Typography variant="caption" className={classes.marginLeft}>{props.orcamentoItemAplicacao.observacao}</Typography>
+                                    </>
+                                ) : (
+                                        <Controller as={
+                                            <TextField label="Observações" error={errors.observacao ? true : false}
+                                                fullWidth
+                                                helperText={
+                                                    <ErrorMessage errors={errors} name="observacao" >
+                                                        {({ message }) => message}
+                                                    </ErrorMessage>
+                                                }
+                                                multiline
+                                                rows={2}
+                                                rowsMax={6}
+                                            />
+                                        } name="observacao" control={control} defaultValue={props.orcamentoItemAplicacao.observacao} rules={{
+                                            maxLength: {
+                                                value: 1024,
+                                                message: "Tamanho máxio de 1024 chars"
                                             }
-                                            multiline
-                                            rows={2}
-                                            rowsMax={6}
-                                        />
-                                    } name="observacao" control={control} defaultValue={props.orcamentoItemAplicacao.observacao} rules={{
-                                        maxLength: {
-                                            value: 1024,
-                                            message: "Tamanho máxio de 1024 chars"
-                                        }
-                                    }} />
-                                )}
+                                        }} />
+                                    )}
+                            </Grid>
+                            <Grid item xs={4}>
+                                {!edit ? (
+                                    <>
+                                        <Typography variant="overline" className={classes.label}>Duração Back-end:</Typography>
+                                        <Typography variant="caption" className={classes.marginLeft}>{formatter.formatarNumero(props.orcamentoItemAplicacao.duracaoBack)}</Typography>
+                                    </>
+                                ) : (
+                                        <Controller as={
+                                            <TextField label="Duração Back-end" error={errors.duracaoBack ? true : false}
+                                                fullWidth
+                                                helperText={
+                                                    <ErrorMessage errors={errors} name="duracaoBack" >
+                                                        {({ message }) => message}
+                                                    </ErrorMessage>
+                                                }
+                                                InputProps={{ inputComponent: NumberFormat as any }}
+                                            />
+                                        } name="duracaoBack" control={control} defaultValue={props.orcamentoItemAplicacao.duracaoBack} />
+                                    )}
+                            </Grid>
+                            <Grid item xs={4}>
+                                {!edit ? (
+                                    <>
+                                        <Typography variant="overline" className={classes.label}>Duração Front-end:</Typography>
+                                        <Typography variant="caption" className={classes.marginLeft}>{formatter.formatarNumero(props.orcamentoItemAplicacao.duracaoFront)}</Typography>
+                                    </>
+                                ) : (
+                                        <Controller as={
+                                            <TextField label="Duração Front-end" error={errors.duracaoFront ? true : false}
+                                                fullWidth
+                                                helperText={
+                                                    <ErrorMessage errors={errors} name="duracaoFront" >
+                                                        {({ message }) => message}
+                                                    </ErrorMessage>
+                                                }
+                                                InputProps={{ inputComponent: NumberFormat as any }}
+                                            />
+                                        } name="duracaoFront" control={control} defaultValue={props.orcamentoItemAplicacao.duracaoFront} />
+                                    )}
+                            </Grid>
+                            <Grid item xs={4}>
+                                {!edit ? (
+                                    <>
+                                        <Typography variant="overline" className={classes.label}>Duração Total:</Typography>
+                                        <Typography variant="caption" className={classes.marginLeft}>{formatter.formatarNumero(props.orcamentoItemAplicacao.duracaoTotal)}</Typography>
+                                    </>
+                                ) : (
+                                        <Controller as={
+                                            <TextField label="Duração Total" error={errors.duracaoTotal ? true : false}
+                                                fullWidth
+                                                helperText={
+                                                    <ErrorMessage errors={errors} name="duracaoTotal" >
+                                                        {({ message }) => message}
+                                                    </ErrorMessage>
+                                                }
+                                                InputProps={{ inputComponent: NumberFormat as any }}
+                                            />
+                                        } name="duracaoTotal" control={control} defaultValue={props.orcamentoItemAplicacao.duracaoTotal} />
+                                    )}
+                            </Grid>
                         </Grid>
-                        <Grid item xs={4}>
-                            {!edit ? (
-                                <>
-                                    <Typography variant="overline" className={classes.label}>Duração Back-end:</Typography>
-                                    <Typography variant="caption" className={classes.marginLeft}>{formatter.formatarNumero(props.orcamentoItemAplicacao.duracaoBack)}</Typography>
-                                </>
-                            ) : (
-                                    <Controller as={
-                                        <TextField label="Duração Back-end" error={errors.duracaoBack ? true : false}
-                                            fullWidth
-                                            helperText={
-                                                <ErrorMessage errors={errors} name="duracaoBack" >
-                                                    {({ message }) => message}
-                                                </ErrorMessage>
-                                            }
-                                            InputProps={{ inputComponent: NumberFormat as any }}
-                                        />
-                                    } name="duracaoBack" control={control} defaultValue={props.orcamentoItemAplicacao.duracaoBack} />
-                                )}
-                        </Grid>
-                        <Grid item xs={4}>
-                            {!edit ? (
-                                <>
-                                    <Typography variant="overline" className={classes.label}>Duração Front-end:</Typography>
-                                    <Typography variant="caption" className={classes.marginLeft}>{formatter.formatarNumero(props.orcamentoItemAplicacao.duracaoFront)}</Typography>
-                                </>
-                            ) : (
-                                    <Controller as={
-                                        <TextField label="Duração Front-end" error={errors.duracaoFront ? true : false}
-                                            fullWidth
-                                            helperText={
-                                                <ErrorMessage errors={errors} name="duracaoFront" >
-                                                    {({ message }) => message}
-                                                </ErrorMessage>
-                                            }
-                                            InputProps={{ inputComponent: NumberFormat as any }}
-                                        />
-                                    } name="duracaoFront" control={control} defaultValue={props.orcamentoItemAplicacao.duracaoFront} />
-                                )}
-                        </Grid>
-                        <Grid item xs={4}>
-                            {!edit ? (
-                                <>
-                                    <Typography variant="overline" className={classes.label}>Duração Total:</Typography>
-                                    <Typography variant="caption" className={classes.marginLeft}>{formatter.formatarNumero(props.orcamentoItemAplicacao.duracaoTotal)}</Typography>
-                                </>
-                            ) : (
-                                    <Controller as={
-                                        <TextField label="Duração Total" error={errors.duracaoTotal ? true : false}
-                                            fullWidth
-                                            helperText={
-                                                <ErrorMessage errors={errors} name="duracaoTotal" >
-                                                    {({ message }) => message}
-                                                </ErrorMessage>
-                                            }
-                                            InputProps={{ inputComponent: NumberFormat as any }}
-                                        />
-                                    } name="duracaoTotal" control={control} defaultValue={props.orcamentoItemAplicacao.duracaoTotal} />
-                                )}
-                        </Grid>
-                    </Grid>
-                </ExpansionPanelDetails>
-                <Divider />
-                <ExpansionPanelActions>
-                    {!edit && (
-                        <>
-                            <Button size="small" color="secondary" onClick={onDelete}>Excluir</Button>
-                            <Button size="small" color="primary" onClick={() => setEdit(true)}>Editar</Button>
-                        </>
-                    )}
-                    {edit && (
-                        <>
-                            <LoadingButton size="small" onClick={() => setEdit(false)} color="inherit" text="Cancelar" loading={isLoading} />
-                            <LoadingButton size="small" color="primary" text="Salvar" loading={isLoading} type="submit" />
-                        </>
-                    )}
-                </ExpansionPanelActions>
-            </form>
-        </ExpansionPanel>
+                    </ExpansionPanelDetails>
+                    <Divider />
+                    <ExpansionPanelActions>
+                        {!edit && (
+                            <>
+                                <Button size="small" color="secondary" onClick={() => setOpenDialogDelete(true)}>Excluir</Button>
+                                <Button size="small" color="primary" onClick={() => setEdit(true)}>Editar</Button>
+                            </>
+                        )}
+                        {edit && (
+                            <>
+                                <LoadingButton size="small" onClick={() => setEdit(false)} color="inherit" text="Cancelar" loading={isLoading} />
+                                <LoadingButton size="small" color="primary" text="Salvar" loading={isLoading} type="submit" />
+                            </>
+                        )}
+                    </ExpansionPanelActions>
+                </form>
+            </ExpansionPanel>
+        </>
     );
 }
 
