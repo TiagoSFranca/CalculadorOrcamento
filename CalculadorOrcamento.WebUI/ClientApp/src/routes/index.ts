@@ -4,7 +4,7 @@ import FetchData from "components/FetchData";
 import OrcamentoIndex from "views/orcamento/index/OrcamentoIndex";
 import OrcamentoAdicionar from "views/orcamento/adicionar/OrcamentoAdicionar"
 import OrcamentoEditar from "views/orcamento/editar/OrcamentoEditar"
-import OrcamentoItens from "views/orcamento/editar/orcamentoItem/OrcamentoItens"
+import OrcamentoItemAplicacao from "views/orcamento/editar/orcamentoItemAplicacao/OrcamentoItemAplicacaoList"
 
 export interface RouteItem {
     exact?: boolean | false,
@@ -48,8 +48,8 @@ export const routes: RouteItem[] = [
         exact: true
     },
     {
-        path: '/orcamento/editar/:id/itens',
-        component: OrcamentoItens,
+        path: '/orcamento/editar/:id/itens-aplicacao',
+        component: OrcamentoItemAplicacao,
         isPrivate: true,
         exact: true
     },

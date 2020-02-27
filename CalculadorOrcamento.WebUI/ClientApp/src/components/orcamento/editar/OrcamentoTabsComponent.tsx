@@ -2,8 +2,10 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import PhoneIcon from '@material-ui/icons/Phone';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import InfoTwoToneIcon from '@material-ui/icons/InfoTwoTone';
+import ListIcon from '@material-ui/icons/List';
+import TocIcon from '@material-ui/icons/Toc';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
@@ -30,18 +32,32 @@ interface OrcamentoTabs {
 export const DadosGerais: OrcamentoTabs = {
     name: "Dados Gerais",
     value: 0,
-    icon: PhoneIcon,
+    icon: InfoTwoToneIcon,
     to: '/orcamento/editar/:id/dados'
 }
 
-export const Itens: OrcamentoTabs = {
-    name: "Itens",
+export const ItensAplicacao: OrcamentoTabs = {
+    name: "Itens da Aplicação",
     value: 1,
-    icon: FavoriteIcon,
-    to: '/orcamento/editar/:id/itens'
+    icon: ListIcon,
+    to: '/orcamento/editar/:id/itens-aplicacao'
 }
 
-const OrcamentoTabsList: OrcamentoTabs[] = [DadosGerais, Itens];
+export const ItensOrcamento: OrcamentoTabs = {
+    name: "Itens do Orçamento",
+    value: 2,
+    icon: TocIcon,
+    to: '/orcamento/editar/:id/itens-orcamento'
+}
+
+export const Valores: OrcamentoTabs = {
+    name: "Valores",
+    value: 3,
+    icon: AttachMoneyIcon,
+    to: '/orcamento/editar/:id/valores'
+}
+
+const OrcamentoTabsList: OrcamentoTabs[] = [DadosGerais, ItensAplicacao, ItensOrcamento, Valores];
 
 type Props = any & {
     tab?: OrcamentoTabs

@@ -8,18 +8,18 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import React, { useState } from 'react';
-import formatter from 'utils/formatter';
-import { Controller, ErrorMessage, useForm } from "react-hook-form";
+import ConfirmDialog from 'components/common/confirmDialog/ConfirmDialogComponent';
 import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
+import React, { useState } from 'react';
+import { Controller, ErrorMessage, useForm } from "react-hook-form";
+import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
 import * as AppStore from 'store/AppStore';
 import * as OrcamentoItemAplicacaoStore from 'store/OrcamentoItemAplicacaoStore';
-import { useSelector, useDispatch } from 'react-redux';
+import formatter from 'utils/formatter';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
-import ConfirmDialog from 'components/common/confirmDialog/ConfirmDialogComponent'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -39,7 +39,7 @@ type Props = {
     orcamentoItemAplicacao: OrcamentoItemAplicacaoStore.OrcamentoItemAplicacao
 }
 
-type OrcamentoItemEditarForm = {
+type OrcamentoItemAplicacaoEditarForm = {
     id: number;
     idOrcamento: number;
     nome: string;
@@ -50,10 +50,10 @@ type OrcamentoItemEditarForm = {
     duracaoTotal: number | null;
 };
 
-const OrcamentoItemComponent = (props: Props) => {
+const OrcamentoItemAplicacaoComponent = (props: Props) => {
     const classes = useStyles();
 
-    const { control, errors, handleSubmit } = useForm<OrcamentoItemEditarForm>();
+    const { control, errors, handleSubmit } = useForm<OrcamentoItemAplicacaoEditarForm>();
 
     const orcamentoItemStore = useSelector((s: ApplicationState) => s.orcamentoItemAplicacao);
     const { isLoading } = orcamentoItemStore;
@@ -83,7 +83,7 @@ const OrcamentoItemComponent = (props: Props) => {
         }
     }
 
-    const onSubmit = (data: OrcamentoItemEditarForm) => {
+    const onSubmit = (data: OrcamentoItemAplicacaoEditarForm) => {
         data.id = props.orcamentoItemAplicacao.id;
         data.idOrcamento = props.orcamentoItemAplicacao.idOrcamento;
         data.duracaoBack = data.duracaoBack != null && data.duracaoBack >= 0 ? +data.duracaoBack : null;
@@ -102,9 +102,7 @@ const OrcamentoItemComponent = (props: Props) => {
 
     const onCloseDialog = () => {
         if (!isLoading)
-            setOpenDialogDelete(false)
-        else
-            console.log("Deixa aberto");
+            setOpenDialogDelete(false);
     }
 
     const confirmDelete = () => {
@@ -278,4 +276,4 @@ const OrcamentoItemComponent = (props: Props) => {
     );
 }
 
-export default OrcamentoItemComponent;
+export default OrcamentoItemAplicacaoComponent;

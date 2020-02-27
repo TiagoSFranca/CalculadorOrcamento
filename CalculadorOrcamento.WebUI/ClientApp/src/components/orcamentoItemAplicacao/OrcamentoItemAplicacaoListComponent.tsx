@@ -1,13 +1,13 @@
 ﻿import { Grid } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import LoadingCard from 'components/common/loadingCard/LoadingCardComponent';
-import OrcamentoItemAdicionar from 'components/orcamentoItem/OrcamentoItemAdicionarComponent';
+import OrcamentoItemAplicacaoAdicionar from 'components/orcamentoItemAplicacao/OrcamentoItemAplicacaoAdicionarComponent';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
 import * as OrcamentoItemAplicacaoStore from 'store/OrcamentoItemAplicacaoStore';
-import OrcamentoItemComponent from './OrcamentoItemComponent';
+import OrcamentoItemAplicacaoComponent from './OrcamentoItemAplicacaoComponent';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const OrcamentoItemListComponent = (props: any) => {
+const OrcamentoItemAplicacaoListComponent = (props: any) => {
     const classes = useStyles();
 
     const id = props.match.params.id;
@@ -55,15 +55,15 @@ const OrcamentoItemListComponent = (props: any) => {
         <div className={classes.marginTop}>
             <LoadingCard isLoading={isLoading}>
                 <Grid container justify="flex-end">
-                    <OrcamentoItemAdicionar buttonClassName={classes.button} />
+                    <OrcamentoItemAplicacaoAdicionar buttonClassName={classes.button} />
                 </Grid>
 
                 {orcamentoItens &&
                     orcamentoItens.map((el, index) => (
-                        <OrcamentoItemComponent orcamentoItemAplicacao={el} key={el.id}/>))}
+                        <OrcamentoItemAplicacaoComponent orcamentoItemAplicacao={el} key={el.id}/>))}
             </LoadingCard>
         </ div>
     );
 }
 
-export default withRouter(OrcamentoItemListComponent);
+export default withRouter(OrcamentoItemAplicacaoListComponent);

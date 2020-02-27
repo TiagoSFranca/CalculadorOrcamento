@@ -31,7 +31,7 @@ type Props = any & {
     buttonClassName: string
 }
 
-type OrcamentoItemAdicionarForm = {
+type OrcamentoItemAplicacaoAdicionarForm = {
     idOrcamento: number;
     nome: string;
     descricao: string;
@@ -41,11 +41,11 @@ type OrcamentoItemAdicionarForm = {
     duracaoTotal: number | null;
 };
 
-const OrcamentoItemAdicionarComponent = (props: Props) => {
+const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
-    const { control, errors, handleSubmit } = useForm<OrcamentoItemAdicionarForm>();
+    const { control, errors, handleSubmit } = useForm<OrcamentoItemAplicacaoAdicionarForm>();
 
     const orcamentoItemStore = useSelector((s: ApplicationState) => s.orcamentoItemAplicacao);
     const { isLoading } = orcamentoItemStore;
@@ -72,7 +72,7 @@ const OrcamentoItemAdicionarComponent = (props: Props) => {
         }
     }
     
-    const onSubmit = (data: OrcamentoItemAdicionarForm) => {
+    const onSubmit = (data: OrcamentoItemAplicacaoAdicionarForm) => {
         data.idOrcamento = +id;
         data.duracaoBack = data.duracaoBack != null && data.duracaoBack >= 0 ? +data.duracaoBack : null;
         data.duracaoFront = data.duracaoFront != null && data.duracaoFront >= 0 ? +data.duracaoFront : null;
@@ -198,4 +198,4 @@ const OrcamentoItemAdicionarComponent = (props: Props) => {
     );
 }
 
-export default withRouter(OrcamentoItemAdicionarComponent);
+export default withRouter(OrcamentoItemAplicacaoAdicionarComponent);

@@ -53,7 +53,7 @@ const OrcamentoAdicionarComponent = (props: any) => {
 
     return (<>
         <Grid container justify="center">
-            <Grid item xs={6} >
+            <Grid item xs={12} >
                 <Card>
                     <CardHeader title="Novo orçamento" />
                     <CardContent>
