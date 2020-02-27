@@ -1,6 +1,7 @@
 ﻿using CalculadorOrcamento.Application.Exceptions;
 using CalculadorOrcamento.Application.Orcamentos.Commands.Adicionar;
 using CalculadorOrcamento.Application.Orcamentos.Commands.Editar;
+using CalculadorOrcamento.Application.Orcamentos.Commands.Excluir;
 using CalculadorOrcamento.Application.Orcamentos.Models;
 using CalculadorOrcamento.Application.Orcamentos.Queries.Get;
 using CalculadorOrcamento.Application.Orcamentos.Queries.Search;
@@ -67,6 +68,20 @@ namespace CalculadorOrcamento.WebUI.Controllers
         {
             var command = Mapper.Map<EditarOrcamentoCommand>(model);
             command.Id = id;
+
+            return Ok(await Mediator.Send(command));
+        }
+
+        [HttpPost]
+        //[Authorize]
+        [Route("Excluir")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(string))]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ResponseBadRequest))]
+        //[ProducesResponseType((int)HttpStatusCode.Unauthorized, Type = typeof(ResponseUnauthorized))]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]
+        public async Task<ActionResult<string>> Excluir([FromBody]ExcluirOrcamentos model)
+        {
+            var command = Mapper.Map<ExcluirOrcamentosCommand>(model);
 
             return Ok(await Mediator.Send(command));
         }

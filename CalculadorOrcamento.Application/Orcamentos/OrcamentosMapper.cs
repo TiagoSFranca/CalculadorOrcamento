@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CalculadorOrcamento.Application.Orcamentos.Commands.Adicionar;
 using CalculadorOrcamento.Application.Orcamentos.Commands.Editar;
+using CalculadorOrcamento.Application.Orcamentos.Commands.Excluir;
 using CalculadorOrcamento.Application.Orcamentos.Models;
 using CalculadorOrcamento.Application.Settings.AutoMapper;
 using CalculadorOrcamento.Domain.Entities;
@@ -23,6 +24,8 @@ namespace CalculadorOrcamento.Application.Orcamentos
 
             profile.CreateMap<EditarOrcamento, EditarOrcamentoCommand>();
             profile.CreateMap<EditarOrcamentoCommand, Orcamento>();
+
+            profile.CreateMap<ExcluirOrcamentos, ExcluirOrcamentosCommand>();
         }
     }
 }

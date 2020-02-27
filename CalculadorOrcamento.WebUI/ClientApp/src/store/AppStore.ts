@@ -33,7 +33,6 @@ export const actionCreators = {
     changePageTitleAction: (value: string) => ({ type: 'CHANGE_PAGE_TITLE', value: value } as ChangePageTitleAction),
     showSnackBarAction: (data: ISnackBar | null, error?: any | null): AppThunkAction<KnownAction> => (dispatch, getState) => {
         if (data != null) {
-            console.log("HAS DATA", data)
             dispatch({ type: 'SHOW_SNACK_BAR_ACTION', snack: data });
         } else {
             let mensagem: string = '';
@@ -46,7 +45,6 @@ export const actionCreators = {
 
             dispatch({ type: 'SHOW_SNACK_BAR_ACTION', snack: { message: mensagem, type: ISnackBarType.erro, title: messages.TITULO_ERRO } });
         }
-
 
     },
     hideSnackBarAction: () => ({ type: 'HIDE_SNACK_BAR_ACTION' } as HideSnackBarAction),

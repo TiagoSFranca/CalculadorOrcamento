@@ -47,10 +47,6 @@ const OrcamentoItemAplicacaoListComponent = (props: any) => {
             dispatch(OrcamentoItemAplicacaoStore.actionCreators.requestOrcamentos(callback, id))
     }, [search])
 
-    useEffect(() => {
-        console.log(orcamentoItens);
-    }, [orcamentoItens]);
-
     return (
         <div className={classes.marginTop}>
             <LoadingCard isLoading={isLoading}>

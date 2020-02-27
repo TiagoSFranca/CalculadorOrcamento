@@ -79,7 +79,12 @@ interface SetTabAction {
     actTab: number;
 }
 
-type KnownAction = ReceiveOrcamentosAction | AdicionarOrcamentoAction | IsLoadingOrcamentoAction | FiltrarOrcamentoAction | SelecionarOrcamentoAction | SetTabAction;
+interface SetSearchOrcamento {
+    type: 'SET_SEARCH_ORCAMENTO';
+    value: boolean;
+}
+
+type KnownAction = ReceiveOrcamentosAction | AdicionarOrcamentoAction | IsLoadingOrcamentoAction | FiltrarOrcamentoAction | SelecionarOrcamentoAction | SetTabAction | SetSearchOrcamento;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -175,6 +180,21 @@ export const actionCreators = {
     setTab: (prevTab: number, actTab: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         dispatch({ type: 'SET_TAB_ORCAMENTO', prevTab: prevTab, actTab: actTab });
     },
+
+    excluirOrcamento: (ids: number[], callback: (error: any, message: any) => void): AppThunkAction<KnownAction> => (dispatch) => {
+        dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
+
+        HTTP.post(`/orcamentos/excluir`, { 'ids': ids })
+            .then(response => response.data as Promise<string>)
+            .then(data => {
+                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+                dispatch({ type: 'SET_SEARCH_ORCAMENTO', value: true });
+                callback(null, data);
+            }, error => {
+                callback(error, null);
+                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+            });
+    },
 };
 
 // ----------------
@@ -230,6 +250,11 @@ export const reducer: Reducer<OrcamentoState> = (state: OrcamentoState | undefin
                 ...state,
                 editarTabPrev: action.prevTab,
                 editarTabAct: action.actTab,
+            }
+        case 'SET_SEARCH_ORCAMENTO':
+            return {
+                ...state,
+                search: action.value
             }
         default:
             return state;

@@ -35,10 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Controllers\package.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\CalculadorOrcamento.Application\CalculadorOrcamento.Application.csproj" />
     <ProjectReference Include="..\CalculadorOrcamento.Domain\CalculadorOrcamento.Domain.csproj" />
     <ProjectReference Include="..\CalculadorOrcamento.Persistence\CalculadorOrcamento.Persistence.csproj" />
