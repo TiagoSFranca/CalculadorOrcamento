@@ -1,8 +1,8 @@
-﻿using System;
+﻿using CalculadorOrcamento.Domain.Entities.GenericModels;
 
 namespace CalculadorOrcamento.Domain.Entities
 {
-    public class OrcamentoItemAplicacao
+    public class OrcamentoItemAplicacao : RegistroTempo
     {
         public int Id { get; set; }
         public int IdOrcamento { get; set; }
@@ -10,9 +10,6 @@ namespace CalculadorOrcamento.Domain.Entities
         public string Nome { get; set; }
         public string Descricao { get; set; }
         public string Observacao { get; set; }
-        public DateTime DataCriacao { get; set; }
-        public DateTime DataAtualizacao { get; set; }
-
         public decimal? DuracaoFront { get; set; }
         public decimal? DuracaoBack { get; set; }
         public decimal? DuracaoTotal { get; set; }

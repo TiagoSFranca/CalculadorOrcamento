@@ -28,7 +28,7 @@ namespace CalculadorOrcamento.Application.OrcamentoItensAplicacao.Commands.Adici
             if (!existeOrcamento)
                 throw new NotFoundException(nameof(Orcamento), request.IdOrcamento);
 
-            var existe = await _context.orcamentoItemAplicacoes.AnyAsync(e => e.IdOrcamento == request.IdOrcamento && e.Nome.ToLower().Equals(request.Nome.ToLower()));
+            var existe = await _context.OrcamentoItemAplicacoes.AnyAsync(e => e.IdOrcamento == request.IdOrcamento && e.Nome.ToLower().Equals(request.Nome.ToLower()));
             if (existe)
                 throw new BusinessException(string.Format("Item já cadastrado com esse nome [{0}]", request.Nome));
 
@@ -36,9 +36,7 @@ namespace CalculadorOrcamento.Application.OrcamentoItensAplicacao.Commands.Adici
 
             try
             {
-                entity.DataCriacao = DateTime.Now;
-                entity.DataAtualizacao = DateTime.Now;
-                _context.orcamentoItemAplicacoes.Add(entity);
+                _context.OrcamentoItemAplicacoes.Add(entity);
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)

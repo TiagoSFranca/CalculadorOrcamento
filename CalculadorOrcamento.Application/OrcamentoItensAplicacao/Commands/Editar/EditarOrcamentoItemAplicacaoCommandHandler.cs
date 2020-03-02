@@ -22,14 +22,14 @@ namespace CalculadorOrcamento.Application.OrcamentoItensAplicacao.Commands.Edita
 
         public async Task<OrcamentoItemAplicacaoViewModel> Handle(EditarOrcamentoItemAplicacaoCommand request, CancellationToken cancellationToken)
         {
-            var entidade = await _context.orcamentoItemAplicacoes.FindAsync(request.Id);
+            var entidade = await _context.OrcamentoItemAplicacoes.FindAsync(request.Id);
             if (entidade == null)
                 throw new NotFoundException("Item", request.Id);
 
             if (entidade.IdOrcamento != request.IdOrcamento)
                 throw new BusinessException("Item não pertence ao orçamento");
 
-            var existe = await _context.orcamentoItemAplicacoes.AnyAsync(e => e.Id != entidade.Id && e.IdOrcamento == request.IdOrcamento && e.Nome.ToLower().Equals(request.Nome.ToLower()));
+            var existe = await _context.OrcamentoItemAplicacoes.AnyAsync(e => e.Id != entidade.Id && e.IdOrcamento == request.IdOrcamento && e.Nome.ToLower().Equals(request.Nome.ToLower()));
             if (existe)
                 throw new BusinessException(string.Format("Item já cadastrado com esse nome [{0}]", request.Nome));
 
@@ -37,9 +37,7 @@ namespace CalculadorOrcamento.Application.OrcamentoItensAplicacao.Commands.Edita
             {
                 _mapper.Map(request, entidade);
 
-                entidade.DataAtualizacao = DateTime.Now;
-
-                _context.orcamentoItemAplicacoes.Update(entidade);
+                _context.OrcamentoItemAplicacoes.Update(entidade);
 
                 await _context.SaveChangesAsync();
             }

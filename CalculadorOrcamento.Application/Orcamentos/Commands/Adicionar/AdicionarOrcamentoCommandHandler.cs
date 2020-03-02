@@ -33,8 +33,7 @@ namespace CalculadorOrcamento.Application.Orcamentos.Commands.Adicionar
             try
             {
                 entity.Codigo = Guid.NewGuid();
-                entity.DataCriacao = DateTime.Now;
-                entity.DataAtualizacao = DateTime.Now;
+
                 _context.Orcamentos.Add(entity);
                 await _context.SaveChangesAsync();
             }

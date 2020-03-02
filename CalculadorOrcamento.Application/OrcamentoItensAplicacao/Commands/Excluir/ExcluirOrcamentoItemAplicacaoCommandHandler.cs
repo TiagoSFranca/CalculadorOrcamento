@@ -20,14 +20,14 @@ namespace CalculadorOrcamento.Application.OrcamentoItensAplicacao.Commands.Exclu
 
         public async Task<Unit> Handle(ExcluirOrcamentoItemAplicacaoCommand request, CancellationToken cancellationToken)
         {
-            var entidade = await _context.orcamentoItemAplicacoes.FindAsync(request.Id);
+            var entidade = await _context.OrcamentoItemAplicacoes.FindAsync(request.Id);
 
             if (entidade == null)
                 throw new NotFoundException("Item", request.Id);
 
             try
             {
-                _context.orcamentoItemAplicacoes.Remove(entidade);
+                _context.OrcamentoItemAplicacoes.Remove(entidade);
 
                 await _context.SaveChangesAsync();
             }

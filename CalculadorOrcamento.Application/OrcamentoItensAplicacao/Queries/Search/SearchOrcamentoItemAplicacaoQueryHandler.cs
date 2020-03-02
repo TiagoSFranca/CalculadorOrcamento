@@ -23,7 +23,7 @@ namespace CalculadorOrcamento.Application.OrcamentoItensAplicacao.Queries.Search
 
         public async Task<List<OrcamentoItemAplicacaoViewModel>> Handle(SearchOrcamentoItemAplicacaoQuery request, CancellationToken cancellationToken)
         {
-            var query = _context.orcamentoItemAplicacoes.Where(e => e.IdOrcamento == request.IdOrcamento);
+            var query = _context.OrcamentoItemAplicacoes.Where(e => e.IdOrcamento == request.IdOrcamento);
 
             var data = await query.ToListAsync();
 

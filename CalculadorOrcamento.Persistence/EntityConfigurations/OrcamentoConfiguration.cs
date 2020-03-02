@@ -18,12 +18,6 @@ namespace CalculadorOrcamento.Persistence.EntityConfigurations
             builder.Property(e => e.Codigo)
                 .IsRequired();
 
-            builder.Property(e => e.DataAtualizacao)
-                .IsRequired();
-
-            builder.Property(e => e.DataCriacao)
-                .IsRequired();
-
             builder.Property(e => e.Descricao)
                 .HasMaxLength(512);
 

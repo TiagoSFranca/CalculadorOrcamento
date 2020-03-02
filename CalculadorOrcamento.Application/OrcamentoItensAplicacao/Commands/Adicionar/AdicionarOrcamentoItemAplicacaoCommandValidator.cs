@@ -18,6 +18,15 @@ namespace CalculadorOrcamento.Application.OrcamentoItensAplicacao.Commands.Adici
 
             RuleFor(e => e.Observacao)
                 .MaximumLength(1024);
+
+            RuleFor(e => e.DuracaoBack)
+                .GreaterThanOrEqualTo(0);
+
+            RuleFor(e => e.DuracaoFront)
+                .GreaterThanOrEqualTo(0);
+
+            RuleFor(e => e.DuracaoTotal)
+                .GreaterThanOrEqualTo(0);
         }
     }
 }

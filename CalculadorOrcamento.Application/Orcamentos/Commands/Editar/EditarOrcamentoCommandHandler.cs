@@ -32,8 +32,6 @@ namespace CalculadorOrcamento.Application.Orcamentos.Commands.Editar
             {
                 _mapper.Map(request, entidade);
 
-                entidade.DataAtualizacao = DateTime.Now;
-
                 _context.Orcamentos.Update(entidade);
 
                 await _context.SaveChangesAsync();

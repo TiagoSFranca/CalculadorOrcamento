@@ -32,7 +32,7 @@ const OrcamentoItemAplicacaoList = (props: any) => {
         <>
             <CustomBreadcrumbs showHome={true} itens={[OrcamentoIndexBreadcrumb, { name: orcamento ? orcamento.nome : '', to: '' }]} />
             <OrcamentoTabsComponent tab={ItensAplicacao} />
-            {orcamento && <OrcamentoItemAplicacaListComponent />}
+            <OrcamentoItemAplicacaListComponent />
         </>
     );
 };
