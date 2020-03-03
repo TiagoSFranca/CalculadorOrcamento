@@ -6,10 +6,6 @@ import React from 'react';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        root: {
-            display: 'inline-flex',
-            alignItems: 'center',
-        },
         wrapper: {
             position: 'relative',
         },
@@ -38,12 +34,12 @@ const LoadingButtonComponent = (props: Props) => {
 
     return (
         <>
-            <div className={classes.root}>
+            <div>
                 <div className={classes.wrapper}>
                     <Button {...buttonProps} disabled={props.isLoading}>
                         {props.text}
                     </Button>
-                    {props.isLoading && <CircularProgress size={24} className={classes.buttonProgress}/>}
+                    {props.isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
                 </div>
             </div>
         </>

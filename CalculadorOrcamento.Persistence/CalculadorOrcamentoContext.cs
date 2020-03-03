@@ -1,5 +1,5 @@
 ﻿using CalculadorOrcamento.Domain.Entities;
-using CalculadorOrcamento.Domain.Entities.Genericas;
+using CalculadorOrcamento.Domain.Entities.GenericModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -20,6 +20,8 @@ namespace CalculadorOrcamento.Persistence
         public DbSet<Orcamento> Orcamentos { get; set; }
         public DbSet<OrcamentoItemAplicacao> OrcamentoItemAplicacoes { get; set; }
         public DbSet<OrcamentoValor> OrcamentoValores { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         #endregion
 

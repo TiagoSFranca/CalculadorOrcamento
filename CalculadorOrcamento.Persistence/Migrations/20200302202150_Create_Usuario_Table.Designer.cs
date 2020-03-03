@@ -4,14 +4,16 @@ using CalculadorOrcamento.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CalculadorOrcamento.Persistence.Migrations
 {
     [DbContext(typeof(CalculadorOrcamentoContext))]
-    partial class CalculadorOrcamentoContextModelSnapshot : ModelSnapshot
+    [Migration("20200302202150_Create_Usuario_Table")]
+    partial class Create_Usuario_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,33 +123,6 @@ namespace CalculadorOrcamento.Persistence.Migrations
                     b.HasIndex("IdOrcamento");
 
                     b.ToTable("OrcamentoValor");
-                });
-
-            modelBuilder.Entity("CalculadorOrcamento.Domain.Entities.RefreshToken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("DataAtualizacao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataExpiracao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("IdUsuario")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Token")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RefreshToken");
                 });
 
             modelBuilder.Entity("CalculadorOrcamento.Domain.Entities.Usuario", b =>

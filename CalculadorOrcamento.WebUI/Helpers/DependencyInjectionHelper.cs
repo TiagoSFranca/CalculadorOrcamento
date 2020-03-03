@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using CalculadorOrcamento.Application.BaseApplications;
 using CalculadorOrcamento.Application.Interfaces.BaseApplications;
+using CalculadorOrcamento.Application.Interfaces.Infrastructure.Services;
 using CalculadorOrcamento.Application.Settings;
 using CalculadorOrcamento.Application.Settings.AutoMapper;
+using CalculadorOrcamento.Infrastructure.Services;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.AspNetCore.Http;
@@ -15,8 +17,8 @@ namespace CalculadorOrcamento.WebUI.Helpers
         public static void Configure(IServiceCollection services)
         {
             //services.AddTransient<IAuthBaseApplication, AuthBaseApplication>();
-            //services.AddTransient<IFileService, FileService>();
-            //services.AddTransient<IIdentityServerAuthService, IdentityServerAuthService>();
+            services.AddTransient<IRefreshTokenBaseApplication, RefreshTokenBaseApplication>();
+            services.AddTransient<IJwtService, JwtService>();
             services.AddTransient(typeof(IPaginacaoBaseApplication<,>), typeof(PaginacaoBaseApplication<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CalculadorOrcamento.Application.Settings.Models
+﻿namespace CalculadorOrcamento.Application.Settings.Models
 {
     public class AppSettings
     {
@@ -10,5 +6,7 @@ namespace CalculadorOrcamento.Application.Settings.Models
         public string Version { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+
+        public JwtSettings JwtSettings { get; set; }
     }
 }

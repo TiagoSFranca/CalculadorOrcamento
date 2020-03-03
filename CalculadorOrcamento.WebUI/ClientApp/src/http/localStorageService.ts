@@ -1,12 +1,17 @@
-﻿export interface LocalStorage {
-    setToken(tokenObj: any): void,
+﻿export interface TokenObj {
+    access_token: string;
+    refresh_token: string;
+}
+
+export interface LocalStorage {
+    setToken(tokenObj: TokenObj): void,
     getAccessToken(): string | null,
     getRefreshToken(): string | null,
     clearToken(): void
 }
 
 const LocalStorageService: LocalStorage = {
-    setToken: (tokenObj: any) => {
+    setToken: (tokenObj: TokenObj) => {
         localStorage.setItem('access_token', tokenObj.access_token);
         localStorage.setItem('refresh_token', tokenObj.refresh_token);
     },

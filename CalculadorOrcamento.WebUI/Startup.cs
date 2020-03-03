@@ -6,6 +6,8 @@ using CalculadorOrcamento.WebUI.Filters;
 using CalculadorOrcamento.WebUI.Helpers;
 using FluentValidation.AspNetCore;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
@@ -14,8 +16,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 
 namespace CalculadorOrcamento.WebUI
@@ -70,6 +75,40 @@ namespace CalculadorOrcamento.WebUI
             services
                 .Configure<AppSettings>(_appSettingsSection);
 
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+           .AddJwtBearer(x =>
+           {
+               x.RequireHttpsMetadata = false;
+               x.SaveToken = true;
+               x.TokenValidationParameters = new TokenValidationParameters
+               {
+                   ValidateIssuerSigningKey = _appSettings.JwtSettings.ValidateIssuerSigningKey,
+                   ValidateIssuer = _appSettings.JwtSettings.ValidateIssuer,
+                   ValidateAudience = _appSettings.JwtSettings.ValidateAudience,
+                   ValidateLifetime = _appSettings.JwtSettings.ValidateLifetime,
+                   SignatureValidator = delegate (string token, TokenValidationParameters parameters)
+                   {
+                       var jwt = new JwtSecurityToken(token);
+
+                       return jwt;
+                   },
+                   RequireSignedTokens = false,
+                   ClockSkew = TimeSpan.Zero
+               };
+           });
+
+            services.AddAuthorization(auth =>
+            {
+                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser().Build());
+            });
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -105,6 +144,9 @@ namespace CalculadorOrcamento.WebUI
             app.UseSpaStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

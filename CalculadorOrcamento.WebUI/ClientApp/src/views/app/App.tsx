@@ -13,11 +13,11 @@ const App = () => {
             {
                 publicRoutes.map((el, index) => (
                     el.exact ?
-                        <Route exact path={el.path} component={() => el.component} key={index} /> :
-                        <Route path={el.path} component={() => el.component} key={index} />
+                        <Route exact path={el.path} component={el.component} key={index} /> :
+                        <Route path={el.path} component={el.component} key={index} />
                 ))
-            }{
-
+            }
+            {
                 privateRoutes.map((el, index) => (
                     el.exact ?
                         (<PrivateRoute exact path={el.path} key={index}  >

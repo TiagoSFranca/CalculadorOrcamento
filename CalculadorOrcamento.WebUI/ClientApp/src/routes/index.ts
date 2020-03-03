@@ -5,6 +5,8 @@ import OrcamentoIndex from "views/orcamento/index/OrcamentoIndex";
 import OrcamentoAdicionar from "views/orcamento/adicionar/OrcamentoAdicionar"
 import OrcamentoEditar from "views/orcamento/editar/OrcamentoEditar"
 import OrcamentoItemAplicacao from "views/orcamento/editar/orcamentoItemAplicacao/OrcamentoItemAplicacaoList"
+import Login from 'views/auth/login/Login'
+import Register from 'views/auth/register/Register'
 
 export interface RouteItem {
     exact?: boolean | false,
@@ -52,5 +54,17 @@ export const routes: RouteItem[] = [
         component: OrcamentoItemAplicacao,
         isPrivate: true,
         exact: true
+    },
+    {
+        exact: true,
+        path: '/login',
+        component: Login,
+        isPrivate: false
+    },
+    {
+        exact: true,
+        path: '/register',
+        component: Register,
+        isPrivate: false
     },
 ]

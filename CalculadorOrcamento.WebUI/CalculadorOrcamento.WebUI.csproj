@@ -15,6 +15,8 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.1" />
     <PackageReference Include="MediatR" Version="8.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.1" />
@@ -37,6 +39,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CalculadorOrcamento.Application\CalculadorOrcamento.Application.csproj" />
     <ProjectReference Include="..\CalculadorOrcamento.Domain\CalculadorOrcamento.Domain.csproj" />
+    <ProjectReference Include="..\CalculadorOrcamento.Infrastructure\CalculadorOrcamento.Infrastructure.csproj" />
     <ProjectReference Include="..\CalculadorOrcamento.Persistence\CalculadorOrcamento.Persistence.csproj" />
   </ItemGroup>
 
