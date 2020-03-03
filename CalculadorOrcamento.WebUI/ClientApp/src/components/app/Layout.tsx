@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
 import DrawerMenu from './DrawerMenu';
 import NavMenu from './NavMenu';
+import BackToTop from 'components/app/ScrollToTop'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -29,5 +30,6 @@ export default (props: { children?: React.ReactNode }) => {
                 {props.children}
                 <CustomSnackBar />
             </Container>
+            <BackToTop {...props} />
         </React.Fragment>);
 };

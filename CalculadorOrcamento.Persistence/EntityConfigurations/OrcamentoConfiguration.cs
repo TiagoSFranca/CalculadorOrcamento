@@ -24,6 +24,11 @@ namespace CalculadorOrcamento.Persistence.EntityConfigurations
             builder.Property(e => e.Nome)
                 .IsRequired()
                 .HasMaxLength(128);
+
+            builder.HasOne(e => e.Usuario)
+                .WithMany(f => f.Orcamentos)
+                .HasForeignKey(e => e.IdUsuario)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

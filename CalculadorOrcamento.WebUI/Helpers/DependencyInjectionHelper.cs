@@ -16,9 +16,11 @@ namespace CalculadorOrcamento.WebUI.Helpers
     {
         public static void Configure(IServiceCollection services)
         {
-            //services.AddTransient<IAuthBaseApplication, AuthBaseApplication>();
-            services.AddTransient<IRefreshTokenBaseApplication, RefreshTokenBaseApplication>();
             services.AddTransient<IJwtService, JwtService>();
+
+            services.AddTransient<IAuthBaseApplication, AuthBaseApplication>();
+            services.AddTransient<IRefreshTokenBaseApplication, RefreshTokenBaseApplication>();
+
             services.AddTransient(typeof(IPaginacaoBaseApplication<,>), typeof(PaginacaoBaseApplication<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));

@@ -5,7 +5,6 @@ using CalculadorOrcamento.Domain.Entities;
 using CalculadorOrcamento.Persistence;
 using MediatR;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,17 +14,23 @@ namespace CalculadorOrcamento.Application.Orcamentos.Queries.Search
     public class SearchOrcamentoQueryHandler : IRequestHandler<SearchOrcamentoQuery, ConsultaPaginadaViewModel<OrcamentoViewModel>>
     {
         private readonly CalculadorOrcamentoContext _context;
+        private readonly IAuthBaseApplication _authBaseApplication;
         private readonly IPaginacaoBaseApplication<Orcamento, OrcamentoViewModel> _paginacaoBaseApplication;
 
-        public SearchOrcamentoQueryHandler(CalculadorOrcamentoContext context, IPaginacaoBaseApplication<Orcamento, OrcamentoViewModel> paginacaoBaseApplication)
+        public SearchOrcamentoQueryHandler(CalculadorOrcamentoContext context, IAuthBaseApplication authBaseApplication, IPaginacaoBaseApplication<Orcamento, OrcamentoViewModel> paginacaoBaseApplication)
         {
             _context = context;
+            _authBaseApplication = authBaseApplication;
             _paginacaoBaseApplication = paginacaoBaseApplication;
         }
 
         public async Task<ConsultaPaginadaViewModel<OrcamentoViewModel>> Handle(SearchOrcamentoQuery request, CancellationToken cancellationToken)
         {
+            var id = _authBaseApplication.GetId();
+
             var query = _context.Orcamentos.AsQueryable();
+
+            query = query.Where(e => e.IdUsuario == id);
 
             if (!string.IsNullOrEmpty(request.Codigo))
                 query = query.Where(e => e.Codigo.ToString().ToLower().Contains(request.Codigo.ToLower()));

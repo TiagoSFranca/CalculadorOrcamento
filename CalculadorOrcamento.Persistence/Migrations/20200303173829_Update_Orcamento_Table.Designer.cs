@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CalculadorOrcamento.Persistence.Migrations
 {
     [DbContext(typeof(CalculadorOrcamentoContext))]
-    [Migration("20200303125538_Update_RefreshToken_Table")]
-    partial class Update_RefreshToken_Table
+    [Migration("20200303173829_Update_Orcamento_Table")]
+    partial class Update_Orcamento_Table
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,12 +41,17 @@ namespace CalculadorOrcamento.Persistence.Migrations
                         .HasColumnType("nvarchar(512)")
                         .HasMaxLength(512);
 
+                    b.Property<int>("IdUsuario")
+                        .HasColumnType("int");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IdUsuario");
 
                     b.ToTable("Orcamento");
                 });
@@ -201,6 +206,15 @@ namespace CalculadorOrcamento.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Usuario");
+                });
+
+            modelBuilder.Entity("CalculadorOrcamento.Domain.Entities.Orcamento", b =>
+                {
+                    b.HasOne("CalculadorOrcamento.Domain.Entities.Usuario", "Usuario")
+                        .WithMany("Orcamentos")
+                        .HasForeignKey("IdUsuario")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CalculadorOrcamento.Domain.Entities.OrcamentoItemAplicacao", b =>

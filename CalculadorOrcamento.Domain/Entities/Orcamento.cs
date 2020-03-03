@@ -13,9 +13,12 @@ namespace CalculadorOrcamento.Domain.Entities
         }
 
         public int Id { get; set; }
+        public int IdUsuario { get; set; }
         public Guid Codigo { get; set; }
         public string Nome { get; set; }
         public string Descricao { get; set; }
+
+        public virtual Usuario Usuario { get; set; }
 
         public virtual ICollection<OrcamentoItemAplicacao> OrcamentoItemAplicacoes { get; set; }
         public virtual ICollection<OrcamentoValor> OrcamentoValores { get; set; }

@@ -37,13 +37,11 @@ HTTP.interceptors.response.use((response: any) => {
             {
                 "token": refreshToken
             })
-            .then(res => {
-                if (res.status === 201) {
-                    const data = res.data as UsuarioAutenticado;
-                    localStorageService.setToken({ access_token: data.token, refresh_token: data.refreshToken });
-                    HTTP.defaults.headers.common['Authorization'] = 'Bearer ' + localStorageService.getAccessToken();
-                    return axios(originalRequest);
-                }
+            .then(response => response.data as Promise<UsuarioAutenticado>)
+            .then(data => {
+                localStorageService.setToken({ access_token: data.token, refresh_token: data.refreshToken });
+                HTTP.defaults.headers.common['Authorization'] = 'Bearer ' + localStorageService.getAccessToken();
+                return axios(originalRequest);
             })
     }
     return Promise.reject(error);

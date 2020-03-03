@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CalculadorOrcamento.Application.Exceptions;
+using CalculadorOrcamento.Application.Interfaces.BaseApplications;
 using CalculadorOrcamento.Application.Orcamentos.Models;
 using CalculadorOrcamento.Domain.Entities;
 using CalculadorOrcamento.Persistence;
@@ -15,15 +16,19 @@ namespace CalculadorOrcamento.Application.Orcamentos.Commands.Adicionar
     {
         private readonly IMapper _mapper;
         private readonly CalculadorOrcamentoContext _context;
-
-        public AdicionarOrcamentoCommandHandler(IMapper mapper, CalculadorOrcamentoContext context)
+        private readonly IAuthBaseApplication _authBaseApplication;
+        
+        public AdicionarOrcamentoCommandHandler(IMapper mapper, CalculadorOrcamentoContext context, IAuthBaseApplication authBaseApplication)
         {
             _mapper = mapper;
             _context = context;
+            _authBaseApplication = authBaseApplication;
         }
 
         public async Task<OrcamentoViewModel> Handle(AdicionarOrcamentoCommand request, CancellationToken cancellationToken)
         {
+            var id = _authBaseApplication.GetId();
+
             var existe = await _context.Orcamentos.AnyAsync(e => e.Nome.ToLower().Equals(request.Nome.ToLower()));
             if (existe)
                 throw new BusinessException(string.Format("Orçamento já cadastrado com esse nome [{0}]", request.Nome));
@@ -33,6 +38,7 @@ namespace CalculadorOrcamento.Application.Orcamentos.Commands.Adicionar
             try
             {
                 entity.Codigo = Guid.NewGuid();
+                entity.IdUsuario = id;
 
                 _context.Orcamentos.Add(entity);
                 await _context.SaveChangesAsync();

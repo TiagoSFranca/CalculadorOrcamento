@@ -91,6 +91,11 @@ export const actionCreators = {
                 dispatch({ type: 'IS_LOADING', value: false });
             });
     },
+
+    logout: (): AppThunkAction<KnownAction> => (dispatch) => {
+        localStorageService.clearToken();
+        dispatch({ type: 'SET_IS_AUTH', value: false });
+    },
 };
 
 const unloadedState: AuthState = { isAuth: true, isLoading: false };

@@ -22,7 +22,7 @@ namespace CalculadorOrcamento.Infrastructure.Services
         }
 
 
-        public JsonWebToken CreateToken(UsuarioViewModel usuario)
+        public JsonWebTokenViewModel CreateToken(UsuarioViewModel usuario)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.SecretKey);
@@ -39,7 +39,7 @@ namespace CalculadorOrcamento.Infrastructure.Services
             var stringToken = tokenHandler.WriteToken(token);
 
 
-            return new JsonWebToken
+            return new JsonWebTokenViewModel
             {
                 AccessToken = stringToken,
                 RefreshToken = CreateRefreshToken(usuario.Id)
