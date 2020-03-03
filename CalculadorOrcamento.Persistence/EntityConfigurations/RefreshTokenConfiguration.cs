@@ -15,6 +15,10 @@ namespace CalculadorOrcamento.Persistence.EntityConfigurations
             builder.Property(e => e.Id)
                 .ValueGeneratedOnAdd();
 
+            builder.HasOne(e => e.Usuario)
+                .WithMany()
+                .HasForeignKey(e => e.IdUsuario)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

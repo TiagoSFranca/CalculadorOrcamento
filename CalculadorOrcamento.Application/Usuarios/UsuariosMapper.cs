@@ -2,6 +2,7 @@
 using CalculadorOrcamento.Application.Settings.AutoMapper;
 using CalculadorOrcamento.Application.Usuarios.Commands.Adicionar;
 using CalculadorOrcamento.Application.Usuarios.Commands.Autenticar;
+using CalculadorOrcamento.Application.Usuarios.Commands.RefreshToken;
 using CalculadorOrcamento.Application.Usuarios.Models;
 using CalculadorOrcamento.Domain.Entities;
 
@@ -27,6 +28,8 @@ namespace CalculadorOrcamento.Application.Usuarios
 
             profile.CreateMap<RefreshToken, RefreshTokenViewModel>()
                 .ReverseMap();
+
+            profile.CreateMap<RefreshTokenUsuario, RefreshTokenUsuarioCommand>();
         }
     }
 }

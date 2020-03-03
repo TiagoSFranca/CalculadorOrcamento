@@ -3,25 +3,22 @@ using CalculadorOrcamento.Application.Exceptions;
 using CalculadorOrcamento.Application.Interfaces.BaseApplications;
 using CalculadorOrcamento.Application.Interfaces.Infrastructure.Services;
 using CalculadorOrcamento.Application.Usuarios.Models;
-using CalculadorOrcamento.Common.Helpers;
 using CalculadorOrcamento.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CalculadorOrcamento.Application.Usuarios.Commands.Autenticar
+namespace CalculadorOrcamento.Application.Usuarios.Commands.RefreshToken
 {
-    public class AutenticarUsuarioCommandHandler : IRequestHandler<AutenticarUsuarioCommand, UsuarioAutenticadoViewModel>
+    public class RefreshTokenUsuarioCommandHandler : IRequestHandler<RefreshTokenUsuarioCommand, UsuarioAutenticadoViewModel>
     {
         private readonly CalculadorOrcamentoContext _context;
         private readonly IJwtService _jwtService;
         private readonly IRefreshTokenBaseApplication _refreshTokenBaseApplication;
         private readonly IMapper _mapper;
 
-        private BusinessException _erroLogin => new BusinessException("Login ou Senha inválidos");
-
-        public AutenticarUsuarioCommandHandler(CalculadorOrcamentoContext context, IJwtService jwtService, IRefreshTokenBaseApplication refreshTokenBaseApplication, IMapper mapper)
+        public RefreshTokenUsuarioCommandHandler(CalculadorOrcamentoContext context, IJwtService jwtService, IRefreshTokenBaseApplication refreshTokenBaseApplication, IMapper mapper)
         {
             _context = context;
             _jwtService = jwtService;
@@ -29,16 +26,13 @@ namespace CalculadorOrcamento.Application.Usuarios.Commands.Autenticar
             _mapper = mapper;
         }
 
-        public async Task<UsuarioAutenticadoViewModel> Handle(AutenticarUsuarioCommand request, CancellationToken cancellationToken)
+        public async Task<UsuarioAutenticadoViewModel> Handle(RefreshTokenUsuarioCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.Usuarios.FirstOrDefaultAsync(e => e.Email.ToLower().Equals(request.Login.ToLower()) || e.Login.ToLower().Equals(request.Login.ToLower()));
+            var entity = await _context.RefreshTokens.FirstOrDefaultAsync(e => e.Token.Equals(request.Token));
             if (entity == null)
-                throw _erroLogin;
+                throw new BusinessException("Refres Token não encontrado");
 
-            if (PasswordHasher.VerifyHashedPassword(entity.Senha, request.Senha) != PasswordVerificationResult.Success)
-                throw _erroLogin;
-
-            var usuario = _mapper.Map<UsuarioAutenticadoViewModel>(entity);
+            var usuario = _mapper.Map<UsuarioAutenticadoViewModel>(entity.Usuario);
 
             var token = _jwtService.CreateToken(usuario);
 

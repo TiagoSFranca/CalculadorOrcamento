@@ -9,5 +9,7 @@ namespace CalculadorOrcamento.Domain.Entities
         public int IdUsuario { get; set; }
         public string Token { get; set; }
         public DateTime DataExpiracao { get; set; }
+
+        public virtual Usuario Usuario { get; set; }
     }
 }
