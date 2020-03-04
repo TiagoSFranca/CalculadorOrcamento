@@ -87,7 +87,7 @@ const DrawerMenu = (props: any) => {
         >
             <List>
                 {drawerRoutes.map((el, index) => (
-                    <ListItem button key={index} component={Link} to={el.path} onClick={() => { dispatch(AppStore.actionCreators.changePageTitleAction(el.title)) }}>
+                    <ListItem button key={index} component={Link} to={el.path}>
                         {el.icon ?
                             <ListItemIcon>{el.icon}</ListItemIcon> :
                             null}

@@ -4,8 +4,10 @@ import AddIcon from '@material-ui/icons/Add';
 import CustomBreadcrumbs from 'components/app/breadcrumbs/CustomBreadcrumbs';
 import OrcamentoFilterComponent from 'components/orcamento/index/OrcamentoFilterComponent';
 import OrcamentoListComponent from 'components/orcamento/index/OrcamentoListComponent';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import * as AppStore from 'store/AppStore';
 import { OrcamentoIndexBreadcrumb } from 'utils/breadcrumbs';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -19,6 +21,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const OrcamentoIndex = () => {
     const classes = useStyles();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(AppStore.actionCreators.changePageTitleAction("Orçamentos"))
+    }, []);
 
     return (
         <>

@@ -1,4 +1,4 @@
-﻿import Home from "components/Home";
+﻿import Home from "views/home/Home";
 import Counter from "components/Counter";
 import FetchData from "components/FetchData";
 import OrcamentoIndex from "views/orcamento/index/OrcamentoIndex";

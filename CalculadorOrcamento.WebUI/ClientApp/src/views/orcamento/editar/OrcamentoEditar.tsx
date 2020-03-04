@@ -1,13 +1,13 @@
-﻿import OrcamentoEditarComponent from 'components/orcamento/editar/OrcamentoEditarComponent';
+﻿import CustomBreadcrumbs from 'components/app/breadcrumbs/CustomBreadcrumbs';
+import OrcamentoEditarComponent from 'components/orcamento/editar/OrcamentoEditarComponent';
 import OrcamentoTabsComponent, { DadosGerais } from 'components/orcamento/editar/OrcamentoTabsComponent';
 import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { OrcamentoIndexBreadcrumb } from 'utils/breadcrumbs';
-import CustomBreadcrumbs from 'components/app/breadcrumbs/CustomBreadcrumbs';
 import { ApplicationState } from 'store';
 import * as AppStore from 'store/AppStore';
 import * as OrcamentoStore from 'store/OrcamentoStore';
-import { useDispatch, useSelector } from 'react-redux';
+import { OrcamentoIndexBreadcrumb } from 'utils/breadcrumbs';
 
 const OrcamentoEditar = (props: any) => {
     const id = props.match.params.id;
@@ -28,11 +28,15 @@ const OrcamentoEditar = (props: any) => {
         dispatch(OrcamentoStore.actionCreators.selecionarOrcamento(id, getCallback));
     }, []);
 
+    useEffect(() => {
+        dispatch(AppStore.actionCreators.changePageTitleAction(orcamento ? orcamento.nome : ''))
+    }, [orcamento])
+
     return (
         <>
             <CustomBreadcrumbs showHome={true} itens={[OrcamentoIndexBreadcrumb, { name: orcamento ? orcamento.nome : '', to: '' }]} />
             <OrcamentoTabsComponent tab={DadosGerais} />
-            {orcamento && <OrcamentoEditarComponent />}
+            <OrcamentoEditarComponent />
         </>
     );
 };

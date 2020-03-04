@@ -138,6 +138,7 @@ const LoginComponent = (props: any) => {
                             </Grid>
                             <Grid item xs={12}>
                                 <LoadingButton
+                                    full={true}
                                     fullWidth
                                     text="Entrar"
                                     type="submit"

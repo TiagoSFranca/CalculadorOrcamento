@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         title: {
             flexGrow: 1,
+            color: "#6c757d"
         }
     }),
 );
@@ -47,7 +48,7 @@ function ElevationScroll(props: Props) {
     });
 
     return React.cloneElement(children, {
-        elevation: trigger ? 4 : 2,
+        elevation: trigger ? 4 : 0,
     });
 }
 
@@ -85,7 +86,7 @@ const NavMenu = (props: any) => {
                         <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={() => { dispatch(AppStore.actionCreators.toggleDrawerAction()) }}>
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant="h6" className={classes.title}></Typography>
+                        <Typography variant="h6" className={classes.title} color="inherit">{appStore.pageTitle}</Typography>
                         <IconButton color="inherit">
                             <SettingsIcon />
                         </IconButton>

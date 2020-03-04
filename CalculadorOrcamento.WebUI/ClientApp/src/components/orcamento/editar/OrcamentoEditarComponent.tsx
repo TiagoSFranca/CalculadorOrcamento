@@ -42,17 +42,6 @@ const OrcamentoAdicionarComponent = (props: any) => {
         }
     }
 
-    const getCallback = (error: any) => {
-        if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error));
-            props.history.push('/orcamento');
-        }
-    }
-
-    useEffect(() => {
-        dispatch(OrcamentoStore.actionCreators.selecionarOrcamento(id, getCallback));
-    }, []);
-
     const onSubmit = (data: any) => {
         dispatch(OrcamentoStore.actionCreators.editarOrcamento(id, data as OrcamentoStore.EditarOrcamento, callback));
     };

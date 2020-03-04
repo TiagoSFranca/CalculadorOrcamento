@@ -55,7 +55,6 @@ const OrcamentoAdicionarComponent = (props: any) => {
         <Grid container justify="center">
             <Grid item xs={12} >
                 <Card>
-                    <CardHeader title="Novo orçamento" />
                     <CardContent>
                         <form onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
                             <Grid item xs={6} >

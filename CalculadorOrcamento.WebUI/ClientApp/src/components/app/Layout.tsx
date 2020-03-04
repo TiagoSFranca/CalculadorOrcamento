@@ -30,6 +30,6 @@ export default (props: { children?: React.ReactNode }) => {
                 {props.children}
                 <CustomSnackBar />
             </Container>
-            <BackToTop {...props} />
+            {isAuth && <BackToTop {...props} />}
         </React.Fragment>);
 };

@@ -6,6 +6,10 @@ import React from 'react';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        root: {
+            display: 'inline-flex',
+            alignItems: 'center',
+        },
         wrapper: {
             position: 'relative',
         },
@@ -23,18 +27,20 @@ const useStyles = makeStyles((theme: Theme) =>
 type Props = ButtonProps & {
     isLoading: boolean;
     text: string;
+    full?: boolean;
 }
 
 const LoadingButtonComponent = (props: Props) => {
     const classes = useStyles();
-    const buttonProps = { ...props, isLoading: undefined, text: undefined };
+    const buttonProps = { ...props, isLoading: undefined, text: undefined, full: undefined };
 
     delete buttonProps.isLoading;
     delete buttonProps.text;
+    delete buttonProps.full;
 
     return (
         <>
-            <div>
+            <div className={props.full === true ? "" : classes.root}>
                 <div className={classes.wrapper}>
                     <Button {...buttonProps} disabled={props.isLoading}>
                         {props.text}

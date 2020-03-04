@@ -282,8 +282,9 @@ const RegisterComponent = (props: any) => {
                             </Grid>
                             <Grid item xs={12}>
                                 <LoadingButton
+                                    full={true}
                                     fullWidth
-                                    text="Entrar"
+                                    text="Cadastrar"
                                     type="submit"
                                     variant="contained"
                                     color="primary"
