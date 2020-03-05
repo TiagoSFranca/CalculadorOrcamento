@@ -1,14 +1,26 @@
 ﻿
 const TratarErro = (erro: any) => {
-    console.log(erro);
     if (erro.response) {
         let response = erro.response;
-        console.log("response", response)
         if (response.data) {
             let data = response.data;
-            console.log(data)
-            if (data.message)
-                return data.message;
+            if (data.message) {
+                if (!data.failures)
+                    return data.message;
+                else {
+                    let failures = data.failures;
+
+                    let errors: any[] = [];
+
+                    Object.keys(failures).map(key => {
+                        errors = errors.concat(failures[key])
+                    });
+
+                    if (errors.length > 0) {
+                        return errors.join("\n");
+                    }
+                }
+            }
         }
     }
     return "";

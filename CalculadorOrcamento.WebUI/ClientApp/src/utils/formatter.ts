@@ -17,8 +17,18 @@ export const formatarNumero = (numero: number | undefined | null) => {
     return "";
 }
 
+export const formatarDinheiro = (numero: number | undefined | null) => {
+    if (numero)
+        return numero.toLocaleString('pt-BR', {
+            style: "currency",
+            currency: "BRL"
+        });
+    return "";
+}
+
 export default {
     formatarData,
     formatarDataRequest,
-    formatarNumero
+    formatarNumero,
+    formatarDinheiro
 }

@@ -18,6 +18,7 @@ import { ApplicationState } from 'store';
 import * as AppStore from 'store/AppStore';
 import * as OrcamentoItemAplicacaoStore from 'store/OrcamentoItemAplicacaoStore';
 import formatter from 'utils/formatter';
+import { maxLengthMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
 
@@ -50,7 +51,7 @@ type OrcamentoItemAplicacaoEditarForm = {
     duracaoTotal: number | null;
 };
 
-const OrcamentoItemAplicacaoComponent = (props: Props) => {
+const OrcamentoItemAplicacaoItemComponent = (props: Props) => {
     const classes = useStyles();
 
     const { control, errors, handleSubmit } = useForm<OrcamentoItemAplicacaoEditarForm>();
@@ -146,24 +147,26 @@ const OrcamentoItemAplicacaoComponent = (props: Props) => {
                             <Grid item xs={12}>
                                 {!edit ? <Typography variant="body2">{props.orcamentoItemAplicacao.descricao}</Typography>
                                     : (
-                                        <Controller as={
-                                            <TextField label="Descrição" error={errors.descricao ? true : false}
-                                                fullWidth
-                                                helperText={
-                                                    <ErrorMessage errors={errors} name="descricao" >
-                                                        {({ message }) => message}
-                                                    </ErrorMessage>
-                                                }
-                                                multiline
-                                                rows={2}
-                                                rowsMax={6}
-                                            />
-                                        } name="descricao" control={control} defaultValue={props.orcamentoItemAplicacao.descricao} rules={{
-                                            maxLength: {
-                                                value: 512,
-                                                message: "Tamanho máxio de 512 chars"
+                                        <Controller
+                                            as={
+                                                <TextField label="Descrição" error={errors.descricao ? true : false}
+                                                    fullWidth
+                                                    helperText={
+                                                        <ErrorMessage errors={errors} name="descricao" >
+                                                            {({ message }) => message}
+                                                        </ErrorMessage>
+                                                    }
+                                                    multiline
+                                                    rows={2}
+                                                    rowsMax={6}
+                                                />
                                             }
-                                        }} />
+                                            name="descricao"
+                                            control={control}
+                                            defaultValue={props.orcamentoItemAplicacao.descricao}
+                                            rules={{
+                                                maxLength: maxLengthMessage(512),
+                                            }} />
                                     )}
                             </Grid>
                             <Grid item xs={12}>
@@ -173,24 +176,26 @@ const OrcamentoItemAplicacaoComponent = (props: Props) => {
                                         <Typography variant="caption" className={classes.marginLeft}>{props.orcamentoItemAplicacao.observacao}</Typography>
                                     </>
                                 ) : (
-                                        <Controller as={
-                                            <TextField label="Observações" error={errors.observacao ? true : false}
-                                                fullWidth
-                                                helperText={
-                                                    <ErrorMessage errors={errors} name="observacao" >
-                                                        {({ message }) => message}
-                                                    </ErrorMessage>
-                                                }
-                                                multiline
-                                                rows={2}
-                                                rowsMax={6}
-                                            />
-                                        } name="observacao" control={control} defaultValue={props.orcamentoItemAplicacao.observacao} rules={{
-                                            maxLength: {
-                                                value: 1024,
-                                                message: "Tamanho máxio de 1024 chars"
+                                        <Controller
+                                            as={
+                                                <TextField label="Observações" error={errors.observacao ? true : false}
+                                                    fullWidth
+                                                    helperText={
+                                                        <ErrorMessage errors={errors} name="observacao" >
+                                                            {({ message }) => message}
+                                                        </ErrorMessage>
+                                                    }
+                                                    multiline
+                                                    rows={2}
+                                                    rowsMax={6}
+                                                />
                                             }
-                                        }} />
+                                            name="observacao"
+                                            control={control}
+                                            defaultValue={props.orcamentoItemAplicacao.observacao}
+                                            rules={{
+                                                maxLength: maxLengthMessage(1024),
+                                            }} />
                                     )}
                             </Grid>
                             <Grid item xs={4}>
@@ -200,17 +205,21 @@ const OrcamentoItemAplicacaoComponent = (props: Props) => {
                                         <Typography variant="caption" className={classes.marginLeft}>{formatter.formatarNumero(props.orcamentoItemAplicacao.duracaoBack)}</Typography>
                                     </>
                                 ) : (
-                                        <Controller as={
-                                            <TextField label="Duração Back-end" error={errors.duracaoBack ? true : false}
-                                                fullWidth
-                                                helperText={
-                                                    <ErrorMessage errors={errors} name="duracaoBack" >
-                                                        {({ message }) => message}
-                                                    </ErrorMessage>
-                                                }
-                                                InputProps={{ inputComponent: NumberFormat as any }}
-                                            />
-                                        } name="duracaoBack" control={control} defaultValue={props.orcamentoItemAplicacao.duracaoBack} />
+                                        <Controller
+                                            as={
+                                                <TextField label="Duração Back-end" error={errors.duracaoBack ? true : false}
+                                                    fullWidth
+                                                    helperText={
+                                                        <ErrorMessage errors={errors} name="duracaoBack" >
+                                                            {({ message }) => message}
+                                                        </ErrorMessage>
+                                                    }
+                                                    InputProps={{ inputComponent: NumberFormat as any }}
+                                                />
+                                            }
+                                            name="duracaoBack"
+                                            control={control}
+                                            defaultValue={props.orcamentoItemAplicacao.duracaoBack} />
                                     )}
                             </Grid>
                             <Grid item xs={4}>
@@ -220,17 +229,21 @@ const OrcamentoItemAplicacaoComponent = (props: Props) => {
                                         <Typography variant="caption" className={classes.marginLeft}>{formatter.formatarNumero(props.orcamentoItemAplicacao.duracaoFront)}</Typography>
                                     </>
                                 ) : (
-                                        <Controller as={
-                                            <TextField label="Duração Front-end" error={errors.duracaoFront ? true : false}
-                                                fullWidth
-                                                helperText={
-                                                    <ErrorMessage errors={errors} name="duracaoFront" >
-                                                        {({ message }) => message}
-                                                    </ErrorMessage>
-                                                }
-                                                InputProps={{ inputComponent: NumberFormat as any }}
-                                            />
-                                        } name="duracaoFront" control={control} defaultValue={props.orcamentoItemAplicacao.duracaoFront} />
+                                        <Controller
+                                            as={
+                                                <TextField label="Duração Front-end" error={errors.duracaoFront ? true : false}
+                                                    fullWidth
+                                                    helperText={
+                                                        <ErrorMessage errors={errors} name="duracaoFront" >
+                                                            {({ message }) => message}
+                                                        </ErrorMessage>
+                                                    }
+                                                    InputProps={{ inputComponent: NumberFormat as any }}
+                                                />
+                                            }
+                                            name="duracaoFront"
+                                            control={control}
+                                            defaultValue={props.orcamentoItemAplicacao.duracaoFront} />
                                     )}
                             </Grid>
                             <Grid item xs={4}>
@@ -240,17 +253,21 @@ const OrcamentoItemAplicacaoComponent = (props: Props) => {
                                         <Typography variant="caption" className={classes.marginLeft}>{formatter.formatarNumero(props.orcamentoItemAplicacao.duracaoTotal)}</Typography>
                                     </>
                                 ) : (
-                                        <Controller as={
-                                            <TextField label="Duração Total" error={errors.duracaoTotal ? true : false}
-                                                fullWidth
-                                                helperText={
-                                                    <ErrorMessage errors={errors} name="duracaoTotal" >
-                                                        {({ message }) => message}
-                                                    </ErrorMessage>
-                                                }
-                                                InputProps={{ inputComponent: NumberFormat as any }}
-                                            />
-                                        } name="duracaoTotal" control={control} defaultValue={props.orcamentoItemAplicacao.duracaoTotal} />
+                                        <Controller
+                                            as={
+                                                <TextField label="Duração Total" error={errors.duracaoTotal ? true : false}
+                                                    fullWidth
+                                                    helperText={
+                                                        <ErrorMessage errors={errors} name="duracaoTotal" >
+                                                            {({ message }) => message}
+                                                        </ErrorMessage>
+                                                    }
+                                                    InputProps={{ inputComponent: NumberFormat as any }}
+                                                />
+                                            }
+                                            name="duracaoTotal"
+                                            control={control}
+                                            defaultValue={props.orcamentoItemAplicacao.duracaoTotal} />
                                     )}
                             </Grid>
                         </Grid>
@@ -276,4 +293,4 @@ const OrcamentoItemAplicacaoComponent = (props: Props) => {
     );
 }
 
-export default OrcamentoItemAplicacaoComponent;
+export default OrcamentoItemAplicacaoItemComponent;

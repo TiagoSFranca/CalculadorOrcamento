@@ -1,4 +1,4 @@
-﻿import { Card, CardActions, CardContent, CardHeader, Grid } from "@material-ui/core";
+﻿import { Card, CardActions, CardContent, Grid } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import SaveIcon from '@material-ui/icons/Save';
@@ -10,6 +10,7 @@ import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
 import * as AppStore from 'store/AppStore';
 import * as OrcamentoStore from 'store/OrcamentoStore';
+import { maxLengthMessage, requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
 
@@ -46,7 +47,6 @@ const OrcamentoAdicionarComponent = (props: any) => {
         }
     }
 
-
     const onSubmit = (data: any) => {
         dispatch(OrcamentoStore.actionCreators.adicionarOrcamento(data as OrcamentoStore.AdicionarOrcamento, callback));
     };
@@ -58,38 +58,48 @@ const OrcamentoAdicionarComponent = (props: any) => {
                     <CardContent>
                         <form onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
                             <Grid item xs={6} >
-                                <Controller as={
-                                    <TextField label="Nome" error={errors.nome ? true : false}
-                                        fullWidth
-                                        helperText={
-                                            <ErrorMessage errors={errors} name="nome" >
-                                                {({ message }) => message}
-                                            </ErrorMessage>
-                                        }
-                                    />
-                                } name="nome" control={control} defaultValue="" rules={{ required: "Campo obrigatório" }} />
+                                <Controller
+                                    as={
+                                        <TextField label="Nome" error={errors.nome ? true : false}
+                                            fullWidth
+                                            helperText={
+                                                <ErrorMessage errors={errors} name="nome" >
+                                                    {({ message }) => message}
+                                                </ErrorMessage>
+                                            }
+                                        />
+                                    }
+                                    name="nome"
+                                    control={control}
+                                    defaultValue=""
+                                    rules={{
+                                        required: requiredMessage()
+                                    }} />
                             </Grid>
 
                             <Grid item xs={12} >
-                                <Controller as={
-                                    <TextField label="Descrição" error={errors.descricao ? true : false}
-                                        fullWidth
-                                        helperText={
-                                            <ErrorMessage errors={errors} name="descricao" >
-                                                {({ message }) => message}
-                                            </ErrorMessage>
-                                        }
-                                        multiline
-                                        rows={2}
-                                        rowsMax={6}
-                                    />
-                                } name="descricao" control={control} defaultValue="" rules={{
-                                    maxLength: {
-                                        value: 512,
-                                        message: "Tamanho máxio de 512 chars"
+                                <Controller
+                                    as={
+                                        <TextField label="Descrição" error={errors.descricao ? true : false}
+                                            fullWidth
+                                            helperText={
+                                                <ErrorMessage errors={errors} name="descricao" >
+                                                    {({ message }) => message}
+                                                </ErrorMessage>
+                                            }
+                                            multiline
+                                            rows={2}
+                                            rowsMax={6}
+                                        />
                                     }
-                                }} />
+                                    name="descricao"
+                                    control={control}
+                                    defaultValue=""
+                                    rules={{
+                                        maxLength: maxLengthMessage(512)
+                                    }} />
                             </Grid>
+
                             <CardActions
                                 className={classes.container}>
                                 <Grid item xs={12} >

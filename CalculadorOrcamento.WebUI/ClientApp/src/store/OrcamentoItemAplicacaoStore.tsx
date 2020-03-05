@@ -10,8 +10,6 @@ export interface OrcamentoItemAplicacaoState {
     orcamentoItens?: OrcamentoItemAplicacao[];
     orcamentoItem?: OrcamentoItemAplicacao;
     search: boolean;
-    editarTabPrev: number;
-    editarTabAct: number;
 }
 
 export interface OrcamentoItemAplicacao {
@@ -50,90 +48,86 @@ export interface EditarOrcamentoItem {
 }
 
 interface ReceiveOrcamentoItensAction {
-    type: 'RECEIVE_ORCAMENTOS';
+    type: 'RECEIVE_ORCAMENTO_ITENS';
     orcamentoItens: OrcamentoItemAplicacao[];
 }
 
 interface AdicionarOrcamentoItemAction {
-    type: 'ADICIONAR_ORCAMENTO';
+    type: 'ADICIONAR_ORCAMENTO_ITEM';
     orcamentoItem?: OrcamentoItemAplicacao;
 }
 
 interface IsLoadingOrcamentoItemAction {
-    type: 'IS_LOADING_ORCAMENTO';
+    type: 'IS_LOADING_ORCAMENTO_ITEM';
     value: boolean;
 }
 
 interface SetSearchOrcamentoItem {
-    type: 'SET_SEARCH_ORCAMENTO';
+    type: 'SET_SEARCH_ORCAMENTO_ITEM';
     value: boolean;
 }
 
 type KnownAction = ReceiveOrcamentoItensAction | AdicionarOrcamentoItemAction | IsLoadingOrcamentoItemAction | SetSearchOrcamentoItem;
 
-// ----------------
-// ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
-// They don't directly mutate state, but they can have external side-effects (such as loading data).
-
 export const actionCreators = {
     requestOrcamentos: (callback: Function, idOrcamento: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
+        dispatch({ type: 'IS_LOADING_ORCAMENTO_ITEM', value: true });
 
         HTTP.get(`/orcamentoitensaplicacao?idOrcamento=${idOrcamento}`)
             .then(response => response.data as Promise<OrcamentoItemAplicacao[]>)
             .then(result => {
-                dispatch({ type: 'RECEIVE_ORCAMENTOS', orcamentoItens: result });
-                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+                dispatch({ type: 'RECEIVE_ORCAMENTO_ITENS', orcamentoItens: result });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO_ITEM', value: false });
 
                 callback();
             }, error => {
                 callback(error);
-                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO_ITEM', value: false });
             });
     },
 
     adicionarItem: (data: AdicionarOrcamentoItem, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
-        dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
+        dispatch({ type: 'IS_LOADING_ORCAMENTO_ITEM', value: true });
 
         HTTP.post(`/orcamentoitensaplicacao`, JSON.stringify(data))
             .then(response => response.data as Promise<OrcamentoItemAplicacao>)
             .then(data => {
-                dispatch({ type: 'ADICIONAR_ORCAMENTO', orcamentoItem: data });
-                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+                dispatch({ type: 'ADICIONAR_ORCAMENTO_ITEM', orcamentoItem: data });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO_ITEM', value: false });
                 callback();
             }, error => {
                 callback(error);
-                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO_ITEM', value: false });
             });
     },
 
     editarItem: (id: number, data: EditarOrcamentoItem, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
-        dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
+        dispatch({ type: 'IS_LOADING_ORCAMENTO_ITEM', value: true });
 
         HTTP.put(`/orcamentoitensaplicacao/${id}`, JSON.stringify(data))
             .then(response => response.data as Promise<OrcamentoItemAplicacao>)
             .then(data => {
-                dispatch({ type: 'ADICIONAR_ORCAMENTO', orcamentoItem: data });
-                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+                dispatch({ type: 'ADICIONAR_ORCAMENTO_ITEM', orcamentoItem: data });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO_ITEM', value: false });
                 callback();
             }, error => {
                 callback(error);
-                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO_ITEM', value: false });
             });
     },
 
     excluirItem: (id: number, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
-        dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
+        dispatch({ type: 'IS_LOADING_ORCAMENTO_ITEM', value: true });
 
         HTTP.delete(`/orcamentoitensaplicacao/${id}`)
             .then(response => response.data as Promise<OrcamentoItemAplicacao>)
             .then(data => {
-                dispatch({ type: 'SET_SEARCH_ORCAMENTO', value: true });
-                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+                dispatch({ type: 'SET_SEARCH_ORCAMENTO_ITEM', value: true });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO_ITEM', value: false });
                 callback();
             }, error => {
                 callback(error);
-                dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO_ITEM', value: false });
             });
     },
 };
@@ -144,8 +138,6 @@ export const actionCreators = {
 const unloadedState: OrcamentoItemAplicacaoState = {
     isLoading: false,
     search: true,
-    editarTabPrev: 0,
-    editarTabAct: 0,
 };
 
 export const reducer: Reducer<OrcamentoItemAplicacaoState> = (state: OrcamentoItemAplicacaoState | undefined, incomingAction: Action): OrcamentoItemAplicacaoState => {
@@ -155,24 +147,24 @@ export const reducer: Reducer<OrcamentoItemAplicacaoState> = (state: OrcamentoIt
 
     const action = incomingAction as KnownAction;
     switch (action.type) {
-        case 'RECEIVE_ORCAMENTOS':
+        case 'RECEIVE_ORCAMENTO_ITENS':
             return {
                 ...state,
                 orcamentoItens: action.orcamentoItens,
                 search: false,
             };
-        case 'ADICIONAR_ORCAMENTO':
+        case 'ADICIONAR_ORCAMENTO_ITEM':
             return {
                 ...state,
                 orcamentoItem: action.orcamentoItem,
                 search: true
             }
-        case 'IS_LOADING_ORCAMENTO':
+        case 'IS_LOADING_ORCAMENTO_ITEM':
             return {
                 ...state,
                 isLoading: action.value
             }
-        case 'SET_SEARCH_ORCAMENTO':
+        case 'SET_SEARCH_ORCAMENTO_ITEM':
             return {
                 ...state,
                 search: action.value

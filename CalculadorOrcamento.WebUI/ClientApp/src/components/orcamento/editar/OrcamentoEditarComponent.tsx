@@ -13,6 +13,7 @@ import * as OrcamentoStore from 'store/OrcamentoStore';
 import formatter from "utils/formatter";
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
+import { requiredMessage, maxLengthMessage } from "utils/hooksValidations";
 
 type OrcamentoEditarForm = {
     id: number;
@@ -67,61 +68,82 @@ const OrcamentoAdicionarComponent = (props: any) => {
                 <form onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
                     <Grid container spacing={3}>
                         <Grid item xs={6} >
-                            <Controller as={
-                                <TextField label="Codigo"
-                                    fullWidth
-                                    disabled
-                                />
-                            } name="codigo" control={control} defaultValue="" />
+                            <Controller
+                                as={
+                                    <TextField label="Codigo"
+                                        fullWidth
+                                        disabled
+                                    />
+                                }
+                                name="codigo"
+                                control={control}
+                                defaultValue="" />
                         </Grid>
                         <Grid item xs={3} >
-                            <Controller as={
-                                <TextField label="Data de criação"
-                                    fullWidth
-                                    disabled
-                                />
-                            } name="dataCriacao" control={control} defaultValue="" />
+                            <Controller
+                                as={
+                                    <TextField label="Data de criação"
+                                        fullWidth
+                                        disabled
+                                    />
+                                }
+                                name="dataCriacao"
+                                control={control}
+                                defaultValue="" />
                         </Grid>
                         <Grid item xs={3} >
-                            <Controller as={
-                                <TextField label="Data de atualização"
-                                    fullWidth
-                                    disabled
-                                />
-                            } name="dataAtualizacao" control={control} defaultValue="" />
+                            <Controller
+                                as={
+                                    <TextField label="Data de atualização"
+                                        fullWidth
+                                        disabled
+                                    />
+                                }
+                                name="dataAtualizacao"
+                                control={control}
+                                defaultValue="" />
                         </Grid>
                         <Grid item xs={6} >
-                            <Controller as={
-                                <TextField label="Nome" error={errors.nome ? true : false}
-                                    fullWidth
-                                    helperText={
-                                        <ErrorMessage errors={errors} name="nome" >
-                                            {({ message }) => message}
-                                        </ErrorMessage>
-                                    }
-                                />
-                            } name="nome" control={control} defaultValue="" rules={{ required: "Campo obrigatório" }} />
+                            <Controller
+                                as={
+                                    <TextField label="Nome" error={errors.nome ? true : false}
+                                        fullWidth
+                                        helperText={
+                                            <ErrorMessage errors={errors} name="nome" >
+                                                {({ message }) => message}
+                                            </ErrorMessage>
+                                        }
+                                    />
+                                }
+                                name="nome"
+                                control={control}
+                                defaultValue=""
+                                rules={{
+                                    required: requiredMessage()
+                                }} />
                         </Grid>
 
                         <Grid item xs={12} >
-                            <Controller as={
-                                <TextField label="Descrição" error={errors.descricao ? true : false}
-                                    fullWidth
-                                    helperText={
-                                        <ErrorMessage errors={errors} name="descricao" >
-                                            {({ message }) => message}
-                                        </ErrorMessage>
-                                    }
-                                    multiline
-                                    rows={2}
-                                    rowsMax={6}
-                                />
-                            } name="descricao" control={control} defaultValue="" rules={{
-                                maxLength: {
-                                    value: 512,
-                                    message: "Tamanho máxio de 512 chars"
+                            <Controller
+                                as={
+                                    <TextField label="Descrição" error={errors.descricao ? true : false}
+                                        fullWidth
+                                        helperText={
+                                            <ErrorMessage errors={errors} name="descricao" >
+                                                {({ message }) => message}
+                                            </ErrorMessage>
+                                        }
+                                        multiline
+                                        rows={2}
+                                        rowsMax={6}
+                                    />
                                 }
-                            }} />
+                                name="descricao"
+                                control={control}
+                                defaultValue=""
+                                rules={{
+                                    maxLength: maxLengthMessage(512)
+                                }} />
                         </Grid>
 
                         <Grid item xs={12} >

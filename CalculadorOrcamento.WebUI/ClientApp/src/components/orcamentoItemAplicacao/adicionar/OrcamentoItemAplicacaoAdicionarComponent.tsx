@@ -3,6 +3,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import AddIcon from '@material-ui/icons/Add';
 import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
@@ -14,9 +15,9 @@ import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
 import * as AppStore from 'store/AppStore';
 import * as OrcamentoItemAplicacaoStore from 'store/OrcamentoItemAplicacaoStore';
+import { maxLengthMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -71,7 +72,7 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
             setOpen(false);
         }
     }
-    
+
     const onSubmit = (data: OrcamentoItemAplicacaoAdicionarForm) => {
         data.idOrcamento = +id;
         data.duracaoBack = data.duracaoBack != null && data.duracaoBack >= 0 ? +data.duracaoBack : null;
@@ -104,87 +105,103 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
                             </Grid>
 
                             <Grid item xs={12} >
-                                <Controller as={
-                                    <TextField label="Descrição" error={errors.descricao ? true : false}
-                                        fullWidth
-                                        helperText={
-                                            <ErrorMessage errors={errors} name="descricao" >
-                                                {({ message }) => message}
-                                            </ErrorMessage>
-                                        }
-                                        multiline
-                                        rows={2}
-                                        rowsMax={6}
-                                    />
-                                } name="descricao" control={control} defaultValue="" rules={{
-                                    maxLength: {
-                                        value: 512,
-                                        message: "Tamanho máxio de 512 chars"
+                                <Controller
+                                    as={
+                                        <TextField label="Descrição" error={errors.descricao ? true : false}
+                                            fullWidth
+                                            helperText={
+                                                <ErrorMessage errors={errors} name="descricao" >
+                                                    {({ message }) => message}
+                                                </ErrorMessage>
+                                            }
+                                            multiline
+                                            rows={2}
+                                            rowsMax={6}
+                                        />
                                     }
-                                }} />
+                                    name="descricao"
+                                    control={control}
+                                    defaultValue=""
+                                    rules={{
+                                        maxLength: maxLengthMessage(512),
+                                    }} />
                             </Grid>
 
                             <Grid item xs={12} >
-                                <Controller as={
-                                    <TextField label="Observações" error={errors.observacao ? true : false}
-                                        fullWidth
-                                        helperText={
-                                            <ErrorMessage errors={errors} name="observacao" >
-                                                {({ message }) => message}
-                                            </ErrorMessage>
-                                        }
-                                        multiline
-                                        rows={2}
-                                        rowsMax={6}
-                                    />
-                                } name="observacao" control={control} defaultValue="" rules={{
-                                    maxLength: {
-                                        value: 1024,
-                                        message: "Tamanho máxio de 1024 chars"
+                                <Controller
+                                    as={
+                                        <TextField label="Observações" error={errors.observacao ? true : false}
+                                            fullWidth
+                                            helperText={
+                                                <ErrorMessage errors={errors} name="observacao" >
+                                                    {({ message }) => message}
+                                                </ErrorMessage>
+                                            }
+                                            multiline
+                                            rows={2}
+                                            rowsMax={6}
+                                        />
                                     }
-                                }} />
+                                    name="observacao"
+                                    control={control}
+                                    defaultValue=""
+                                    rules={{
+                                        maxLength: maxLengthMessage(1024),
+                                    }} />
                             </Grid>
 
                             <Grid item xs={4} >
-                                <Controller as={
-                                    <TextField label="Duração Back-end" error={errors.duracaoBack ? true : false}
-                                        fullWidth
-                                        helperText={
-                                            <ErrorMessage errors={errors} name="duracaoBack" >
-                                                {({ message }) => message}
-                                            </ErrorMessage>
-                                        }
-                                        InputProps={{ inputComponent: NumberFormat as any }}
-                                    />
-                                } name="duracaoBack" control={control} defaultValue="" />
+                                <Controller
+                                    as={
+                                        <TextField label="Duração Back-end" error={errors.duracaoBack ? true : false}
+                                            fullWidth
+                                            helperText={
+                                                <ErrorMessage errors={errors} name="duracaoBack" >
+                                                    {({ message }) => message}
+                                                </ErrorMessage>
+                                            }
+                                            InputProps={{ inputComponent: NumberFormat as any }}
+                                        />
+                                    }
+                                    name="duracaoBack"
+                                    control={control}
+                                    defaultValue="" />
                             </Grid>
 
                             <Grid item xs={4} >
-                                <Controller as={
-                                    <TextField label="Duração Front-end" error={errors.duracaoFront ? true : false}
-                                        fullWidth
-                                        helperText={
-                                            <ErrorMessage errors={errors} name="duracaoFront" >
-                                                {({ message }) => message}
-                                            </ErrorMessage>
-                                        }
-                                        InputProps={{ inputComponent: NumberFormat as any }}
-                                    />
-                                } name="duracaoFront" control={control} defaultValue="" />
+                                <Controller
+                                    as={
+                                        <TextField label="Duração Front-end" error={errors.duracaoFront ? true : false}
+                                            fullWidth
+                                            helperText={
+                                                <ErrorMessage errors={errors} name="duracaoFront" >
+                                                    {({ message }) => message}
+                                                </ErrorMessage>
+                                            }
+                                            InputProps={{ inputComponent: NumberFormat as any }}
+                                        />
+                                    }
+                                    name="duracaoFront"
+                                    control={control}
+                                    defaultValue="" />
                             </Grid>
 
                             <Grid item xs={4} >
-                                <Controller as={
-                                    <TextField label="Duração Total" error={errors.duracaoTotal ? true : false}
-                                        fullWidth
-                                        helperText={
-                                            <ErrorMessage errors={errors} name="duracaoTotal" >
-                                                {({ message }) => message}
-                                            </ErrorMessage>
-                                        }
-                                        InputProps={{ inputComponent: NumberFormat as any }}
-                                    />
-                                } name="duracaoTotal" control={control} defaultValue="" />
+                                <Controller
+                                    as={
+                                        <TextField label="Duração Total" error={errors.duracaoTotal ? true : false}
+                                            fullWidth
+                                            helperText={
+                                                <ErrorMessage errors={errors} name="duracaoTotal" >
+                                                    {({ message }) => message}
+                                                </ErrorMessage>
+                                            }
+                                            InputProps={{ inputComponent: NumberFormat as any }}
+                                        />
+                                    }
+                                    name="duracaoTotal"
+                                    control={control}
+                                    defaultValue="" />
                             </Grid>
                         </Grid>
                     </DialogContent>

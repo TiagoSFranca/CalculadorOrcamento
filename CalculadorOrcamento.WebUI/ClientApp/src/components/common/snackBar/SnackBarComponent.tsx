@@ -6,14 +6,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
 import * as AppStore from 'store/AppStore';
 import { ISnackBarType } from 'utils/snackBar';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={10} variant="filled" {...props} />;
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        preLine: {
+            whiteSpace: 'pre-line'
+        }
+    }));
+
 const CustomSnackBar = () => {
     const appStore = useSelector((s: ApplicationState) => s.app);
     const dispatch = useDispatch();
+    const classes = useStyles();
 
     const { snackBar } = appStore;
 
@@ -39,7 +48,7 @@ const CustomSnackBar = () => {
         snackBar != null ? (
             <Snackbar open={snackBar != null} autoHideDuration={6000} onClose={handleClose}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
-                <Alert onClose={handleClose} severity={getSeverity(snackBar.type)}>
+                <Alert onClose={handleClose} severity={getSeverity(snackBar.type)} className={classes.preLine}>
                     {
                         snackBar.title != null ? (<AlertTitle>{snackBar.title}</AlertTitle>) : (null)
                     }

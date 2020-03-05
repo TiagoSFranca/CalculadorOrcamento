@@ -1,13 +1,13 @@
 ﻿import { Grid } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import LoadingCard from 'components/common/loadingCard/LoadingCardComponent';
-import OrcamentoItemAplicacaoAdicionar from 'components/orcamentoItemAplicacao/OrcamentoItemAplicacaoAdicionarComponent';
+import OrcamentoItemAplicacaoAdicionar from 'components/orcamentoItemAplicacao/adicionar/OrcamentoItemAplicacaoAdicionarComponent';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
 import * as OrcamentoItemAplicacaoStore from 'store/OrcamentoItemAplicacaoStore';
-import OrcamentoItemAplicacaoComponent from './OrcamentoItemAplicacaoComponent';
+import OrcamentoItemAplicacaoComponent from 'components/orcamentoItemAplicacao/item/OrcamentoItemAplicacaoItemComponent';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -43,6 +43,10 @@ const OrcamentoItemAplicacaoListComponent = (props: any) => {
     }
 
     useEffect(() => {
+        dispatch(OrcamentoItemAplicacaoStore.actionCreators.requestOrcamentos(callback, id))
+    }, []);
+
+    useEffect(() => {
         if (search)
             dispatch(OrcamentoItemAplicacaoStore.actionCreators.requestOrcamentos(callback, id))
     }, [search])
@@ -56,7 +60,7 @@ const OrcamentoItemAplicacaoListComponent = (props: any) => {
 
                 {orcamentoItens &&
                     orcamentoItens.map((el, index) => (
-                        <OrcamentoItemAplicacaoComponent orcamentoItemAplicacao={el} key={el.id}/>))}
+                        <OrcamentoItemAplicacaoComponent orcamentoItemAplicacao={el} key={el.id} />))}
             </LoadingCard>
         </ div>
     );

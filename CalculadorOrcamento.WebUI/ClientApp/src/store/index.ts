@@ -4,6 +4,7 @@ import * as App from './AppStore'
 import * as Orcamento from './OrcamentoStore';
 import * as Auth from './AuthStore';
 import * as OrcamentoItemAplicacao from './OrcamentoItemAplicacaoStore'
+import * as OrcamentoValor from './OrcamentoValorStore'
 
 // The top-level state object
 export interface ApplicationState {
@@ -13,6 +14,7 @@ export interface ApplicationState {
     orcamento: Orcamento.OrcamentoState;
     auth: Auth.AuthState;
     orcamentoItemAplicacao: OrcamentoItemAplicacao.OrcamentoItemAplicacaoState;
+    orcamentoValor: OrcamentoValor.OrcamentoValorState;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -25,6 +27,7 @@ export const reducers = {
     orcamento: Orcamento.reducer,
     auth: Auth.reducer,
     orcamentoItemAplicacao: OrcamentoItemAplicacao.reducer,
+    orcamentoValor: OrcamentoValor.reducer,
 };
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are

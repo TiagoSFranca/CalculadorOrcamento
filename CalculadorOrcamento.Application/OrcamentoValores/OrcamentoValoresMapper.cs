@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CalculadorOrcamento.Application.OrcamentoValores.Commands.Adicionar;
+using CalculadorOrcamento.Application.OrcamentoValores.Commands.Editar;
 using CalculadorOrcamento.Application.OrcamentoValores.Models;
 using CalculadorOrcamento.Application.Settings.AutoMapper;
 using CalculadorOrcamento.Domain.Entities;
@@ -19,6 +20,9 @@ namespace CalculadorOrcamento.Application.OrcamentoValores
 
             profile.CreateMap<AdicionarOrcamentoValor, AdicionarOrcamentoValorCommand>();
             profile.CreateMap<AdicionarOrcamentoValorCommand, OrcamentoValor>();
+
+            profile.CreateMap<EditarOrcamentoValor, EditarOrcamentoValorCommand>();
+            profile.CreateMap<EditarOrcamentoValorCommand, OrcamentoValor>();
         }
     }
 }

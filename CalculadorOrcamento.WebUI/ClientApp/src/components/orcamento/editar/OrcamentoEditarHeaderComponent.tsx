@@ -1,6 +1,4 @@
 ﻿import CustomBreadcrumbs from 'components/app/breadcrumbs/CustomBreadcrumbs';
-import OrcamentoTabsComponent, { ItensAplicacao } from 'components/orcamento/editar/OrcamentoTabsComponent';
-import OrcamentoItemAplicacaListComponent from 'components/orcamentoItemAplicacao/OrcamentoItemAplicacaoListComponent';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -9,7 +7,8 @@ import * as AppStore from 'store/AppStore';
 import * as OrcamentoStore from 'store/OrcamentoStore';
 import { OrcamentoIndexBreadcrumb } from 'utils/breadcrumbs';
 
-const OrcamentoItemAplicacaoList = (props: any) => {
+
+const OrcamentoEditarHeaderComponent = (props: any) => {
     const id = props.match.params.id;
 
     const dispatch = useDispatch();
@@ -32,13 +31,9 @@ const OrcamentoItemAplicacaoList = (props: any) => {
         dispatch(AppStore.actionCreators.changePageTitleAction(orcamento ? orcamento.nome : ''))
     }, [orcamento])
 
-    return (
-        <>
-            <CustomBreadcrumbs showHome={true} itens={[OrcamentoIndexBreadcrumb, { name: orcamento ? orcamento.nome : '', to: '' }]} />
-            <OrcamentoTabsComponent tab={ItensAplicacao} />
-            <OrcamentoItemAplicacaListComponent />
-        </>
-    );
-};
+    return (<>
+        <CustomBreadcrumbs showHome={true} itens={[OrcamentoIndexBreadcrumb, { name: orcamento ? orcamento.nome : '', to: '' }]} />
+    </>)
+}
 
-export default withRouter(OrcamentoItemAplicacaoList);
+export default withRouter(OrcamentoEditarHeaderComponent);
