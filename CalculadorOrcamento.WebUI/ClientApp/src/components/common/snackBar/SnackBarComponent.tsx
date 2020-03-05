@@ -47,7 +47,7 @@ const CustomSnackBar = () => {
     return (
         snackBar != null ? (
             <Snackbar open={snackBar != null} autoHideDuration={6000} onClose={handleClose}
-                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
+                anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}>
                 <Alert onClose={handleClose} severity={getSeverity(snackBar.type)} className={classes.preLine}>
                     {
                         snackBar.title != null ? (<AlertTitle>{snackBar.title}</AlertTitle>) : (null)

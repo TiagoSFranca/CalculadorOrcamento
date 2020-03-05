@@ -15,7 +15,7 @@ import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
 import * as AppStore from 'store/AppStore';
 import * as OrcamentoValorStore from 'store/OrcamentoValorStore';
-import { requiredMessage } from 'utils/hooksValidations';
+import { requiredMessage, greaterThanMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
 
@@ -101,7 +101,7 @@ const OrcamentoValorAdicionarComponent = (props: Props) => {
                                                 startAdornment: <InputAdornment position="start">R$</InputAdornment>,
                                             }}
                                             inputRef={register({
-                                                validate: value => value > 0 || "O valor deve ser maior que zero"
+                                                validate: value => value > 0 || greaterThanMessage(0)
                                             })}
                                         />
                                     }
@@ -128,7 +128,7 @@ const OrcamentoValorAdicionarComponent = (props: Props) => {
                                                 startAdornment: <InputAdornment position="start">x</InputAdornment>,
                                             }}
                                             inputRef={register({
-                                                validate: value => value > 0 || "O valor deve ser maior que zero"
+                                                validate: value => value > 0 || greaterThanMessage(0)
                                             })}
                                         />
                                     }

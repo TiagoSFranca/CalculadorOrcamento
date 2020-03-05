@@ -12,17 +12,19 @@ export const formatarDataRequest = (data: Date | null) => {
 }
 
 export const formatarNumero = (numero: number | undefined | null) => {
-    if (numero)
+    if (numero || numero === 0)
         return numero.toLocaleString('pt-BR');
+
     return "";
 }
 
 export const formatarDinheiro = (numero: number | undefined | null) => {
-    if (numero)
+    if (numero || numero === 0)
         return numero.toLocaleString('pt-BR', {
             style: "currency",
             currency: "BRL"
         });
+
     return "";
 }
 

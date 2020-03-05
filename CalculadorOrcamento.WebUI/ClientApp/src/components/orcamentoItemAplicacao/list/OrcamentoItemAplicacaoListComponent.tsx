@@ -12,13 +12,6 @@ import OrcamentoItemAplicacaoComponent from 'components/orcamentoItemAplicacao/i
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        root: {
-            width: '100%',
-        },
-        heading: {
-            fontSize: theme.typography.pxToRem(15),
-            fontWeight: theme.typography.fontWeightRegular,
-        },
         marginTop: {
             marginTop: theme.spacing(3)
         },

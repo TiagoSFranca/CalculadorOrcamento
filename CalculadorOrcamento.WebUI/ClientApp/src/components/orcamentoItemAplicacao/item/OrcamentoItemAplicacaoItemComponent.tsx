@@ -18,7 +18,7 @@ import { ApplicationState } from 'store';
 import * as AppStore from 'store/AppStore';
 import * as OrcamentoItemAplicacaoStore from 'store/OrcamentoItemAplicacaoStore';
 import formatter from 'utils/formatter';
-import { maxLengthMessage } from 'utils/hooksValidations';
+import { maxLengthMessage, minValueMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
 
@@ -219,7 +219,10 @@ const OrcamentoItemAplicacaoItemComponent = (props: Props) => {
                                             }
                                             name="duracaoBack"
                                             control={control}
-                                            defaultValue={props.orcamentoItemAplicacao.duracaoBack} />
+                                            defaultValue={props.orcamentoItemAplicacao.duracaoBack}
+                                            rules={{
+                                                min: minValueMessage(0)
+                                            }} />
                                     )}
                             </Grid>
                             <Grid item xs={4}>
@@ -243,7 +246,10 @@ const OrcamentoItemAplicacaoItemComponent = (props: Props) => {
                                             }
                                             name="duracaoFront"
                                             control={control}
-                                            defaultValue={props.orcamentoItemAplicacao.duracaoFront} />
+                                            defaultValue={props.orcamentoItemAplicacao.duracaoFront}
+                                            rules={{
+                                                min: minValueMessage(0)
+                                            }} />
                                     )}
                             </Grid>
                             <Grid item xs={4}>
@@ -267,7 +273,10 @@ const OrcamentoItemAplicacaoItemComponent = (props: Props) => {
                                             }
                                             name="duracaoTotal"
                                             control={control}
-                                            defaultValue={props.orcamentoItemAplicacao.duracaoTotal} />
+                                            defaultValue={props.orcamentoItemAplicacao.duracaoTotal}
+                                            rules={{
+                                                min: minValueMessage(0)
+                                            }} />
                                     )}
                             </Grid>
                         </Grid>

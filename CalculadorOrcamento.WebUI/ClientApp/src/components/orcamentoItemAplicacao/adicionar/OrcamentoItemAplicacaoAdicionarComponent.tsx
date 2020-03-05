@@ -15,7 +15,7 @@ import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
 import * as AppStore from 'store/AppStore';
 import * as OrcamentoItemAplicacaoStore from 'store/OrcamentoItemAplicacaoStore';
-import { maxLengthMessage } from 'utils/hooksValidations';
+import { maxLengthMessage, minValueMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
 
@@ -165,7 +165,10 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
                                     }
                                     name="duracaoBack"
                                     control={control}
-                                    defaultValue="" />
+                                    defaultValue=""
+                                    rules={{
+                                        min: minValueMessage(0)
+                                    }} />
                             </Grid>
 
                             <Grid item xs={4} >
@@ -183,7 +186,10 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
                                     }
                                     name="duracaoFront"
                                     control={control}
-                                    defaultValue="" />
+                                    defaultValue=""
+                                    rules={{
+                                        min: minValueMessage(0)
+                                    }} />
                             </Grid>
 
                             <Grid item xs={4} >
@@ -201,7 +207,10 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
                                     }
                                     name="duracaoTotal"
                                     control={control}
-                                    defaultValue="" />
+                                    defaultValue=""
+                                    rules={{
+                                        min: minValueMessage(0)
+                                    }} />
                             </Grid>
                         </Grid>
                     </DialogContent>

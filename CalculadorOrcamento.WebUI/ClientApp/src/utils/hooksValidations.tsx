@@ -16,8 +16,21 @@ export const minLengthMessage = (min: number) => {
     }
 }
 
+export const greaterThanMessage = (value: number) => {
+    return `O valor deve ser maior que ${value}`;
+}
+
+export const minValueMessage = (min: number) => {
+    return {
+        value: min,
+        message: `O valor mínimo deve ser ${min}`
+    }
+}
+
 export default {
     maxLengthMessage,
     minLengthMessage,
-    requiredMessage
+    requiredMessage,
+    greaterThanMessage,
+    minValueMessage
 }
