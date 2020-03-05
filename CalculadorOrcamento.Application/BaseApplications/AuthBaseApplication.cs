@@ -4,6 +4,7 @@ using CalculadorOrcamento.Common.Helpers;
 using CalculadorOrcamento.Domain.Entities;
 using CalculadorOrcamento.Persistence;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,9 +28,9 @@ namespace CalculadorOrcamento.Application.BaseApplications
 
         private int? _id => ConvertHelper.ConvertStringToNullableInt(GetClaims(ClaimTypes.Sid).FirstOrDefault()?.Value);
 
-        public Task<Usuario> GetUsuarioLogado()
+        public void CheckIsAuth()
         {
-            throw new NotImplementedException();
+            GetId();
         }
 
         public int GetId()

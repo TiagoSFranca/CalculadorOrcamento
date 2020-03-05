@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Linq;
+using CalculadorOrcamento.Domain.Seeds;
 
 namespace CalculadorOrcamento.Persistence
 {
@@ -14,24 +13,16 @@ namespace CalculadorOrcamento.Persistence
 
         private void Seed(CalculadorOrcamentoContext context)
         {
-            //SeedGeneroPet(context);
-            //SeedSituacaoSolicitacaoPet(context);
+            SeedOrcamentoPermissao(context);
         }
 
-        //private void SeedSituacaoSolicitacaoPet(CalculadorOrcamentoContext context)
-        //{
-        //    if (context.SituacoesSolicitacaoPet.Any())
-        //        return;
-        //    context.SituacoesSolicitacaoPet.AddRange(SituacaoSolicitacaoPetSeed.Seeds);
-        //    context.SaveChanges();
-        //}
+        private void SeedOrcamentoPermissao(CalculadorOrcamentoContext context)
+        {
+            if (context.OrcamentoPermissoes.Any())
+                return;
 
-        //private void SeedGeneroPet(CalculadorOrcamentoContext context)
-        //{
-        //    if (context.GenerosPet.Any())
-        //        return;
-        //    context.GenerosPet.AddRange(GeneroPetSeed.Seeds);
-        //    context.SaveChanges();
-        //}
+            context.OrcamentoPermissoes.AddRange(OrcamentoPermissaoSeed.Seeds);
+            context.SaveChanges();
+        }
     }
 }

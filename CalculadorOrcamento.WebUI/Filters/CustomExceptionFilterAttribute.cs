@@ -41,6 +41,12 @@ namespace CalculadorOrcamento.WebUI.Filters
             MontarResponse(ref context, (int)HttpStatusCode.Unauthorized, objeto);
         }
 
+        private void MontarForbidden(ref ExceptionContext context)
+        {
+            var objeto = new ResponseForbidden(context.Exception);
+            MontarResponse(ref context, (int)HttpStatusCode.Forbidden, objeto);
+        }
+
         public override void OnException(ExceptionContext context)
         {
             if (context.Exception is ValidationException || context.Exception is BusinessException)
@@ -58,6 +64,10 @@ namespace CalculadorOrcamento.WebUI.Filters
             else if (context.Exception is PersistenceException)
             {
                 MontarInternalServerError(ref context);
+            }
+            else if(context.Exception is ForbiddenException)
+            {
+                MontarForbidden(ref context);
             }
             else
             {

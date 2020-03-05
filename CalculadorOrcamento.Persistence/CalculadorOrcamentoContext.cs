@@ -22,6 +22,7 @@ namespace CalculadorOrcamento.Persistence
         public DbSet<OrcamentoValor> OrcamentoValores { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<OrcamentoPermissao> OrcamentoPermissoes { get; set; }
 
         #endregion
 

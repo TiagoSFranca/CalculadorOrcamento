@@ -56,6 +56,7 @@ namespace CalculadorOrcamento.WebUI.Controllers
         [HttpGet("{id}")]
         [Authorize]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(OrcamentoViewModel))]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden, Type = typeof(ResponseForbidden))]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized, Type = typeof(ResponseUnauthorized))]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]
         public async Task<ActionResult<OrcamentoViewModel>> Get(int id)
@@ -69,6 +70,8 @@ namespace CalculadorOrcamento.WebUI.Controllers
         [HttpPut("{id}")]
         [Authorize]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(OrcamentoViewModel))]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden, Type = typeof(ResponseForbidden))]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ResponseBadRequest))]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized, Type = typeof(ResponseUnauthorized))]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]
         public async Task<ActionResult<OrcamentoViewModel>> Editar(int id, [FromBody]EditarOrcamento model)
@@ -83,6 +86,7 @@ namespace CalculadorOrcamento.WebUI.Controllers
         [Authorize]
         [Route("Excluir")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(string))]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden, Type = typeof(ResponseForbidden))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ResponseBadRequest))]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized, Type = typeof(ResponseUnauthorized))]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]

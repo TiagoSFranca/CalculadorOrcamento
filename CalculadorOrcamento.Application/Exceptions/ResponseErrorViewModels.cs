@@ -51,4 +51,10 @@ namespace CalculadorOrcamento.Application.Exceptions
         }
     }
 
+    public class ResponseForbidden : ResponseError
+    {
+        public ResponseForbidden(Exception exception) : base(exception)
+        {
+        }
+    }
 }

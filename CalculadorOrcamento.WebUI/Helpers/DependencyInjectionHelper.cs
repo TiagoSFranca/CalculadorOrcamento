@@ -19,6 +19,7 @@ namespace CalculadorOrcamento.WebUI.Helpers
             services.AddTransient<IJwtService, JwtService>();
 
             services.AddTransient<IAuthBaseApplication, AuthBaseApplication>();
+            services.AddTransient<IOrcamentoAuthBaseApplication, OrcamentoAuthBaseApplication>();
             services.AddTransient<IRefreshTokenBaseApplication, RefreshTokenBaseApplication>();
 
             services.AddTransient(typeof(IPaginacaoBaseApplication<,>), typeof(PaginacaoBaseApplication<,>));
