@@ -1,13 +1,15 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoMapper;
 using CalculadorOrcamento.Application.Exceptions;
+using CalculadorOrcamento.Application.Interfaces.BaseApplications;
 using CalculadorOrcamento.Application.OrcamentoValores.Models;
 using CalculadorOrcamento.Domain.Entities;
+using CalculadorOrcamento.Domain.Seeds;
 using CalculadorOrcamento.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace CalculadorOrcamento.Application.OrcamentoValores.Commands.Adicionar
 {
@@ -15,15 +17,19 @@ namespace CalculadorOrcamento.Application.OrcamentoValores.Commands.Adicionar
     {
         private readonly CalculadorOrcamentoContext _context;
         private readonly IMapper _mapper;
+        private readonly IOrcamentoAuthBaseApplication _orcamentoAuthBaseApplication;
 
-        public AdicionarOrcamentoValorCommandHandler(CalculadorOrcamentoContext context, IMapper mapper)
+        public AdicionarOrcamentoValorCommandHandler(CalculadorOrcamentoContext context, IMapper mapper, IOrcamentoAuthBaseApplication orcamentoAuthBaseApplication)
         {
             _context = context;
             _mapper = mapper;
+            _orcamentoAuthBaseApplication = orcamentoAuthBaseApplication;
         }
 
         public async Task<OrcamentoValorViewModel> Handle(AdicionarOrcamentoValorCommand request, CancellationToken cancellationToken)
         {
+            await _orcamentoAuthBaseApplication.VerificarPermissao(request.IdOrcamento, OrcamentoPermissaoEnum.EDITAR);
+
             var existeOrcamento = await _context.Orcamentos.AnyAsync(e => e.Id == request.IdOrcamento);
             if (!existeOrcamento)
                 throw new NotFoundException(nameof(Orcamento), request.IdOrcamento);

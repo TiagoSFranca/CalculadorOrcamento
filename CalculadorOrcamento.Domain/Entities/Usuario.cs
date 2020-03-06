@@ -1,6 +1,6 @@
-﻿using CalculadorOrcamento.Domain.Entities.GenericModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using CalculadorOrcamento.Domain.Entities.GenericModels;
 
 namespace CalculadorOrcamento.Domain.Entities
 {
@@ -9,6 +9,7 @@ namespace CalculadorOrcamento.Domain.Entities
         public Usuario()
         {
             Orcamentos = new HashSet<Orcamento>();
+            OrcamentoUsuarioPermissoes = new HashSet<OrcamentoUsuarioPermissao>();
         }
 
         public int Id { get; set; }
@@ -21,5 +22,6 @@ namespace CalculadorOrcamento.Domain.Entities
         public bool ConfirmouEmail { get; set; }
 
         public virtual ICollection<Orcamento> Orcamentos { get; set; }
+        public virtual ICollection<OrcamentoUsuarioPermissao> OrcamentoUsuarioPermissoes { get; set; }
     }
 }

@@ -1,12 +1,14 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoMapper;
 using CalculadorOrcamento.Application.Exceptions;
+using CalculadorOrcamento.Application.Interfaces.BaseApplications;
 using CalculadorOrcamento.Application.OrcamentoItensAplicacao.Models;
+using CalculadorOrcamento.Domain.Seeds;
 using CalculadorOrcamento.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace CalculadorOrcamento.Application.OrcamentoItensAplicacao.Commands.Editar
 {
@@ -14,14 +16,19 @@ namespace CalculadorOrcamento.Application.OrcamentoItensAplicacao.Commands.Edita
     {
         private readonly CalculadorOrcamentoContext _context;
         private readonly IMapper _mapper;
-        public EditarOrcamentoItemAplicacaoCommandHandler(CalculadorOrcamentoContext context, IMapper mapper)
+        private readonly IOrcamentoAuthBaseApplication _orcamentoAuthBaseApplication;
+
+        public EditarOrcamentoItemAplicacaoCommandHandler(CalculadorOrcamentoContext context, IMapper mapper, IOrcamentoAuthBaseApplication orcamentoAuthBaseApplication)
         {
             _context = context;
             _mapper = mapper;
+            _orcamentoAuthBaseApplication = orcamentoAuthBaseApplication;
         }
 
         public async Task<OrcamentoItemAplicacaoViewModel> Handle(EditarOrcamentoItemAplicacaoCommand request, CancellationToken cancellationToken)
         {
+            await _orcamentoAuthBaseApplication.VerificarPermissao(request.IdOrcamento, OrcamentoPermissaoEnum.EDITAR);
+
             var entidade = await _context.OrcamentoItemAplicacoes.FindAsync(request.Id);
             if (entidade == null)
                 throw new NotFoundException("Item", request.Id);

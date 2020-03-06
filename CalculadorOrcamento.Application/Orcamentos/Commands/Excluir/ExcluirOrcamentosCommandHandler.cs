@@ -1,13 +1,15 @@
-﻿using AutoMapper;
-using CalculadorOrcamento.Application.Exceptions;
-using CalculadorOrcamento.Domain.Entities;
-using CalculadorOrcamento.Persistence;
-using MediatR;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using CalculadorOrcamento.Application.Exceptions;
+using CalculadorOrcamento.Application.Interfaces.BaseApplications;
+using CalculadorOrcamento.Domain.Entities;
+using CalculadorOrcamento.Domain.Seeds;
+using CalculadorOrcamento.Persistence;
+using MediatR;
 
 namespace CalculadorOrcamento.Application.Orcamentos.Commands.Excluir
 {
@@ -15,11 +17,13 @@ namespace CalculadorOrcamento.Application.Orcamentos.Commands.Excluir
     {
         private readonly CalculadorOrcamentoContext _context;
         private readonly IMapper _mapper;
+        private readonly IOrcamentoAuthBaseApplication _orcamentoAuthBaseApplication;
 
-        public ExcluirOrcamentosCommandHandler(CalculadorOrcamentoContext context, IMapper mapper)
+        public ExcluirOrcamentosCommandHandler(CalculadorOrcamentoContext context, IMapper mapper, IOrcamentoAuthBaseApplication orcamentoAuthBaseApplication)
         {
             _context = context;
             _mapper = mapper;
+            _orcamentoAuthBaseApplication = orcamentoAuthBaseApplication;
         }
 
         public async Task<string> Handle(ExcluirOrcamentosCommand request, CancellationToken cancellationToken)
@@ -35,6 +39,7 @@ namespace CalculadorOrcamento.Application.Orcamentos.Commands.Excluir
                 Orcamento item = null;
                 try
                 {
+                    await _orcamentoAuthBaseApplication.VerificarPermissao(id, OrcamentoPermissaoEnum.EXCLUIR);
                     item = _context.Orcamentos.Find(id);
                     if (item == null)
                         throw new NotFoundException(nameof(Orcamento), id);
@@ -43,12 +48,21 @@ namespace CalculadorOrcamento.Application.Orcamentos.Commands.Excluir
 
                     await _context.SaveChangesAsync();
                 }
+                catch (AuthorizationException)
+                {
+                    throw;
+                }
+                catch (ForbiddenException)
+                {
+                    mensagem += Environment.NewLine + string.Format("Você não tem permissão para excluir o orçamento [{0}]", id);
+                    countErrors++;
+                }
                 catch (NotFoundException ex)
                 {
                     mensagem += Environment.NewLine + ex.Message;
                     countErrors++;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     countErrors++;
                     if (item != null)

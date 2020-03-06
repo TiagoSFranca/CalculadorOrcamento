@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using CalculadorOrcamento.Application.Exceptions;
+using CalculadorOrcamento.Application.Interfaces.BaseApplications;
 using CalculadorOrcamento.Application.OrcamentoValores.Models;
+using CalculadorOrcamento.Domain.Seeds;
 using CalculadorOrcamento.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -14,15 +16,19 @@ namespace CalculadorOrcamento.Application.OrcamentoValores.Commands.Editar
     {
         private readonly CalculadorOrcamentoContext _context;
         private readonly IMapper _mapper;
+        private readonly IOrcamentoAuthBaseApplication _orcamentoAuthBaseApplication;
 
-        public EditarOrcamentoValorCommandHandler(CalculadorOrcamentoContext context, IMapper mapper)
+        public EditarOrcamentoValorCommandHandler(CalculadorOrcamentoContext context, IMapper mapper, IOrcamentoAuthBaseApplication orcamentoAuthBaseApplication)
         {
             _context = context;
             _mapper = mapper;
+            _orcamentoAuthBaseApplication = orcamentoAuthBaseApplication;
         }
 
         public async Task<OrcamentoValorViewModel> Handle(EditarOrcamentoValorCommand request, CancellationToken cancellationToken)
         {
+            await _orcamentoAuthBaseApplication.VerificarPermissao(request.IdOrcamento, OrcamentoPermissaoEnum.EDITAR);
+
             var entidade = await _context.OrcamentoValores.FindAsync(request.Id);
             if (entidade == null)
                 throw new NotFoundException("Valor", request.Id);

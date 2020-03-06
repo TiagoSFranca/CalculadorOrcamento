@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CalculadorOrcamento.Application.Exceptions;
+using CalculadorOrcamento.Application.Interfaces.BaseApplications;
+using CalculadorOrcamento.Domain.Seeds;
 using CalculadorOrcamento.Persistence;
 using MediatR;
 
@@ -12,10 +12,12 @@ namespace CalculadorOrcamento.Application.OrcamentoItensAplicacao.Commands.Exclu
     public class ExcluirOrcamentoItemAplicacaoCommandHandler : IRequestHandler<ExcluirOrcamentoItemAplicacaoCommand>
     {
         private readonly CalculadorOrcamentoContext _context;
+        private readonly IOrcamentoAuthBaseApplication _orcamentoAuthBaseApplication;
 
-        public ExcluirOrcamentoItemAplicacaoCommandHandler(CalculadorOrcamentoContext context)
+        public ExcluirOrcamentoItemAplicacaoCommandHandler(CalculadorOrcamentoContext context, IOrcamentoAuthBaseApplication orcamentoAuthBaseApplication)
         {
             _context = context;
+            _orcamentoAuthBaseApplication = orcamentoAuthBaseApplication;
         }
 
         public async Task<Unit> Handle(ExcluirOrcamentoItemAplicacaoCommand request, CancellationToken cancellationToken)
@@ -24,6 +26,8 @@ namespace CalculadorOrcamento.Application.OrcamentoItensAplicacao.Commands.Exclu
 
             if (entidade == null)
                 throw new NotFoundException("Item", request.Id);
+
+            await _orcamentoAuthBaseApplication.VerificarPermissao(entidade.IdOrcamento, OrcamentoPermissaoEnum.EXCLUIR);
 
             try
             {

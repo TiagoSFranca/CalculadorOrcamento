@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using CalculadorOrcamento.Application.Exceptions;
 using CalculadorOrcamento.Application.Interfaces.BaseApplications;
 using CalculadorOrcamento.Domain.Seeds;
 using CalculadorOrcamento.Persistence;
@@ -29,6 +30,12 @@ namespace CalculadorOrcamento.Application.BaseApplications
             {
                 if (orcamento.IdUsuario == idUsuario)
                     return;
+                var temPermissao = await _context.OrcamentoUsuarioPermissoes
+                    .AnyAsync(e => e.IdOrcamento == idOrcamento && e.IdUsuario == idUsuario 
+                    && (e.IdPermissao == (int)idPermissao || e.IdPermissao == (int)OrcamentoPermissaoEnum.ADMIN));
+
+                if (!temPermissao)
+                    throw new ForbiddenException();
             }
         }
     }

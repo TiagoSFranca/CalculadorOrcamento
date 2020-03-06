@@ -17,12 +17,13 @@ namespace CalculadorOrcamento.Persistence
 
         #region [Entidades]
 
-        public DbSet<Orcamento> Orcamentos { get; set; }
-        public DbSet<OrcamentoItemAplicacao> OrcamentoItemAplicacoes { get; set; }
-        public DbSet<OrcamentoValor> OrcamentoValores { get; set; }
-        public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<RefreshToken> RefreshTokens { get; set; }
-        public DbSet<OrcamentoPermissao> OrcamentoPermissoes { get; set; }
+        public virtual DbSet<Orcamento> Orcamentos { get; set; }
+        public virtual DbSet<OrcamentoItemAplicacao> OrcamentoItemAplicacoes { get; set; }
+        public virtual DbSet<OrcamentoValor> OrcamentoValores { get; set; }
+        public virtual DbSet<Usuario> Usuarios { get; set; }
+        public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
+        public virtual DbSet<OrcamentoPermissao> OrcamentoPermissoes { get; set; }
+        public virtual DbSet<OrcamentoUsuarioPermissao> OrcamentoUsuarioPermissoes { get; set; }
 
         #endregion
 
