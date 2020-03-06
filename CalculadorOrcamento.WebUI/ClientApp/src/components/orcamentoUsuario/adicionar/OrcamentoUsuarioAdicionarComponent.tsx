@@ -14,8 +14,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
 import * as AppStore from 'store/AppStore';
-import * as OrcamentoValorStore from 'store/OrcamentoValorStore';
-import { requiredMessage, greaterThanMessage } from 'utils/hooksValidations';
+import * as OrcamentoUsuarioStore from 'store/OrcamentoUsuarioStore';
+import { greaterThanMessage, requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
 
@@ -32,20 +32,20 @@ type Props = any & {
     buttonClassName: string
 }
 
-type OrcamentoValorAdicionarForm = {
+type OrcamentoUsuarioAdicionarForm = {
     idOrcamento: number;
     valorHora: number;
     multiplicador: number;
 };
 
-const OrcamentoValorAdicionarComponent = (props: Props) => {
+const OrcamentoUsuarioAdicionarComponent = (props: Props) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
-    const { control, errors, handleSubmit, register } = useForm<OrcamentoValorAdicionarForm>();
+    const { control, errors, handleSubmit, register } = useForm<OrcamentoUsuarioAdicionarForm>();
 
-    const orcamentoItemStore = useSelector((s: ApplicationState) => s.orcamentoValor);
-    const { isLoading } = orcamentoItemStore;
+    const orcamentoValorStore = useSelector((s: ApplicationState) => s.orcamentoUsuario);
+    const { isLoading } = orcamentoValorStore;
 
     const dispatch = useDispatch();
 
@@ -69,11 +69,11 @@ const OrcamentoValorAdicionarComponent = (props: Props) => {
         }
     }
 
-    const onSubmit = (data: OrcamentoValorAdicionarForm) => {
+    const onSubmit = (data: OrcamentoUsuarioAdicionarForm) => {
         data.idOrcamento = +id;
         data.valorHora = +data.valorHora;
         data.multiplicador = +data.multiplicador;
-        dispatch(OrcamentoValorStore.actionCreators.adicionarItem(data as OrcamentoValorStore.AdicionarOrcamentoValor, callback));
+        dispatch(OrcamentoUsuarioStore.actionCreators.adicionarItem(data as OrcamentoUsuarioStore.AdicionarOrcamentoUsuario, callback));
     };
 
     return (
@@ -151,4 +151,4 @@ const OrcamentoValorAdicionarComponent = (props: Props) => {
     );
 }
 
-export default withRouter(OrcamentoValorAdicionarComponent);
+export default withRouter(OrcamentoUsuarioAdicionarComponent);

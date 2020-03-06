@@ -10,7 +10,7 @@ import { Controller, ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
 import * as AppStore from 'store/AppStore';
-import * as OrcamentoValorStore from 'store/OrcamentoValorStore';
+import * as OrcamentoUsuarioStore from 'store/OrcamentoUsuarioStore';
 import formatter from 'utils/formatter';
 import { requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
@@ -34,23 +34,23 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = {
-    orcamentoValor: OrcamentoValorStore.OrcamentoValor
+    orcamentoUsuario: OrcamentoUsuarioStore.OrcamentoUsuario
 }
 
-type OrcamentoValorEditarForm = {
+type OrcamentoItemAplicacaoEditarForm = {
     id: number;
     idOrcamento: number;
     valorHora: number;
     multiplicador: number;
 };
 
-const OrcamentoValorItemComponent = (props: Props) => {
+const OrcamentoUsuarioItemComponent = (props: Props) => {
     const classes = useStyles();
 
-    const { control, errors, handleSubmit, register } = useForm<OrcamentoValorEditarForm>();
+    const { control, errors, handleSubmit, register } = useForm<OrcamentoItemAplicacaoEditarForm>();
 
-    const orcamentoValorStore = useSelector((s: ApplicationState) => s.orcamentoValor);
-    const { isLoading } = orcamentoValorStore;
+    const orcamentoUsuarioStore = useSelector((s: ApplicationState) => s.orcamentoUsuario);
+    const { isLoading } = orcamentoUsuarioStore;
 
     const dispatch = useDispatch();
 
@@ -77,13 +77,13 @@ const OrcamentoValorItemComponent = (props: Props) => {
         }
     }
 
-    const onSubmit = (data: OrcamentoValorEditarForm) => {
-        data.id = props.orcamentoValor.id;
-        data.idOrcamento = props.orcamentoValor.idOrcamento;
+    const onSubmit = (data: OrcamentoItemAplicacaoEditarForm) => {
+        data.id = props.orcamentoUsuario.id;
+        data.idOrcamento = props.orcamentoUsuario.idOrcamento;
         data.valorHora = +data.valorHora;
         data.multiplicador = +data.multiplicador;
 
-        dispatch(OrcamentoValorStore.actionCreators.editarItem(data.id, data as OrcamentoValorStore.EditarOrcamentoValor, callback));
+        dispatch(OrcamentoUsuarioStore.actionCreators.editarItem(data.id, data as OrcamentoUsuarioStore.EditarOrcamentoUsuario, callback));
     };
 
     const dialogActions = () => {
@@ -99,7 +99,7 @@ const OrcamentoValorItemComponent = (props: Props) => {
     }
 
     const confirmDelete = () => {
-        dispatch(OrcamentoValorStore.actionCreators.excluirItem(props.orcamentoValor.id, callbackDelete));
+        dispatch(OrcamentoUsuarioStore.actionCreators.excluirItem(props.orcamentoUsuario.id, callbackDelete));
     }
 
     return (
@@ -114,7 +114,7 @@ const OrcamentoValorItemComponent = (props: Props) => {
                                 {!edit ? (
                                     <>
                                         <Typography variant="overline" className={classes.label}>Valor da hora:</Typography>
-                                        <Typography variant="caption" className={classes.marginLeft}>{formatter.formatarDinheiro(props.orcamentoValor.valorHora)}</Typography>
+                                        <Typography variant="caption" className={classes.marginLeft}>{formatter.formatarDinheiro(props.orcamentoUsuario.valorHora)}</Typography>
                                     </>
                                 ) : (
                                         <Controller
@@ -137,7 +137,7 @@ const OrcamentoValorItemComponent = (props: Props) => {
                                             }
                                             name="valorHora"
                                             control={control}
-                                            defaultValue={props.orcamentoValor.valorHora}
+                                            defaultValue={props.orcamentoUsuario.valorHora}
                                             rules={{
                                                 required: requiredMessage()
                                             }} />
@@ -147,7 +147,7 @@ const OrcamentoValorItemComponent = (props: Props) => {
                                 {!edit ? (
                                     <>
                                         <Typography variant="overline" className={classes.label}>Multiplicador:</Typography>
-                                        <Typography variant="caption" className={classes.marginLeft}>{formatter.formatarNumero(props.orcamentoValor.multiplicador)}x</Typography>
+                                        <Typography variant="caption" className={classes.marginLeft}>{formatter.formatarNumero(props.orcamentoUsuario.multiplicador)}x</Typography>
                                     </>
                                 ) : (
                                         <Controller
@@ -170,7 +170,7 @@ const OrcamentoValorItemComponent = (props: Props) => {
                                             }
                                             name="multiplicador"
                                             control={control}
-                                            defaultValue={props.orcamentoValor.multiplicador}
+                                            defaultValue={props.orcamentoUsuario.multiplicador}
                                             rules={{
                                                 required: requiredMessage()
                                             }} />
@@ -200,4 +200,4 @@ const OrcamentoValorItemComponent = (props: Props) => {
     );
 }
 
-export default OrcamentoValorItemComponent;
+export default OrcamentoUsuarioItemComponent;

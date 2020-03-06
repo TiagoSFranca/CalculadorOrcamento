@@ -5,27 +5,27 @@ import { AppThunkAction } from './';
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
-export interface OrcamentoValorState {
+export interface OrcamentoUsuarioState {
     isLoading: boolean;
-    orcamentoValores?: OrcamentoValor[];
-    orcamentoValor?: OrcamentoValor;
+    orcamentoUsuarios?: OrcamentoUsuario[];
+    orcamentoUsuario?: OrcamentoUsuario;
     search: boolean;
 }
 
-export interface OrcamentoValor {
+export interface OrcamentoUsuario {
     id: number;
     idOrcamento: number;
     valorHora: number;
     multiplicador: number;
 }
 
-export interface AdicionarOrcamentoValor {
+export interface AdicionarOrcamentoUsuario {
     idOrcamento: number;
     valorHora: number;
     multiplicador: number;
 }
 
-export interface EditarOrcamentoValor {
+export interface EditarOrcamentoUsuario {
     id: number;
     idOrcamento: number;
     valorHora: number;
@@ -33,22 +33,22 @@ export interface EditarOrcamentoValor {
 }
 
 interface ReceiveOrcamentoItensAction {
-    type: 'RECEIVE_ORCAMENTO_VALORES';
-    orcamentoValores: OrcamentoValor[];
+    type: 'RECEIVE_ORCAMENTO_USUARIOS';
+    orcamentoUsuarios: OrcamentoUsuario[];
 }
 
 interface AdicionarOrcamentoItemAction {
-    type: 'ADICIONAR_ORCAMENTO_VALOR';
-    orcamentoValor?: OrcamentoValor;
+    type: 'ADICIONAR_ORCAMENTO_USUARIO';
+    orcamentoUsuario?: OrcamentoUsuario;
 }
 
 interface IsLoadingOrcamentoItemAction {
-    type: 'IS_LOADING_ORCAMENTO_VALOR';
+    type: 'IS_LOADING_ORCAMENTO_USUARIO';
     value: boolean;
 }
 
 interface SetSearchOrcamentoItem {
-    type: 'SET_SEARCH_ORCAMENTO_VALOR';
+    type: 'SET_SEARCH_ORCAMENTO_USUARIO';
     value: boolean;
 }
 
@@ -60,63 +60,63 @@ type KnownAction = ReceiveOrcamentoItensAction | AdicionarOrcamentoItemAction | 
 
 export const actionCreators = {
     requestOrcamentos: (callback: Function, idOrcamento: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        dispatch({ type: 'IS_LOADING_ORCAMENTO_VALOR', value: true });
+        dispatch({ type: 'IS_LOADING_ORCAMENTO_USUARIO', value: true });
 
         HTTP.get(`/orcamentovalores?idOrcamento=${idOrcamento}`)
-            .then(response => response.data as Promise<OrcamentoValor[]>)
+            .then(response => response.data as Promise<OrcamentoUsuario[]>)
             .then(result => {
-                dispatch({ type: 'RECEIVE_ORCAMENTO_VALORES', orcamentoValores: result });
-                dispatch({ type: 'IS_LOADING_ORCAMENTO_VALOR', value: false });
+                dispatch({ type: 'RECEIVE_ORCAMENTO_USUARIOS', orcamentoUsuarios: result });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO_USUARIO', value: false });
 
                 callback();
             }, error => {
                 callback(error);
-                dispatch({ type: 'IS_LOADING_ORCAMENTO_VALOR', value: false });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO_USUARIO', value: false });
             });
     },
 
-    adicionarItem: (data: AdicionarOrcamentoValor, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
-        dispatch({ type: 'IS_LOADING_ORCAMENTO_VALOR', value: true });
+    adicionarItem: (data: AdicionarOrcamentoUsuario, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
+        dispatch({ type: 'IS_LOADING_ORCAMENTO_USUARIO', value: true });
 
         HTTP.post(`/orcamentovalores`, JSON.stringify(data))
-            .then(response => response.data as Promise<OrcamentoValor>)
+            .then(response => response.data as Promise<OrcamentoUsuario>)
             .then(data => {
-                dispatch({ type: 'ADICIONAR_ORCAMENTO_VALOR', orcamentoValor: data });
-                dispatch({ type: 'IS_LOADING_ORCAMENTO_VALOR', value: false });
+                dispatch({ type: 'ADICIONAR_ORCAMENTO_USUARIO', orcamentoUsuario: data });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO_USUARIO', value: false });
                 callback();
             }, error => {
                 callback(error);
-                dispatch({ type: 'IS_LOADING_ORCAMENTO_VALOR', value: false });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO_USUARIO', value: false });
             });
     },
 
-    editarItem: (id: number, data: EditarOrcamentoValor, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
-        dispatch({ type: 'IS_LOADING_ORCAMENTO_VALOR', value: true });
+    editarItem: (id: number, data: EditarOrcamentoUsuario, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
+        dispatch({ type: 'IS_LOADING_ORCAMENTO_USUARIO', value: true });
 
         HTTP.put(`/orcamentovalores/${id}`, JSON.stringify(data))
-            .then(response => response.data as Promise<OrcamentoValor>)
+            .then(response => response.data as Promise<OrcamentoUsuario>)
             .then(data => {
-                dispatch({ type: 'ADICIONAR_ORCAMENTO_VALOR', orcamentoValor: data });
-                dispatch({ type: 'IS_LOADING_ORCAMENTO_VALOR', value: false });
+                dispatch({ type: 'ADICIONAR_ORCAMENTO_USUARIO', orcamentoUsuario: data });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO_USUARIO', value: false });
                 callback();
             }, error => {
                 callback(error);
-                dispatch({ type: 'IS_LOADING_ORCAMENTO_VALOR', value: false });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO_USUARIO', value: false });
             });
     },
 
     excluirItem: (id: number, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
-        dispatch({ type: 'IS_LOADING_ORCAMENTO_VALOR', value: true });
+        dispatch({ type: 'IS_LOADING_ORCAMENTO_USUARIO', value: true });
 
         HTTP.delete(`/orcamentovalores/${id}`)
-            .then(response => response.data as Promise<OrcamentoValor>)
+            .then(response => response.data as Promise<OrcamentoUsuario>)
             .then(data => {
-                dispatch({ type: 'SET_SEARCH_ORCAMENTO_VALOR', value: true });
-                dispatch({ type: 'IS_LOADING_ORCAMENTO_VALOR', value: false });
+                dispatch({ type: 'SET_SEARCH_ORCAMENTO_USUARIO', value: true });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO_USUARIO', value: false });
                 callback();
             }, error => {
                 callback(error);
-                dispatch({ type: 'IS_LOADING_ORCAMENTO_VALOR', value: false });
+                dispatch({ type: 'IS_LOADING_ORCAMENTO_USUARIO', value: false });
             });
     },
 };
@@ -124,36 +124,36 @@ export const actionCreators = {
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
-const unloadedState: OrcamentoValorState = {
+const unloadedState: OrcamentoUsuarioState = {
     isLoading: false,
     search: true,
 };
 
-export const reducer: Reducer<OrcamentoValorState> = (state: OrcamentoValorState | undefined, incomingAction: Action): OrcamentoValorState => {
+export const reducer: Reducer<OrcamentoUsuarioState> = (state: OrcamentoUsuarioState | undefined, incomingAction: Action): OrcamentoUsuarioState => {
     if (state === undefined) {
         return unloadedState;
     }
 
     const action = incomingAction as KnownAction;
     switch (action.type) {
-        case 'RECEIVE_ORCAMENTO_VALORES':
+        case 'RECEIVE_ORCAMENTO_USUARIOS':
             return {
                 ...state,
-                orcamentoValores: action.orcamentoValores,
+                orcamentoUsuarios: action.orcamentoUsuarios,
                 search: false,
             };
-        case 'ADICIONAR_ORCAMENTO_VALOR':
+        case 'ADICIONAR_ORCAMENTO_USUARIO':
             return {
                 ...state,
-                orcamentoValor: action.orcamentoValor,
+                orcamentoUsuario: action.orcamentoUsuario,
                 search: true
             }
-        case 'IS_LOADING_ORCAMENTO_VALOR':
+        case 'IS_LOADING_ORCAMENTO_USUARIO':
             return {
                 ...state,
                 isLoading: action.value
             }
-        case 'SET_SEARCH_ORCAMENTO_VALOR':
+        case 'SET_SEARCH_ORCAMENTO_USUARIO':
             return {
                 ...state,
                 search: action.value

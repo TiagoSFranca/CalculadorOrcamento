@@ -1,13 +1,13 @@
 ﻿import { Grid } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import LoadingCard from 'components/common/loadingCard/LoadingCardComponent';
-import OrcamentoValorAdicionar from 'components/orcamentoValor/adicionar/OrcamentoValorAdicionarComponent';
-import OrcamentoValorItemComponent from 'components/orcamentoValor/item/OrcamentoValorItemComponent';
+import OcamentoUsuarioAdicionarComponent from 'components/orcamentoUsuario/adicionar/OrcamentoUsuarioAdicionarComponent';
+import OrcamentoUsuarioItemComponent from 'components/orcamentoUsuario/item/OrcamentoUsuarioItemComponent';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
-import * as OrcamentoValorStore from 'store/OrcamentoValorStore';
+import * as OrcamentoUsuarioStore from 'store/OrcamentoUsuarioStore';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -21,45 +21,45 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const OrcamentoValorListComponent = (props: any) => {
+const OrcamentoUsuarioListComponent = (props: any) => {
     const classes = useStyles();
 
     const id = props.match.params.id;
 
-    const orcamentoValorStore = useSelector((s: ApplicationState) => s.orcamentoValor);
+    const orcamentoUsuarioStore = useSelector((s: ApplicationState) => s.orcamentoUsuario);
     const dispatch = useDispatch();
 
-    const { isLoading, orcamentoValores, search } = orcamentoValorStore;
+    const { isLoading, orcamentoUsuarios, search } = orcamentoUsuarioStore;
 
     const callback = (error: any) => {
 
     }
 
     useEffect(() => {
-        dispatch(OrcamentoValorStore.actionCreators.requestOrcamentos(callback, id))
+        dispatch(OrcamentoUsuarioStore.actionCreators.requestOrcamentos(callback, id))
     }, []);
 
     useEffect(() => {
         if (search)
-            dispatch(OrcamentoValorStore.actionCreators.requestOrcamentos(callback, id))
+            dispatch(OrcamentoUsuarioStore.actionCreators.requestOrcamentos(callback, id))
     }, [search]);
 
     return (
         <div className={classes.marginTop}>
             <LoadingCard isLoading={isLoading}>
                 <Grid container justify="flex-end">
-                    <OrcamentoValorAdicionar buttonClassName={classes.button} />
+                    <OcamentoUsuarioAdicionarComponent buttonClassName={classes.button} />
                 </Grid>
 
                 {
-                    orcamentoValores &&
-                    orcamentoValores.length > 0 &&
+                    orcamentoUsuarios &&
+                    orcamentoUsuarios.length > 0 &&
                     <Grid container spacing={3}>
                         {
-                            orcamentoValores.map((el, index) => (
+                            orcamentoUsuarios.map((el, index) => (
                                 <>
                                     <Grid item xs={3}>
-                                        <OrcamentoValorItemComponent orcamentoValor={el} key={el.id} />
+                                        <OrcamentoUsuarioItemComponent orcamentoUsuario={el} key={el.id} />
                                     </Grid>
                                 </>
                             ))
@@ -71,4 +71,4 @@ const OrcamentoValorListComponent = (props: any) => {
     );
 }
 
-export default withRouter(OrcamentoValorListComponent);
+export default withRouter(OrcamentoUsuarioListComponent);

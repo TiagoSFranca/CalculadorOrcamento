@@ -25,14 +25,13 @@ namespace CalculadorOrcamento.Application.BaseApplications
 
             var orcamento = await _context.Orcamentos.FirstOrDefaultAsync(e => e.Id == idOrcamento);
 
-            //TODO: Adicionar verificação após criar as permissões
             if (orcamento != null)
             {
                 if (orcamento.IdUsuario == idUsuario)
                     return;
                 var temPermissao = await _context.OrcamentoUsuarioPermissoes
-                    .AnyAsync(e => e.IdOrcamento == idOrcamento && e.IdUsuario == idUsuario 
-                    && (e.IdPermissao == (int)idPermissao || e.IdPermissao == (int)OrcamentoPermissaoEnum.ADMIN));
+                    .AnyAsync(e => e.OrcamentoUsuario.IdOrcamento == idOrcamento && e.OrcamentoUsuario.IdUsuario == idUsuario
+                    && e.Permite && (e.IdPermissao == (int)idPermissao || e.IdPermissao == (int)OrcamentoPermissaoEnum.ADMIN));
 
                 if (!temPermissao)
                     throw new ForbiddenException();

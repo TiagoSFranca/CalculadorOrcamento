@@ -30,7 +30,7 @@ namespace CalculadorOrcamento.Application.Orcamentos.Queries.Search
 
             var query = _context.Orcamentos.AsQueryable();
 
-            query = query.Where(e => e.IdUsuario == id || e.OrcamentoUsuarioPermissoes.Any(f => f.IdUsuario == id));
+            query = query.Where(e => e.IdUsuario == id || e.OrcamentoUsuarios.Any(f => f.IdUsuario == id));
 
             if (!string.IsNullOrEmpty(request.Codigo))
                 query = query.Where(e => e.Codigo.ToString().ToLower().Contains(request.Codigo.ToLower()));

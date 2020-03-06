@@ -9,7 +9,7 @@ namespace CalculadorOrcamento.Domain.Entities
         public Usuario()
         {
             Orcamentos = new HashSet<Orcamento>();
-            OrcamentoUsuarioPermissoes = new HashSet<OrcamentoUsuarioPermissao>();
+            OrcamentoUsuarios = new HashSet<OrcamentoUsuario>();
         }
 
         public int Id { get; set; }
@@ -22,6 +22,6 @@ namespace CalculadorOrcamento.Domain.Entities
         public bool ConfirmouEmail { get; set; }
 
         public virtual ICollection<Orcamento> Orcamentos { get; set; }
-        public virtual ICollection<OrcamentoUsuarioPermissao> OrcamentoUsuarioPermissoes { get; set; }
+        public virtual ICollection<OrcamentoUsuario> OrcamentoUsuarios { get; set; }
     }
 }

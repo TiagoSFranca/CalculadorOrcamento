@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { ApplicationState } from 'store';
 import * as OrcamentoStore from 'store/OrcamentoStore';
+import PeopleAltTwoToneIcon from '@material-ui/icons/PeopleAltTwoTone';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -57,7 +58,14 @@ export const Valores: OrcamentoTabs = {
     to: '/orcamento/editar/:id/valores'
 }
 
-const OrcamentoTabsList: OrcamentoTabs[] = [DadosGerais, ItensAplicacao, ItensOrcamento, Valores];
+export const Usuarios: OrcamentoTabs = {
+    name: "Usuários",
+    value: 4,
+    icon: PeopleAltTwoToneIcon,
+    to: '/orcamento/editar/:id/usuarios'
+}
+
+const OrcamentoTabsList: OrcamentoTabs[] = [DadosGerais, ItensAplicacao, ItensOrcamento, Valores, Usuarios];
 
 type Props = any & {
     tab?: OrcamentoTabs

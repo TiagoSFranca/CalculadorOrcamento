@@ -4,14 +4,16 @@ using CalculadorOrcamento.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CalculadorOrcamento.Persistence.Migrations
 {
     [DbContext(typeof(CalculadorOrcamentoContext))]
-    partial class CalculadorOrcamentoContextModelSnapshot : ModelSnapshot
+    [Migration("20200306174552_Create_OrcamentoUsuario_AND_OrcamentoUsuarioPermissao_Tables")]
+    partial class Create_OrcamentoUsuario_AND_OrcamentoUsuarioPermissao_Tables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

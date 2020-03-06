@@ -1,13 +1,14 @@
-﻿import Home from "views/home/Home";
-import Counter from "components/Counter";
+﻿import Counter from "components/Counter";
 import FetchData from "components/FetchData";
+import Login from 'views/auth/login/Login';
+import Register from 'views/auth/register/Register';
+import Home from "views/home/Home";
+import OrcamentoAdicionar from "views/orcamento/adicionar/OrcamentoAdicionar";
+import OrcamentoEditar from "views/orcamento/editar/OrcamentoEditar";
+import OrcamentoItemAplicacao from "views/orcamento/editar/orcamentoItemAplicacao/OrcamentoItemAplicacao";
+import OrcamentoUsuario from "views/orcamento/editar/orcamentoUsuario/OrcamentoUsuario";
+import OrcamentoValor from "views/orcamento/editar/orcamentoValor/OrcamentoValor";
 import OrcamentoIndex from "views/orcamento/index/OrcamentoIndex";
-import OrcamentoAdicionar from "views/orcamento/adicionar/OrcamentoAdicionar"
-import OrcamentoEditar from "views/orcamento/editar/OrcamentoEditar"
-import OrcamentoItemAplicacao from "views/orcamento/editar/orcamentoItemAplicacao/OrcamentoItemAplicacao"
-import OrcamentoValor from "views/orcamento/editar/orcamentoValor/OrcamentoValor"
-import Login from 'views/auth/login/Login'
-import Register from 'views/auth/register/Register'
 
 export interface RouteItem {
     exact?: boolean | false,
@@ -71,6 +72,12 @@ export const routes: RouteItem[] = [
     {
         path: '/orcamento/editar/:id/valores',
         component: OrcamentoValor,
+        isPrivate: true,
+        exact: true
+    },
+    {
+        path: '/orcamento/editar/:id/usuarios',
+        component: OrcamentoUsuario,
         isPrivate: true,
         exact: true
     },
