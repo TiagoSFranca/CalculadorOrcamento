@@ -17,6 +17,7 @@ namespace CalculadorOrcamento.WebUI.Controllers
         [HttpGet]
         [Authorize]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(List<OrcamentoItemAplicacaoViewModel>))]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden, Type = typeof(ResponseForbidden))]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized, Type = typeof(ResponseUnauthorized))]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]
         public async Task<ActionResult<List<OrcamentoItemAplicacaoViewModel>>> Search([FromQuery] int idOrcamento)
@@ -30,6 +31,7 @@ namespace CalculadorOrcamento.WebUI.Controllers
         [HttpPost]
         [Authorize]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(OrcamentoItemAplicacaoViewModel))]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden, Type = typeof(ResponseForbidden))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ResponseBadRequest))]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized, Type = typeof(ResponseUnauthorized))]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]
@@ -43,6 +45,7 @@ namespace CalculadorOrcamento.WebUI.Controllers
         [HttpPut("{id}")]
         [Authorize]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(OrcamentoItemAplicacaoViewModel))]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden, Type = typeof(ResponseForbidden))]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized, Type = typeof(ResponseUnauthorized))]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]
         public async Task<ActionResult<OrcamentoItemAplicacaoViewModel>> Editar(int id, [FromBody]EditarOrcamentoItemAplicacao model)
@@ -56,6 +59,7 @@ namespace CalculadorOrcamento.WebUI.Controllers
         [HttpDelete("{id}")]
         [Authorize]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden, Type = typeof(ResponseForbidden))]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized, Type = typeof(ResponseUnauthorized))]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]
         public async Task<IActionResult> Excluir(int id)

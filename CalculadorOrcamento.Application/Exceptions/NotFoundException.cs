@@ -7,5 +7,9 @@ namespace CalculadorOrcamento.Application.Exceptions
         public NotFoundException(string name, object key)
             : base($"Entidade \"{name}\" ({key}) não foi encontrada.")
         { }
+
+        public NotFoundException(string message)
+            : base(message)
+        { }
     }
 }

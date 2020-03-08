@@ -1,15 +1,11 @@
 ﻿using CalculadorOrcamento.Application.Exceptions;
 using CalculadorOrcamento.Application.Interfaces.BaseApplications;
 using CalculadorOrcamento.Common.Helpers;
-using CalculadorOrcamento.Domain.Entities;
 using CalculadorOrcamento.Persistence;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace CalculadorOrcamento.Application.BaseApplications
 {
