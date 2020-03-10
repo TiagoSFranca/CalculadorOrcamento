@@ -54,15 +54,13 @@ interface SetSearchOrcamentoItem {
 
 type KnownAction = ReceiveOrcamentoItensAction | AdicionarOrcamentoItemAction | IsLoadingOrcamentoItemAction | SetSearchOrcamentoItem;
 
-// ----------------
-// ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
-// They don't directly mutate state, but they can have external side-effects (such as loading data).
+const BASE_URL = "orcamentoValores";
 
 export const actionCreators = {
     requestOrcamentos: (callback: Function, idOrcamento: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO_VALOR', value: true });
 
-        HTTP.get(`/orcamentovalores?idOrcamento=${idOrcamento}`)
+        HTTP.get(`/${BASE_URL}?idOrcamento=${idOrcamento}`)
             .then(response => response.data as Promise<OrcamentoValor[]>)
             .then(result => {
                 dispatch({ type: 'RECEIVE_ORCAMENTO_VALORES', orcamentoValores: result });
@@ -78,7 +76,7 @@ export const actionCreators = {
     adicionarItem: (data: AdicionarOrcamentoValor, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO_VALOR', value: true });
 
-        HTTP.post(`/orcamentovalores`, JSON.stringify(data))
+        HTTP.post(`/${BASE_URL}`, JSON.stringify(data))
             .then(response => response.data as Promise<OrcamentoValor>)
             .then(data => {
                 dispatch({ type: 'ADICIONAR_ORCAMENTO_VALOR', orcamentoValor: data });
@@ -93,7 +91,7 @@ export const actionCreators = {
     editarItem: (id: number, data: EditarOrcamentoValor, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO_VALOR', value: true });
 
-        HTTP.put(`/orcamentovalores/${id}`, JSON.stringify(data))
+        HTTP.put(`/${BASE_URL}/${id}`, JSON.stringify(data))
             .then(response => response.data as Promise<OrcamentoValor>)
             .then(data => {
                 dispatch({ type: 'ADICIONAR_ORCAMENTO_VALOR', orcamentoValor: data });
@@ -108,7 +106,7 @@ export const actionCreators = {
     excluirItem: (id: number, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO_VALOR', value: true });
 
-        HTTP.delete(`/orcamentovalores/${id}`)
+        HTTP.delete(`/${BASE_URL}/${id}`)
             .then(response => response.data as Promise<OrcamentoValor>)
             .then(data => {
                 dispatch({ type: 'SET_SEARCH_ORCAMENTO_VALOR', value: true });

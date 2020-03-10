@@ -49,6 +49,8 @@ interface IsLoadingAction {
 
 export type KnownAction = SetIsAuthAction | CheckIsAuthAction | IsLoadingAction;
 
+const BASE_URL = "auth";
+
 export const actionCreators = {
     setIsAuthAction: (value: boolean) => ({ type: 'SET_IS_AUTH', value: value } as SetIsAuthAction),
 
@@ -65,7 +67,7 @@ export const actionCreators = {
     cadastrarUsuario: (data: CadastrarUsuario, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
         dispatch({ type: 'IS_LOADING', value: true });
 
-        HTTP.post(`/auth/register`, JSON.stringify(data))
+        HTTP.post(`/${BASE_URL}/register`, JSON.stringify(data))
             .then(response => response.data as Promise<Usuario>)
             .then(data => {
                 dispatch({ type: 'IS_LOADING', value: false });
@@ -79,7 +81,7 @@ export const actionCreators = {
     autenticarUsuario: (data: AutenticarUsuario, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
         dispatch({ type: 'IS_LOADING', value: true });
 
-        HTTP.post(`/auth/login`, JSON.stringify(data))
+        HTTP.post(`/${BASE_URL}/login`, JSON.stringify(data))
             .then(response => response.data as Promise<UsuarioAutenticado>)
             .then(data => {
                 localStorageService.setToken({ access_token: data.token, refresh_token: data.refreshToken })

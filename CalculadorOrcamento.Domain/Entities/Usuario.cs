@@ -20,6 +20,18 @@ namespace CalculadorOrcamento.Domain.Entities
         public string Login { get; set; }
         public string Senha { get; set; }
         public bool ConfirmouEmail { get; set; }
+        public string NomeCompleto
+        {
+            get
+            {
+                var nomeCompleto = Nome;
+                
+                if (!string.IsNullOrEmpty(Sobrenome))
+                    nomeCompleto += " " + Sobrenome;
+
+                return nomeCompleto;
+            }
+        }
 
         public virtual ICollection<Orcamento> Orcamentos { get; set; }
         public virtual ICollection<OrcamentoUsuario> OrcamentoUsuarios { get; set; }

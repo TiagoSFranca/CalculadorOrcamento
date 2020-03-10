@@ -11,6 +11,6 @@ namespace CalculadorOrcamento.Application.Usuarios.Models
         public string Sobrenome { get; set; }
         public string Email { get; set; }
         public string Login { get; set; }
-
+        public string NomeCompleto { get; set; }
     }
 }

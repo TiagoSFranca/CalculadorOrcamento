@@ -86,9 +86,7 @@ interface SetSearchOrcamento {
 
 type KnownAction = ReceiveOrcamentosAction | AdicionarOrcamentoAction | IsLoadingOrcamentoAction | FiltrarOrcamentoAction | SelecionarOrcamentoAction | SetTabAction | SetSearchOrcamento;
 
-// ----------------
-// ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
-// They don't directly mutate state, but they can have external side-effects (such as loading data).
+const BASE_URL = "orcamentos";
 
 export const actionCreators = {
     filtrarOrcamentos: (filtro: FiltroOrcamento): AppThunkAction<KnownAction> => (dispatch, getState) => {
@@ -101,7 +99,7 @@ export const actionCreators = {
         let qtdPorPagina = query.pageSize || query.pageSize >= QtdPadrao.qtd ? query.pageSize : QtdPadrao.qtd;
         let pagina = getState().orcamento.search ? 1 : query.page + 1;
 
-        HTTP.get(`/orcamentos?itensPorPagina=${qtdPorPagina}&pagina=${pagina}&asc=${query.orderDirection !== "desc" ? true : false}
+        HTTP.get(`/${BASE_URL}?itensPorPagina=${qtdPorPagina}&pagina=${pagina}&asc=${query.orderDirection !== "desc" ? true : false}
 &ordenarPor=${encodeURIComponent(query.orderBy && query.orderBy.field ? query.orderBy.field : "")}&codigo=${encodeURIComponent(filtro.codigo)}
 &nome=${encodeURIComponent(filtro.nome)}&descricao=${encodeURIComponent(filtro.descricao)}&dataCriacaoInicial=${formatter.formatarDataRequest(filtro.dataCriacaoInicial)}
 &dataCriacaoFinal=${formatter.formatarDataRequest(filtro.dataCriacaoFinal)}&dataAtualizacaoInicial=${formatter.formatarDataRequest(filtro.dataAtualizacaoInicial)}&dataAtualizacaoFinal=${formatter.formatarDataRequest(filtro.dataAtualizacaoFinal)}`)
@@ -134,7 +132,7 @@ export const actionCreators = {
     adicionarOrcamento: (data: AdicionarOrcamento, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
 
-        HTTP.post(`/orcamentos`, JSON.stringify(data))
+        HTTP.post(`/${BASE_URL}`, JSON.stringify(data))
             .then(response => response.data as Promise<Orcamento>)
             .then(data => {
                 dispatch({ type: 'ADICIONAR_ORCAMENTO', orcamento: data });
@@ -149,7 +147,7 @@ export const actionCreators = {
     selecionarOrcamento: (id: number, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
 
-        HTTP.get(`/orcamentos/${id}`)
+        HTTP.get(`/${BASE_URL}/${id}`)
             .then(response => response.data as Promise<Orcamento>)
             .then(result => {
                 dispatch({ type: 'ADICIONAR_ORCAMENTO', orcamento: result });
@@ -165,7 +163,7 @@ export const actionCreators = {
     editarOrcamento: (id: number, data: EditarOrcamento, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
 
-        HTTP.put(`/orcamentos/${id}`, JSON.stringify(data))
+        HTTP.put(`/${BASE_URL}/${id}`, JSON.stringify(data))
             .then(response => response.data as Promise<Orcamento>)
             .then(data => {
                 dispatch({ type: 'ADICIONAR_ORCAMENTO', orcamento: data });
@@ -184,7 +182,7 @@ export const actionCreators = {
     excluirOrcamento: (ids: number[], callback: (error: any, message: any) => void): AppThunkAction<KnownAction> => (dispatch) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
 
-        HTTP.post(`/orcamentos/excluir`, { 'ids': ids })
+        HTTP.post(`/${BASE_URL}/excluir`, { 'ids': ids })
             .then(response => response.data as Promise<string>)
             .then(data => {
                 dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });

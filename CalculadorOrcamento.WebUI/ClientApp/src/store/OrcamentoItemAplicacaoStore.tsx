@@ -69,11 +69,13 @@ interface SetSearchOrcamentoItem {
 
 type KnownAction = ReceiveOrcamentoItensAction | AdicionarOrcamentoItemAction | IsLoadingOrcamentoItemAction | SetSearchOrcamentoItem;
 
+const BASE_URL = "orcamentoItensAplicacao";
+
 export const actionCreators = {
     requestOrcamentos: (callback: Function, idOrcamento: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO_ITEM', value: true });
 
-        HTTP.get(`/orcamentoitensaplicacao?idOrcamento=${idOrcamento}`)
+        HTTP.get(`/${BASE_URL}?idOrcamento=${idOrcamento}`)
             .then(response => response.data as Promise<OrcamentoItemAplicacao[]>)
             .then(result => {
                 dispatch({ type: 'RECEIVE_ORCAMENTO_ITENS', orcamentoItens: result });
@@ -89,7 +91,7 @@ export const actionCreators = {
     adicionarItem: (data: AdicionarOrcamentoItem, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO_ITEM', value: true });
 
-        HTTP.post(`/orcamentoitensaplicacao`, JSON.stringify(data))
+        HTTP.post(`/${BASE_URL}`, JSON.stringify(data))
             .then(response => response.data as Promise<OrcamentoItemAplicacao>)
             .then(data => {
                 dispatch({ type: 'ADICIONAR_ORCAMENTO_ITEM', orcamentoItem: data });
@@ -104,7 +106,7 @@ export const actionCreators = {
     editarItem: (id: number, data: EditarOrcamentoItem, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO_ITEM', value: true });
 
-        HTTP.put(`/orcamentoitensaplicacao/${id}`, JSON.stringify(data))
+        HTTP.put(`/${BASE_URL}/${id}`, JSON.stringify(data))
             .then(response => response.data as Promise<OrcamentoItemAplicacao>)
             .then(data => {
                 dispatch({ type: 'ADICIONAR_ORCAMENTO_ITEM', orcamentoItem: data });
@@ -119,7 +121,7 @@ export const actionCreators = {
     excluirItem: (id: number, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO_ITEM', value: true });
 
-        HTTP.delete(`/orcamentoitensaplicacao/${id}`)
+        HTTP.delete(`/${BASE_URL}/${id}`)
             .then(response => response.data as Promise<OrcamentoItemAplicacao>)
             .then(data => {
                 dispatch({ type: 'SET_SEARCH_ORCAMENTO_ITEM', value: true });

@@ -4,6 +4,8 @@ using CalculadorOrcamento.Application.OrcamentoUsuarios.Commands.Editar;
 using CalculadorOrcamento.Application.OrcamentoUsuarios.Commands.Excluir;
 using CalculadorOrcamento.Application.OrcamentoUsuarios.Models;
 using CalculadorOrcamento.Application.OrcamentoUsuarios.Queries.Search;
+using CalculadorOrcamento.Application.OrcamentoUsuarios.Queries.SearchUsuario;
+using CalculadorOrcamento.Application.Usuarios.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -67,6 +69,22 @@ namespace CalculadorOrcamento.WebUI.Controllers
             var command = new ExcluirOrcamentoUsuarioCommand() { Id = id };
 
             return Ok(await Mediator.Send(command));
+        }
+
+        [HttpGet]
+        [Route("BuscarUsuarios")]
+        [Authorize]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(List<UsuarioViewModel>))]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden, Type = typeof(ResponseForbidden))]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized, Type = typeof(ResponseUnauthorized))]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(ResponseInternalServerError))]
+        public async Task<ActionResult<List<UsuarioViewModel>>> SearchUsuarios([FromQuery] int idOrcamento, [FromQuery]string termo)
+        {
+            return Ok(await Mediator.Send(new SearchUsuarioOrcamentoUsuarioQuery()
+            {
+                IdOrcamento = idOrcamento,
+                Termo = termo
+            }));
         }
     }
 }

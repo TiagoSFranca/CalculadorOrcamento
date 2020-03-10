@@ -37,6 +37,8 @@ namespace CalculadorOrcamento.Persistence.EntityConfigurations
             builder.Property(e => e.Senha)
                 .IsRequired()
                 .HasMaxLength(256);
+
+            builder.Ignore(e => e.NomeCompleto);
         }
     }
 }
