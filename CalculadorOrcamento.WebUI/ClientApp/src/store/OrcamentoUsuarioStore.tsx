@@ -1,6 +1,8 @@
 ﻿import HTTP from 'http/index';
 import { Action, Reducer } from 'redux';
 import { AppThunkAction } from './';
+import { Usuario } from './AuthStore';
+import { OrcamentoPermissao } from './OrcamentoPermissaoStore';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -10,13 +12,23 @@ export interface OrcamentoUsuarioState {
     orcamentoUsuarios?: OrcamentoUsuario[];
     orcamentoUsuario?: OrcamentoUsuario;
     search: boolean;
+    usuarios: 
 }
 
 export interface OrcamentoUsuario {
     id: number;
     idOrcamento: number;
-    valorHora: number;
-    multiplicador: number;
+    idUsuario: number;
+    usuario: Usuario;
+    orcamentoUsuarioPermissoes: OrcamentoUsuarioPermissao[];
+}
+
+export interface OrcamentoUsuarioPermissao {
+    id: number;
+    idOrcamentoUsuario: number;
+    idPermissao: number;
+    permite: boolean;
+    permissao: OrcamentoPermissao;
 }
 
 export interface AdicionarOrcamentoUsuario {
@@ -37,32 +49,30 @@ interface ReceiveOrcamentoItensAction {
     orcamentoUsuarios: OrcamentoUsuario[];
 }
 
-interface AdicionarOrcamentoItemAction {
+interface AdicionarOrcamentoUsuarioAction {
     type: 'ADICIONAR_ORCAMENTO_USUARIO';
     orcamentoUsuario?: OrcamentoUsuario;
 }
 
-interface IsLoadingOrcamentoItemAction {
+interface IsLoadingOrcamentoUsuarioAction {
     type: 'IS_LOADING_ORCAMENTO_USUARIO';
     value: boolean;
 }
 
-interface SetSearchOrcamentoItem {
+interface SetSearchOrcamentoUsuario {
     type: 'SET_SEARCH_ORCAMENTO_USUARIO';
     value: boolean;
 }
 
-type KnownAction = ReceiveOrcamentoItensAction | AdicionarOrcamentoItemAction | IsLoadingOrcamentoItemAction | SetSearchOrcamentoItem;
+type KnownAction = ReceiveOrcamentoItensAction | AdicionarOrcamentoUsuarioAction | IsLoadingOrcamentoUsuarioAction | SetSearchOrcamentoUsuario;
 
-// ----------------
-// ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
-// They don't directly mutate state, but they can have external side-effects (such as loading data).
+const BASE_URL = "orcamentoUsuarios";
 
 export const actionCreators = {
-    requestOrcamentos: (callback: Function, idOrcamento: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    requestOrcamentos: (callback: Function, idOrcamento: number): AppThunkAction<KnownAction> => (dispatch) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO_USUARIO', value: true });
 
-        HTTP.get(`/orcamentovalores?idOrcamento=${idOrcamento}`)
+        HTTP.get(`/${BASE_URL}?idOrcamento=${idOrcamento}`)
             .then(response => response.data as Promise<OrcamentoUsuario[]>)
             .then(result => {
                 dispatch({ type: 'RECEIVE_ORCAMENTO_USUARIOS', orcamentoUsuarios: result });
@@ -75,10 +85,10 @@ export const actionCreators = {
             });
     },
 
-    adicionarItem: (data: AdicionarOrcamentoUsuario, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
+    adicionarUsuario: (data: AdicionarOrcamentoUsuario, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO_USUARIO', value: true });
 
-        HTTP.post(`/orcamentovalores`, JSON.stringify(data))
+        HTTP.post(`/${BASE_URL}`, JSON.stringify(data))
             .then(response => response.data as Promise<OrcamentoUsuario>)
             .then(data => {
                 dispatch({ type: 'ADICIONAR_ORCAMENTO_USUARIO', orcamentoUsuario: data });
@@ -90,10 +100,10 @@ export const actionCreators = {
             });
     },
 
-    editarItem: (id: number, data: EditarOrcamentoUsuario, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
+    editarUsuario: (id: number, data: EditarOrcamentoUsuario, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO_USUARIO', value: true });
 
-        HTTP.put(`/orcamentovalores/${id}`, JSON.stringify(data))
+        HTTP.put(`/${BASE_URL}/${id}`, JSON.stringify(data))
             .then(response => response.data as Promise<OrcamentoUsuario>)
             .then(data => {
                 dispatch({ type: 'ADICIONAR_ORCAMENTO_USUARIO', orcamentoUsuario: data });
@@ -105,10 +115,10 @@ export const actionCreators = {
             });
     },
 
-    excluirItem: (id: number, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
+    excluirUsuario: (id: number, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
         dispatch({ type: 'IS_LOADING_ORCAMENTO_USUARIO', value: true });
 
-        HTTP.delete(`/orcamentovalores/${id}`)
+        HTTP.delete(`/${BASE_URL}/${id}`)
             .then(response => response.data as Promise<OrcamentoUsuario>)
             .then(data => {
                 dispatch({ type: 'SET_SEARCH_ORCAMENTO_USUARIO', value: true });
