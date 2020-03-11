@@ -8,14 +8,15 @@ import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import React, { useRef, useState } from 'react';
-import { Controller, ErrorMessage, useForm } from "react-hook-form";
+import { ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
+import { ApplicationState } from 'store';
 import * as AppStore from 'store/AppStore';
 import * as AuthStore from 'store/AuthStore';
-import { ApplicationState } from 'store';
 import { maxLengthMessage, minLengthMessage, requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
@@ -75,7 +76,6 @@ const RegisterComponent = (props: any) => {
 
     const [showSenha, setShowSenha] = useState(false);
     const [showConfirmarSenha, setShowConfirmarSenha] = useState(false);
-    const watchAllFields = watch();
 
     const password = useRef({});
     password.current = watch("senha", "");
@@ -83,17 +83,6 @@ const RegisterComponent = (props: any) => {
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
     };
-
-    const onBlurEvent = (event: any) => {
-        Object.keys(watchAllFields).forEach(key => trimValue(key));
-    }
-
-    const trimValue = (name: string) => {
-        if (watchAllFields[name]) {
-            setValue(name, watchAllFields[name].trim());
-            triggerValidation(name);
-        }
-    }
 
     return (
         <>
@@ -112,7 +101,7 @@ const RegisterComponent = (props: any) => {
                     <form noValidate onSubmit={handleSubmit(onSubmit)}>
                         <Grid container justify="center" spacing={3}>
                             <Grid item xs={5}>
-                                <Controller
+                                <CustomController
                                     as={
                                         <TextField label="Nome" error={errors.nome ? true : false}
                                             fullWidth
@@ -131,10 +120,13 @@ const RegisterComponent = (props: any) => {
                                         maxLength: maxLengthMessage(64),
                                         minLength: minLengthMessage(3),
                                     }}
-                                    onBlur={onBlurEvent} />
+                                    watch={watch}
+                                    setValue={setValue}
+                                    triggerValidation={triggerValidation}
+                                    trim="ALL" />
                             </Grid>
                             <Grid item xs={7}>
-                                <Controller
+                                <CustomController
                                     as={
                                         <TextField label="Sobrenome" error={errors.sobrenome ? true : false}
                                             fullWidth
@@ -152,10 +144,13 @@ const RegisterComponent = (props: any) => {
                                         required: requiredMessage(),
                                         maxLength: maxLengthMessage(256)
                                     }}
-                                    onBlur={onBlurEvent} />
+                                    watch={watch}
+                                    setValue={setValue}
+                                    triggerValidation={triggerValidation}
+                                    trim="ALL" />
                             </Grid>
                             <Grid item xs={7}>
-                                <Controller
+                                <CustomController
                                     as={
                                         <TextField label="E-mail" error={errors.email ? true : false}
                                             fullWidth
@@ -178,10 +173,13 @@ const RegisterComponent = (props: any) => {
                                         }
 
                                     }}
-                                    onBlur={onBlurEvent} />
+                                    watch={watch}
+                                    setValue={setValue}
+                                    triggerValidation={triggerValidation}
+                                    trim="ALL" />
                             </Grid>
                             <Grid item xs={5}>
-                                <Controller
+                                <CustomController
                                     as={
                                         <TextField label="Login" error={errors.login ? true : false}
                                             fullWidth
@@ -204,10 +202,13 @@ const RegisterComponent = (props: any) => {
                                             message: "Não pode conter espaços em branco"
                                         }
                                     }}
-                                    onBlur={onBlurEvent} />
+                                    watch={watch}
+                                    setValue={setValue}
+                                    triggerValidation={triggerValidation}
+                                    trim="ALL" />
                             </Grid>
                             <Grid item xs={6}>
-                                <Controller
+                                <CustomController
                                     as={
                                         <TextField label="Senha" error={errors.senha ? true : false}
                                             fullWidth
@@ -239,10 +240,13 @@ const RegisterComponent = (props: any) => {
                                         maxLength: maxLengthMessage(64),
                                         minLength: minLengthMessage(6),
                                     }}
-                                    onBlur={onBlurEvent} />
+                                    watch={watch}
+                                    setValue={setValue}
+                                    triggerValidation={triggerValidation}
+                                    trim="ALL" />
                             </Grid>
                             <Grid item xs={6}>
-                                <Controller
+                                <CustomController
                                     as={
                                         <TextField label="Confirmar Senha" error={errors.confirmarSenha ? true : false}
                                             fullWidth
@@ -278,7 +282,10 @@ const RegisterComponent = (props: any) => {
                                         maxLength: maxLengthMessage(64),
                                         minLength: minLengthMessage(6),
                                     }}
-                                    onBlur={onBlurEvent} />
+                                    watch={watch}
+                                    setValue={setValue}
+                                    triggerValidation={triggerValidation}
+                                    trim="ALL" />
                             </Grid>
                             <Grid item xs={12}>
                                 <LoadingButton

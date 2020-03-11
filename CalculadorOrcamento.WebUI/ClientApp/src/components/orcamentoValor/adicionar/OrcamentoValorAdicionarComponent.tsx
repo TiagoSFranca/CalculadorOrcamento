@@ -7,9 +7,10 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import AddIcon from '@material-ui/icons/Add';
 import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
+import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import React from 'react';
-import { Controller, ErrorMessage, useForm } from "react-hook-form";
+import { ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
@@ -42,7 +43,7 @@ const OrcamentoValorAdicionarComponent = (props: Props) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
-    const { control, errors, handleSubmit, register } = useForm<OrcamentoValorAdicionarForm>();
+    const { control, errors, handleSubmit, register, watch, setValue, triggerValidation } = useForm<OrcamentoValorAdicionarForm>();
 
     const orcamentoValorStore = useSelector((s: ApplicationState) => s.orcamentoValor);
     const { isLoading } = orcamentoValorStore;
@@ -87,7 +88,7 @@ const OrcamentoValorAdicionarComponent = (props: Props) => {
                     <DialogContent>
                         <Grid container spacing={3} className={classes.noMargin}>
                             <Grid item xs={6}>
-                                <Controller
+                                <CustomController
                                     as={
                                         <TextField label="Valor da hora" error={errors.valorHora ? true : false}
                                             fullWidth
@@ -110,11 +111,15 @@ const OrcamentoValorAdicionarComponent = (props: Props) => {
                                     defaultValue=""
                                     rules={{
                                         required: requiredMessage()
-                                    }} />
+                                    }}
+                                    watch={watch}
+                                    setValue={setValue}
+                                    triggerValidation={triggerValidation}
+                                    trim="ALL" />
                             </Grid>
 
                             <Grid item xs={6}>
-                                <Controller
+                                <CustomController
                                     as={
                                         <TextField label="Multiplicador" error={errors.multiplicador ? true : false}
                                             fullWidth
@@ -137,7 +142,11 @@ const OrcamentoValorAdicionarComponent = (props: Props) => {
                                     defaultValue=""
                                     rules={{
                                         required: requiredMessage()
-                                    }} />
+                                    }}
+                                    watch={watch}
+                                    setValue={setValue}
+                                    triggerValidation={triggerValidation}
+                                    trim="ALL" />
                             </Grid>
                         </Grid>
                     </DialogContent>

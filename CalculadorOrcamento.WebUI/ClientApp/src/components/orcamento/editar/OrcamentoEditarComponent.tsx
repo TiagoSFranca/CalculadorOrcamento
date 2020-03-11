@@ -14,6 +14,7 @@ import formatter from "utils/formatter";
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
 import { requiredMessage, maxLengthMessage } from "utils/hooksValidations";
+import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 
 type OrcamentoEditarForm = {
     id: number;
@@ -30,7 +31,7 @@ const OrcamentoAdicionarComponent = (props: any) => {
     const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
     const { isLoading, orcamento } = orcamentoStore;
 
-    const { control, errors, handleSubmit, reset } = useForm<OrcamentoEditarForm>();
+    const { control, errors, handleSubmit, reset, watch, setValue, triggerValidation } = useForm<OrcamentoEditarForm>();
 
     const dispatch = useDispatch();
 
@@ -104,7 +105,7 @@ const OrcamentoAdicionarComponent = (props: any) => {
                                 defaultValue="" />
                         </Grid>
                         <Grid item xs={6} >
-                            <Controller
+                            <CustomController
                                 as={
                                     <TextField label="Nome" error={errors.nome ? true : false}
                                         fullWidth
@@ -120,11 +121,15 @@ const OrcamentoAdicionarComponent = (props: any) => {
                                 defaultValue=""
                                 rules={{
                                     required: requiredMessage()
-                                }} />
+                                }}
+                                watch={watch}
+                                setValue={setValue}
+                                triggerValidation={triggerValidation}
+                                trim="ALL" />
                         </Grid>
 
                         <Grid item xs={12} >
-                            <Controller
+                            <CustomController
                                 as={
                                     <TextField label="Descrição" error={errors.descricao ? true : false}
                                         fullWidth
@@ -143,7 +148,11 @@ const OrcamentoAdicionarComponent = (props: any) => {
                                 defaultValue=""
                                 rules={{
                                     maxLength: maxLengthMessage(512)
-                                }} />
+                                }}
+                                watch={watch}
+                                setValue={setValue}
+                                triggerValidation={triggerValidation}
+                                trim="ALL" />
                         </Grid>
 
                         <Grid item xs={12} >

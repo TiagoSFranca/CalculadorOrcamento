@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import ConfirmDialog from 'components/common/confirmDialog/ConfirmDialogComponent';
 import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
+import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 import React, { useState } from 'react';
 import { Controller, ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
@@ -47,7 +48,7 @@ type OrcamentoValorEditarForm = {
 const OrcamentoValorItemComponent = (props: Props) => {
     const classes = useStyles();
 
-    const { control, errors, handleSubmit, register } = useForm<OrcamentoValorEditarForm>();
+    const { control, errors, handleSubmit, register, watch, setValue, triggerValidation } = useForm<OrcamentoValorEditarForm>();
 
     const orcamentoValorStore = useSelector((s: ApplicationState) => s.orcamentoValor);
     const { isLoading } = orcamentoValorStore;
@@ -117,7 +118,7 @@ const OrcamentoValorItemComponent = (props: Props) => {
                                         <Typography variant="caption" className={classes.marginLeft}>{formatter.formatarDinheiro(props.orcamentoValor.valorHora)}</Typography>
                                     </>
                                 ) : (
-                                        <Controller
+                                        <CustomController
                                             as={
                                                 <TextField label="Valor da hora" error={errors.valorHora ? true : false}
                                                     fullWidth
@@ -140,7 +141,11 @@ const OrcamentoValorItemComponent = (props: Props) => {
                                             defaultValue={props.orcamentoValor.valorHora}
                                             rules={{
                                                 required: requiredMessage()
-                                            }} />
+                                            }}
+                                            watch={watch}
+                                            setValue={setValue}
+                                            triggerValidation={triggerValidation}
+                                            trim="ALL" />
                                     )}
                             </Grid>
                             <Grid item xs={12}>
@@ -150,7 +155,7 @@ const OrcamentoValorItemComponent = (props: Props) => {
                                         <Typography variant="caption" className={classes.marginLeft}>{formatter.formatarNumero(props.orcamentoValor.multiplicador)}x</Typography>
                                     </>
                                 ) : (
-                                        <Controller
+                                        <CustomController
                                             as={
                                                 <TextField label="Multiplicador" error={errors.multiplicador ? true : false}
                                                     fullWidth
@@ -173,7 +178,11 @@ const OrcamentoValorItemComponent = (props: Props) => {
                                             defaultValue={props.orcamentoValor.multiplicador}
                                             rules={{
                                                 required: requiredMessage()
-                                            }} />
+                                            }}
+                                            watch={watch}
+                                            setValue={setValue}
+                                            triggerValidation={triggerValidation}
+                                            trim="ALL" />
                                     )}
                             </Grid>
                         </Grid>

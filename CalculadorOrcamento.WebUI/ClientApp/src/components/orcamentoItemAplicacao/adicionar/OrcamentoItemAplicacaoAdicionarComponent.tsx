@@ -7,15 +7,16 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import AddIcon from '@material-ui/icons/Add';
 import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
+import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import React from 'react';
-import { Controller, ErrorMessage, useForm } from "react-hook-form";
+import { ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
 import * as AppStore from 'store/AppStore';
 import * as OrcamentoItemAplicacaoStore from 'store/OrcamentoItemAplicacaoStore';
-import { maxLengthMessage, minValueMessage } from 'utils/hooksValidations';
+import { maxLengthMessage, minValueMessage, requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
 
@@ -46,7 +47,7 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
-    const { control, errors, handleSubmit } = useForm<OrcamentoItemAplicacaoAdicionarForm>();
+    const { control, errors, handleSubmit, watch, setValue, triggerValidation } = useForm<OrcamentoItemAplicacaoAdicionarForm>();
 
     const orcamentoItemStore = useSelector((s: ApplicationState) => s.orcamentoItemAplicacao);
     const { isLoading } = orcamentoItemStore;
@@ -92,7 +93,8 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
                     <DialogContent>
                         <Grid container spacing={3} className={classes.noMargin}>
                             <Grid item xs={6} >
-                                <Controller as={
+                                <CustomController
+                                    as={
                                     <TextField label="Nome" error={errors.nome ? true : false}
                                         fullWidth
                                         helperText={
@@ -101,11 +103,19 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
                                             </ErrorMessage>
                                         }
                                     />
-                                } name="nome" control={control} defaultValue="" rules={{ required: "Campo obrigatório" }} />
+                                    }
+                                    name="nome"
+                                    control={control}
+                                    defaultValue=""
+                                    rules={{ required: requiredMessage() }}
+                                    watch={watch}
+                                    setValue={setValue}
+                                    triggerValidation={triggerValidation}
+                                    trim="ALL" />
                             </Grid>
 
                             <Grid item xs={12} >
-                                <Controller
+                                <CustomController
                                     as={
                                         <TextField label="Descrição" error={errors.descricao ? true : false}
                                             fullWidth
@@ -124,11 +134,15 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
                                     defaultValue=""
                                     rules={{
                                         maxLength: maxLengthMessage(512),
-                                    }} />
+                                    }}
+                                    watch={watch}
+                                    setValue={setValue}
+                                    triggerValidation={triggerValidation}
+                                    trim="ALL" />
                             </Grid>
 
                             <Grid item xs={12} >
-                                <Controller
+                                <CustomController
                                     as={
                                         <TextField label="Observações" error={errors.observacao ? true : false}
                                             fullWidth
@@ -147,11 +161,15 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
                                     defaultValue=""
                                     rules={{
                                         maxLength: maxLengthMessage(1024),
-                                    }} />
+                                    }}
+                                    watch={watch}
+                                    setValue={setValue}
+                                    triggerValidation={triggerValidation}
+                                    trim="ALL" />
                             </Grid>
 
                             <Grid item xs={4} >
-                                <Controller
+                                <CustomController
                                     as={
                                         <TextField label="Duração Back-end" error={errors.duracaoBack ? true : false}
                                             fullWidth
@@ -168,11 +186,15 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
                                     defaultValue=""
                                     rules={{
                                         min: minValueMessage(0)
-                                    }} />
+                                    }}
+                                    watch={watch}
+                                    setValue={setValue}
+                                    triggerValidation={triggerValidation}
+                                    trim="ALL" />
                             </Grid>
 
                             <Grid item xs={4} >
-                                <Controller
+                                <CustomController
                                     as={
                                         <TextField label="Duração Front-end" error={errors.duracaoFront ? true : false}
                                             fullWidth
@@ -189,11 +211,15 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
                                     defaultValue=""
                                     rules={{
                                         min: minValueMessage(0)
-                                    }} />
+                                    }}
+                                    watch={watch}
+                                    setValue={setValue}
+                                    triggerValidation={triggerValidation}
+                                    trim="ALL" />
                             </Grid>
 
                             <Grid item xs={4} >
-                                <Controller
+                                <CustomController
                                     as={
                                         <TextField label="Duração Total" error={errors.duracaoTotal ? true : false}
                                             fullWidth
@@ -210,7 +236,11 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
                                     defaultValue=""
                                     rules={{
                                         min: minValueMessage(0)
-                                    }} />
+                                    }}
+                                    watch={watch}
+                                    setValue={setValue}
+                                    triggerValidation={triggerValidation}
+                                    trim="ALL" />
                             </Grid>
                         </Grid>
                     </DialogContent>

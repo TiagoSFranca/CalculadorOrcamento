@@ -8,9 +8,10 @@ import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import React, { useState } from 'react';
-import { Controller, ErrorMessage, useForm } from "react-hook-form";
+import { ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import { ApplicationState } from 'store';
@@ -47,7 +48,7 @@ const LoginComponent = (props: any) => {
 
     const dispatch = useDispatch();
 
-    const { control, errors, handleSubmit, reset } = useForm<LoginForm>();
+    const { control, errors, handleSubmit, watch, setValue, triggerValidation } = useForm<LoginForm>();
 
     const callback = (error: any) => {
         if (error) {
@@ -86,7 +87,7 @@ const LoginComponent = (props: any) => {
                     <form noValidate onSubmit={handleSubmit(onSubmit)}>
                         <Grid container justify="center" spacing={3}>
                             <Grid item xs={12}>
-                                <Controller
+                                <CustomController
                                     as={
                                         <TextField label="Login ou E-mail" error={errors.login ? true : false}
                                             fullWidth
@@ -102,10 +103,13 @@ const LoginComponent = (props: any) => {
                                     defaultValue=""
                                     rules={{
                                         required: requiredMessage()
-                                    }} />
+                                    }}
+                                    watch={watch}
+                                    setValue={setValue}
+                                    triggerValidation={triggerValidation} />
                             </Grid>
                             <Grid item xs={12}>
-                                <Controller
+                                <CustomController
                                     as={
                                         <TextField label="Senha" error={errors.senha ? true : false}
                                             fullWidth
@@ -134,7 +138,10 @@ const LoginComponent = (props: any) => {
                                     defaultValue=""
                                     rules={{
                                         required: requiredMessage()
-                                    }} />
+                                    }}
+                                    watch={watch}
+                                    setValue={setValue}
+                                    triggerValidation={triggerValidation} />
                             </Grid>
                             <Grid item xs={12}>
                                 <LoadingButton

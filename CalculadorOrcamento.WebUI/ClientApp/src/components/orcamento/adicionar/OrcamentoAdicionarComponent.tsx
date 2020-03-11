@@ -2,9 +2,10 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import SaveIcon from '@material-ui/icons/Save';
+import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import React from "react";
-import { Controller, ErrorMessage, useForm } from "react-hook-form";
+import { ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
@@ -33,7 +34,7 @@ const OrcamentoAdicionarComponent = (props: any) => {
     const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
     const { isLoading } = orcamentoStore;
 
-    const { control, errors, handleSubmit } = useForm<OrcamentoAdicionarForm>();
+    const { control, errors, handleSubmit, watch, setValue, triggerValidation } = useForm<OrcamentoAdicionarForm>();
 
     const dispatch = useDispatch();
 
@@ -58,7 +59,7 @@ const OrcamentoAdicionarComponent = (props: any) => {
                     <CardContent>
                         <form onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
                             <Grid item xs={6} >
-                                <Controller
+                                <CustomController
                                     as={
                                         <TextField label="Nome" error={errors.nome ? true : false}
                                             fullWidth
@@ -74,11 +75,15 @@ const OrcamentoAdicionarComponent = (props: any) => {
                                     defaultValue=""
                                     rules={{
                                         required: requiredMessage()
-                                    }} />
+                                    }}
+                                    watch={watch}
+                                    setValue={setValue}
+                                    triggerValidation={triggerValidation}
+                                    trim="ALL" />
                             </Grid>
 
                             <Grid item xs={12} >
-                                <Controller
+                                <CustomController
                                     as={
                                         <TextField label="Descrição" error={errors.descricao ? true : false}
                                             fullWidth
@@ -97,7 +102,11 @@ const OrcamentoAdicionarComponent = (props: any) => {
                                     defaultValue=""
                                     rules={{
                                         maxLength: maxLengthMessage(512)
-                                    }} />
+                                    }}
+                                    watch={watch}
+                                    setValue={setValue}
+                                    triggerValidation={triggerValidation}
+                                    trim="ALL" />
                             </Grid>
 
                             <CardActions
