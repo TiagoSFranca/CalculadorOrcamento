@@ -6,6 +6,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import AddIcon from '@material-ui/icons/Add';
+import appActions from 'actions/appActions';
+import orcamentoUsuarioActions from 'actions/orcamentoUsuarioActions';
 import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import React from 'react';
@@ -13,8 +15,7 @@ import { Controller, ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
-import * as OrcamentoUsuarioStore from 'store/OrcamentoUsuarioStore';
+import { AdicionarOrcamentoUsuario } from 'store/orcamentoUsuario/models';
 import { greaterThanMessage, requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
@@ -61,10 +62,10 @@ const OrcamentoUsuarioAdicionarComponent = (props: Props) => {
 
     const callback = (error: any) => {
         if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
+            dispatch(appActions.showSnackBarAction(null, error))
         }
         else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
             setOpen(false);
         }
     }
@@ -73,7 +74,7 @@ const OrcamentoUsuarioAdicionarComponent = (props: Props) => {
         data.idOrcamento = +id;
         data.valorHora = +data.valorHora;
         data.multiplicador = +data.multiplicador;
-        dispatch(OrcamentoUsuarioStore.actionCreators.adicionarItem(data as OrcamentoUsuarioStore.AdicionarOrcamentoUsuario, callback));
+        dispatch(orcamentoUsuarioActions.adicionarUsuario(data as AdicionarOrcamentoUsuario, callback));
     };
 
     return (

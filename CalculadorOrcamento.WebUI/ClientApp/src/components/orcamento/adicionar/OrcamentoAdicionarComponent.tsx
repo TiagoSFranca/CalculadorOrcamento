@@ -2,6 +2,8 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import SaveIcon from '@material-ui/icons/Save';
+import appActions from 'actions/appActions';
+import orcamentoActions from 'actions/orcamentoActions';
 import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import React from "react";
@@ -9,8 +11,7 @@ import { ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
-import * as OrcamentoStore from 'store/OrcamentoStore';
+import { AdicionarOrcamento } from "store/orcamento/models";
 import { maxLengthMessage, requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
@@ -40,16 +41,16 @@ const OrcamentoAdicionarComponent = (props: any) => {
 
     const callback = (error: any) => {
         if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
+            dispatch(appActions.showSnackBarAction(null, error))
         }
         else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
             props.history.push('/orcamento');
         }
     }
 
     const onSubmit = (data: any) => {
-        dispatch(OrcamentoStore.actionCreators.adicionarOrcamento(data as OrcamentoStore.AdicionarOrcamento, callback));
+        dispatch(orcamentoActions.adicionarOrcamento(data as AdicionarOrcamento, callback));
     };
 
     return (<>

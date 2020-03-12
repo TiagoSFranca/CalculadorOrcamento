@@ -8,6 +8,8 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import appActions from 'actions/appActions';
+import orcamentoItemAplicacaoActions from 'actions/orcamentoItemAplicacaoActions';
 import ConfirmDialog from 'components/common/confirmDialog/ConfirmDialogComponent';
 import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
 import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
@@ -16,8 +18,7 @@ import React, { useState } from 'react';
 import { ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
-import * as OrcamentoItemAplicacaoStore from 'store/OrcamentoItemAplicacaoStore';
+import { OrcamentoItemAplicacao, EditarOrcamentoItemAplicacao } from 'store/orcamentoItemAplicacao/models';
 import formatter from 'utils/formatter';
 import { maxLengthMessage, minValueMessage, requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
@@ -38,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = {
-    orcamentoItemAplicacao: OrcamentoItemAplicacaoStore.OrcamentoItemAplicacao
+    orcamentoItemAplicacao: OrcamentoItemAplicacao
 }
 
 type OrcamentoItemAplicacaoEditarForm = {
@@ -67,20 +68,20 @@ const OrcamentoItemAplicacaoItemComponent = (props: Props) => {
 
     const callback = (error: any) => {
         if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
+            dispatch(appActions.showSnackBarAction(null, error))
         }
         else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
             setEdit(false);
         }
     }
 
     const callbackDelete = (error: any) => {
         if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
+            dispatch(appActions.showSnackBarAction(null, error))
         }
         else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
             setOpenDialogDelete(false);
         }
     }
@@ -92,7 +93,7 @@ const OrcamentoItemAplicacaoItemComponent = (props: Props) => {
         data.duracaoFront = data.duracaoFront != null && data.duracaoFront >= 0 ? +data.duracaoFront : null;
         data.duracaoTotal = data.duracaoTotal != null && data.duracaoTotal >= 0 ? +data.duracaoTotal : null;
 
-        dispatch(OrcamentoItemAplicacaoStore.actionCreators.editarItem(data.id, data as OrcamentoItemAplicacaoStore.EditarOrcamentoItem, callback));
+        dispatch(orcamentoItemAplicacaoActions.editarItem(data.id, data as EditarOrcamentoItemAplicacao, callback));
     };
 
     const dialogActions = () => {
@@ -108,7 +109,7 @@ const OrcamentoItemAplicacaoItemComponent = (props: Props) => {
     }
 
     const confirmDelete = () => {
-        dispatch(OrcamentoItemAplicacaoStore.actionCreators.excluirItem(props.orcamentoItemAplicacao.id, callbackDelete));
+        dispatch(orcamentoItemAplicacaoActions.excluirItem(props.orcamentoItemAplicacao.id, callbackDelete));
     }
 
     const onExpansionPanelChange = (event: React.ChangeEvent<{}>, newExpanded: boolean) => {

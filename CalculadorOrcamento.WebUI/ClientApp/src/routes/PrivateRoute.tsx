@@ -1,8 +1,8 @@
-﻿import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+﻿import authActions from 'actions/authActions';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route } from 'react-router';
 import { ApplicationState } from 'store';
-import * as AuthStore from 'store/AuthStore';
 
 const PrivateRoute = (props: any) => {
     const appStore = useSelector((s: ApplicationState) => s.auth);
@@ -10,7 +10,7 @@ const PrivateRoute = (props: any) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(AuthStore.actionCreators.checkIsAuthAction())
+        dispatch(authActions.checkIsAuthAction())
     }, [])
 
     return (

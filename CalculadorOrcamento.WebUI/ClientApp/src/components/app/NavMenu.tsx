@@ -7,13 +7,13 @@ import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import MenuIcon from '@material-ui/icons/Menu';
 import SettingsIcon from '@material-ui/icons/Settings';
+import appActions from 'actions/appActions';
+import authActions from 'actions/authActions';
 import ConfirmDialog from 'components/common/confirmDialog/ConfirmDialogComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
-import * as AuthStore from 'store/AuthStore';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -75,7 +75,7 @@ const NavMenu = (props: any) => {
     }
 
     const confirmLogout = () => {
-        dispatch(AuthStore.actionCreators.logout());
+        dispatch(authActions.logout());
     }
 
     return (
@@ -83,7 +83,7 @@ const NavMenu = (props: any) => {
             <ElevationScroll {...props}>
                 <AppBar className={classes.toolbar}>
                     <Toolbar>
-                        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={() => { dispatch(AppStore.actionCreators.toggleDrawerAction()) }}>
+                        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={() => { dispatch(appActions.toggleDrawerAction()) }}>
                             <MenuIcon />
                         </IconButton>
                         <Typography variant="h6" className={classes.title} color="inherit">{appStore.pageTitle}</Typography>

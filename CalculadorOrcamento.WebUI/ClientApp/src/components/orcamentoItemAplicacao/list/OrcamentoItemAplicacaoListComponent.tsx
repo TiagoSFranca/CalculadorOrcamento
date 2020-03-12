@@ -1,14 +1,13 @@
 ﻿import { Grid } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import orcamentoItemAplicacaoActions from 'actions/orcamentoItemAplicacaoActions';
 import LoadingCard from 'components/common/loadingCard/LoadingCardComponent';
 import OrcamentoItemAplicacaoAdicionar from 'components/orcamentoItemAplicacao/adicionar/OrcamentoItemAplicacaoAdicionarComponent';
+import OrcamentoItemAplicacaoComponent from 'components/orcamentoItemAplicacao/item/OrcamentoItemAplicacaoItemComponent';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
-import * as OrcamentoItemAplicacaoStore from 'store/OrcamentoItemAplicacaoStore';
-import OrcamentoItemAplicacaoComponent from 'components/orcamentoItemAplicacao/item/OrcamentoItemAplicacaoItemComponent';
-
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -36,12 +35,12 @@ const OrcamentoItemAplicacaoListComponent = (props: any) => {
     }
 
     useEffect(() => {
-        dispatch(OrcamentoItemAplicacaoStore.actionCreators.requestOrcamentos(callback, id))
+        dispatch(orcamentoItemAplicacaoActions.requestOrcamentos(callback, id))
     }, []);
 
     useEffect(() => {
         if (search)
-            dispatch(OrcamentoItemAplicacaoStore.actionCreators.requestOrcamentos(callback, id))
+            dispatch(orcamentoItemAplicacaoActions.requestOrcamentos(callback, id))
     }, [search])
 
     return (

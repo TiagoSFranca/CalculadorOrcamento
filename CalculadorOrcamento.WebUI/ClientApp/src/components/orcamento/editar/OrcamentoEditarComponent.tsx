@@ -1,6 +1,9 @@
 ﻿import { Grid } from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';
 import EditIcon from '@material-ui/icons/Edit';
+import appActions from 'actions/appActions';
+import orcamentoActions from 'actions/orcamentoActions';
+import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import LoadingCard from "components/common/loadingCard/LoadingCardComponent";
 import React, { useEffect } from "react";
@@ -8,13 +11,11 @@ import { Controller, ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
-import * as OrcamentoStore from 'store/OrcamentoStore';
+import { EditarOrcamento } from 'store/orcamento/models';
 import formatter from "utils/formatter";
+import { maxLengthMessage, requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
-import { requiredMessage, maxLengthMessage } from "utils/hooksValidations";
-import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 
 type OrcamentoEditarForm = {
     id: number;
@@ -37,15 +38,15 @@ const OrcamentoAdicionarComponent = (props: any) => {
 
     const callback = (error: any) => {
         if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
+            dispatch(appActions.showSnackBarAction(null, error))
         }
         else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
         }
     }
 
     const onSubmit = (data: any) => {
-        dispatch(OrcamentoStore.actionCreators.editarOrcamento(id, data as OrcamentoStore.EditarOrcamento, callback));
+        dispatch(orcamentoActions.editarOrcamento(id, data as EditarOrcamento, callback));
     };
 
     useEffect(() => {

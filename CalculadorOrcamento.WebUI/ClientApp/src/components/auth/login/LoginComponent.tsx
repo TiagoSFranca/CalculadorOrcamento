@@ -8,6 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import appActions from 'actions/appActions';
+import authActions from 'actions/authActions';
 import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import React, { useState } from 'react';
@@ -15,8 +17,7 @@ import { ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
-import * as AuthStore from 'store/AuthStore';
+import { AutenticarUsuario } from 'store/auth/models';
 import { requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
@@ -52,16 +53,16 @@ const LoginComponent = (props: any) => {
 
     const callback = (error: any) => {
         if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
+            dispatch(appActions.showSnackBarAction(null, error))
         }
         else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
             props.history.push('/');
         }
     }
 
     const onSubmit = (data: any) => {
-        dispatch(AuthStore.actionCreators.autenticarUsuario(data as AuthStore.AutenticarUsuario, callback));
+        dispatch(authActions.autenticarUsuario(data as AutenticarUsuario, callback));
     };
 
     const [showSenha, setShowSenha] = useState(false);

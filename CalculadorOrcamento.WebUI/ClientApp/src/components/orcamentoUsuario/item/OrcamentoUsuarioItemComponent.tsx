@@ -2,6 +2,8 @@
 import Button from '@material-ui/core/Button';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import appActions from 'actions/appActions';
+import orcamentoUsuarioActions from 'actions/orcamentoUsuarioActions';
 import ConfirmDialog from 'components/common/confirmDialog/ConfirmDialogComponent';
 import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
@@ -9,8 +11,7 @@ import React, { useState } from 'react';
 import { Controller, ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
-import * as OrcamentoUsuarioStore from 'store/OrcamentoUsuarioStore';
+import { EditarOrcamentoUsuario, OrcamentoUsuario } from 'store/orcamentoUsuario/models';
 import formatter from 'utils/formatter';
 import { requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
@@ -34,10 +35,10 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = {
-    orcamentoUsuario: OrcamentoUsuarioStore.OrcamentoUsuario
+    orcamentoUsuario: OrcamentoUsuario
 }
 
-type OrcamentoItemAplicacaoEditarForm = {
+type OrcamentoUsuarioEditarForm = {
     id: number;
     idOrcamento: number;
     valorHora: number;
@@ -47,7 +48,7 @@ type OrcamentoItemAplicacaoEditarForm = {
 const OrcamentoUsuarioItemComponent = (props: Props) => {
     const classes = useStyles();
 
-    const { control, errors, handleSubmit, register } = useForm<OrcamentoItemAplicacaoEditarForm>();
+    const { control, errors, handleSubmit, register } = useForm<OrcamentoUsuarioEditarForm>();
 
     const orcamentoUsuarioStore = useSelector((s: ApplicationState) => s.orcamentoUsuario);
     const { isLoading } = orcamentoUsuarioStore;
@@ -59,31 +60,31 @@ const OrcamentoUsuarioItemComponent = (props: Props) => {
 
     const callback = (error: any) => {
         if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
+            dispatch(appActions.showSnackBarAction(null, error))
         }
         else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
             setEdit(false);
         }
     }
 
     const callbackDelete = (error: any) => {
         if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
+            dispatch(appActions.showSnackBarAction(null, error))
         }
         else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
             setOpenDialogDelete(false);
         }
     }
 
-    const onSubmit = (data: OrcamentoItemAplicacaoEditarForm) => {
+    const onSubmit = (data: OrcamentoUsuarioEditarForm) => {
         data.id = props.orcamentoUsuario.id;
         data.idOrcamento = props.orcamentoUsuario.idOrcamento;
         data.valorHora = +data.valorHora;
         data.multiplicador = +data.multiplicador;
 
-        dispatch(OrcamentoUsuarioStore.actionCreators.editarItem(data.id, data as OrcamentoUsuarioStore.EditarOrcamentoUsuario, callback));
+        dispatch(orcamentoUsuarioActions.editarUsuario(data.id, data as EditarOrcamentoUsuario, callback));
     };
 
     const dialogActions = () => {
@@ -99,7 +100,7 @@ const OrcamentoUsuarioItemComponent = (props: Props) => {
     }
 
     const confirmDelete = () => {
-        dispatch(OrcamentoUsuarioStore.actionCreators.excluirItem(props.orcamentoUsuario.id, callbackDelete));
+        dispatch(orcamentoUsuarioActions.excluirUsuario(props.orcamentoUsuario.id, callbackDelete));
     }
 
     return (
@@ -110,72 +111,6 @@ const OrcamentoUsuarioItemComponent = (props: Props) => {
                 <form onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
                     <CardContent>
                         <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                {!edit ? (
-                                    <>
-                                        <Typography variant="overline" className={classes.label}>Valor da hora:</Typography>
-                                        <Typography variant="caption" className={classes.marginLeft}>{formatter.formatarDinheiro(props.orcamentoUsuario.valorHora)}</Typography>
-                                    </>
-                                ) : (
-                                        <Controller
-                                            as={
-                                                <TextField label="Valor da hora" error={errors.valorHora ? true : false}
-                                                    fullWidth
-                                                    helperText={
-                                                        <ErrorMessage errors={errors} name="valorHora" >
-                                                            {({ message }) => message}
-                                                        </ErrorMessage>
-                                                    }
-                                                    InputProps={{
-                                                        inputComponent: NumberFormat as any,
-                                                        startAdornment: <InputAdornment position="start">R$</InputAdornment>,
-                                                    }}
-                                                    inputRef={register({
-                                                        validate: value => value > 0 || "O valor deve ser maior que zero"
-                                                    })}
-                                                />
-                                            }
-                                            name="valorHora"
-                                            control={control}
-                                            defaultValue={props.orcamentoUsuario.valorHora}
-                                            rules={{
-                                                required: requiredMessage()
-                                            }} />
-                                    )}
-                            </Grid>
-                            <Grid item xs={12}>
-                                {!edit ? (
-                                    <>
-                                        <Typography variant="overline" className={classes.label}>Multiplicador:</Typography>
-                                        <Typography variant="caption" className={classes.marginLeft}>{formatter.formatarNumero(props.orcamentoUsuario.multiplicador)}x</Typography>
-                                    </>
-                                ) : (
-                                        <Controller
-                                            as={
-                                                <TextField label="Multiplicador" error={errors.multiplicador ? true : false}
-                                                    fullWidth
-                                                    helperText={
-                                                        <ErrorMessage errors={errors} name="multiplicador" >
-                                                            {({ message }) => message}
-                                                        </ErrorMessage>
-                                                    }
-                                                    InputProps={{
-                                                        inputComponent: NumberFormat as any,
-                                                        startAdornment: <InputAdornment position="start">x</InputAdornment>,
-                                                    }}
-                                                    inputRef={register({
-                                                        validate: value => value > 0 || "O valor deve ser maior que zero"
-                                                    })}
-                                                />
-                                            }
-                                            name="multiplicador"
-                                            control={control}
-                                            defaultValue={props.orcamentoUsuario.multiplicador}
-                                            rules={{
-                                                required: requiredMessage()
-                                            }} />
-                                    )}
-                            </Grid>
                         </Grid>
                     </CardContent>
                     <CardActions>

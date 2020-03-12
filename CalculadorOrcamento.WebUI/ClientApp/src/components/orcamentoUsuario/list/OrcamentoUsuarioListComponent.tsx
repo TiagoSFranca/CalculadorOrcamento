@@ -1,5 +1,6 @@
 ﻿import { Grid } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import orcamentoUsuarioActions from 'actions/orcamentoUsuarioActions';
 import LoadingCard from 'components/common/loadingCard/LoadingCardComponent';
 import OcamentoUsuarioAdicionarComponent from 'components/orcamentoUsuario/adicionar/OrcamentoUsuarioAdicionarComponent';
 import OrcamentoUsuarioItemComponent from 'components/orcamentoUsuario/item/OrcamentoUsuarioItemComponent';
@@ -7,8 +8,6 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
-import * as OrcamentoUsuarioStore from 'store/OrcamentoUsuarioStore';
-
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -36,12 +35,12 @@ const OrcamentoUsuarioListComponent = (props: any) => {
     }
 
     useEffect(() => {
-        dispatch(OrcamentoUsuarioStore.actionCreators.requestOrcamentos(callback, id))
+        dispatch(orcamentoUsuarioActions.requestOrcamentos(callback, id))
     }, []);
 
     useEffect(() => {
         if (search)
-            dispatch(OrcamentoUsuarioStore.actionCreators.requestOrcamentos(callback, id))
+            dispatch(orcamentoUsuarioActions.requestOrcamentos(callback, id))
     }, [search]);
 
     return (

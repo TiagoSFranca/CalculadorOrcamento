@@ -6,6 +6,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import AddIcon from '@material-ui/icons/Add';
+import appActions from 'actions/appActions';
+import orcamentoItemAplicacaoActions from 'actions/orcamentoItemAplicacaoActions';
 import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
 import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
@@ -14,8 +16,7 @@ import { ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
-import * as OrcamentoItemAplicacaoStore from 'store/OrcamentoItemAplicacaoStore';
+import { AdicionarOrcamentoItem } from 'store/orcamentoItemAplicacao/models';
 import { maxLengthMessage, minValueMessage, requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
@@ -66,10 +67,10 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
 
     const callback = (error: any) => {
         if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
+            dispatch(appActions.showSnackBarAction(null, error))
         }
         else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
             setOpen(false);
         }
     }
@@ -79,7 +80,7 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
         data.duracaoBack = data.duracaoBack != null && data.duracaoBack >= 0 ? +data.duracaoBack : null;
         data.duracaoFront = data.duracaoFront != null && data.duracaoFront >= 0 ? +data.duracaoFront : null;
         data.duracaoTotal = data.duracaoTotal != null && data.duracaoTotal >= 0 ? +data.duracaoTotal : null;
-        dispatch(OrcamentoItemAplicacaoStore.actionCreators.adicionarItem(data as OrcamentoItemAplicacaoStore.AdicionarOrcamentoItem, callback));
+        dispatch(orcamentoItemAplicacaoActions.adicionarItem(data as AdicionarOrcamentoItem, callback));
     };
 
     return (

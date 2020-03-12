@@ -3,6 +3,7 @@ import { Card, CardActions, CardContent, createStyles, Grid, makeStyles, TextFie
 import FindReplaceIcon from '@material-ui/icons/FindReplace';
 import SearchIcon from '@material-ui/icons/Search';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import orcamentoActions from 'actions/orcamentoActions';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import 'date-fns';
 import ptLocale from "date-fns/locale/pt-BR";
@@ -10,7 +11,7 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
-import * as OrcamentoStore from 'store/OrcamentoStore';
+import { FiltroOrcamento } from 'store/orcamento/models';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -51,7 +52,7 @@ const OrcamentoFilter = (props: any) => {
             data.dataAtualizacaoFinal = dataAtualizacaoFinal;
         }
 
-        dispatch(OrcamentoStore.actionCreators.filtrarOrcamentos(data as OrcamentoStore.FiltroOrcamento));
+        dispatch(orcamentoActions.filtrarOrcamentos(data as FiltroOrcamento));
     };
 
     const onLimpar = () => {

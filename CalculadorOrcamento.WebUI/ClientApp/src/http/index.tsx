@@ -1,6 +1,6 @@
 ﻿import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import localStorageService from "http/localStorageService";
-import { UsuarioAutenticado } from 'store/AuthStore';
+import { UsuarioAutenticado } from 'store/auth/models';
 
 const conf: AxiosRequestConfig = {
     baseURL: '/api'

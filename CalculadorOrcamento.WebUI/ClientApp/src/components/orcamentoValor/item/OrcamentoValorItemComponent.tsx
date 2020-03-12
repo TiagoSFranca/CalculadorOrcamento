@@ -2,16 +2,17 @@
 import Button from '@material-ui/core/Button';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import appActions from 'actions/appActions';
+import orcamentoValorActions from 'actions/orcamentoValorActions';
 import ConfirmDialog from 'components/common/confirmDialog/ConfirmDialogComponent';
 import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
-import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
+import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import React, { useState } from 'react';
-import { Controller, ErrorMessage, useForm } from "react-hook-form";
+import { ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
-import * as OrcamentoValorStore from 'store/OrcamentoValorStore';
+import { EditarOrcamentoValor, OrcamentoValor } from 'store/orcamentoValor/models';
 import formatter from 'utils/formatter';
 import { requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
@@ -35,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = {
-    orcamentoValor: OrcamentoValorStore.OrcamentoValor
+    orcamentoValor: OrcamentoValor
 }
 
 type OrcamentoValorEditarForm = {
@@ -60,20 +61,20 @@ const OrcamentoValorItemComponent = (props: Props) => {
 
     const callback = (error: any) => {
         if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
+            dispatch(appActions.showSnackBarAction(null, error))
         }
         else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
             setEdit(false);
         }
     }
 
     const callbackDelete = (error: any) => {
         if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
+            dispatch(appActions.showSnackBarAction(null, error))
         }
         else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
             setOpenDialogDelete(false);
         }
     }
@@ -84,7 +85,7 @@ const OrcamentoValorItemComponent = (props: Props) => {
         data.valorHora = +data.valorHora;
         data.multiplicador = +data.multiplicador;
 
-        dispatch(OrcamentoValorStore.actionCreators.editarItem(data.id, data as OrcamentoValorStore.EditarOrcamentoValor, callback));
+        dispatch(orcamentoValorActions.editarItem(data.id, data as EditarOrcamentoValor, callback));
     };
 
     const dialogActions = () => {
@@ -100,7 +101,7 @@ const OrcamentoValorItemComponent = (props: Props) => {
     }
 
     const confirmDelete = () => {
-        dispatch(OrcamentoValorStore.actionCreators.excluirItem(props.orcamentoValor.id, callbackDelete));
+        dispatch(orcamentoValorActions.excluirItem(props.orcamentoValor.id, callbackDelete));
     }
 
     return (

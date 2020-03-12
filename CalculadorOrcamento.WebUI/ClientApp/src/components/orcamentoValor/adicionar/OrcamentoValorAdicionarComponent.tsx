@@ -6,6 +6,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import AddIcon from '@material-ui/icons/Add';
+import appActions from 'actions/appActions';
+import orcamentoValorActions from 'actions/orcamentoValorActions';
 import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
 import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
@@ -14,8 +16,7 @@ import { ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
-import * as OrcamentoValorStore from 'store/OrcamentoValorStore';
+import { AdicionarOrcamentoValor } from 'store/orcamentoValor/models';
 import { greaterThanMessage, requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
@@ -62,10 +63,10 @@ const OrcamentoValorAdicionarComponent = (props: Props) => {
 
     const callback = (error: any) => {
         if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
+            dispatch(appActions.showSnackBarAction(null, error))
         }
         else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
             setOpen(false);
         }
     }
@@ -74,7 +75,7 @@ const OrcamentoValorAdicionarComponent = (props: Props) => {
         data.idOrcamento = +id;
         data.valorHora = +data.valorHora;
         data.multiplicador = +data.multiplicador;
-        dispatch(OrcamentoValorStore.actionCreators.adicionarItem(data as OrcamentoValorStore.AdicionarOrcamentoValor, callback));
+        dispatch(orcamentoValorActions.adicionarItem(data as AdicionarOrcamentoValor, callback));
     };
 
     return (

@@ -4,9 +4,9 @@ import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
 import { ISnackBarType } from 'utils/snackBar';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import appActions from 'actions/appActions';
 
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={10} variant="filled" {...props} />;
@@ -30,7 +30,7 @@ const CustomSnackBar = () => {
         if (reason === 'clickaway') {
             return;
         }
-        dispatch(AppStore.actionCreators.hideSnackBarAction());
+        dispatch(appActions.hideSnackBarAction());
     };
 
     const getSeverity = (type: ISnackBarType) => {

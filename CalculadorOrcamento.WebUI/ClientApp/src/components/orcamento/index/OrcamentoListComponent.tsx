@@ -1,4 +1,6 @@
-﻿import ConfirmDialog from 'components/common/confirmDialog/ConfirmDialogComponent';
+﻿import appActions from 'actions/appActions';
+import orcamentoActions from 'actions/orcamentoActions';
+import ConfirmDialog from 'components/common/confirmDialog/ConfirmDialogComponent';
 import CustomTable from 'components/common/customTable/CustomTableComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import LoadingCard from 'components/common/loadingCard/LoadingCardComponent';
@@ -8,17 +10,16 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
-import * as OrcamentoStore from 'store/OrcamentoStore';
+import { Orcamento } from 'store/orcamento/models';
 import * as ConsultaPaginada from 'utils/consultaPaginada';
 import formatter from 'utils/formatter';
-import { ISnackBarType } from 'utils/snackBar';
 import messages from 'utils/messages';
+import { ISnackBarType } from 'utils/snackBar';
 
 
 const OrcamentoListComponent = (props: any) => {
 
-    const columns: Column<OrcamentoStore.Orcamento>[] = [
+    const columns: Column<Orcamento>[] = [
         {
             field: 'codigo',
             title: 'Código'
@@ -55,11 +56,11 @@ const OrcamentoListComponent = (props: any) => {
 
     const callbackDelete = (error: any, message: any) => {
         if (error)
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error));
+            dispatch(appActions.showSnackBarAction(null, error));
         else if (message)
-            dispatch(AppStore.actionCreators.showSnackBarAction({ title: 'Info', message: message, type: ISnackBarType.info }, error));
+            dispatch(appActions.showSnackBarAction({ title: 'Info', message: message, type: ISnackBarType.info }, error));
         else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
             setOpenDialogDelete(false);
         }
     }
@@ -92,7 +93,7 @@ const OrcamentoListComponent = (props: any) => {
     }
 
     const confirmDelete = () => {
-        dispatch(OrcamentoStore.actionCreators.excluirOrcamento(idsSelecionados, callbackDelete));
+        dispatch(orcamentoActions.excluirOrcamento(idsSelecionados, callbackDelete));
     }
 
     return (
@@ -101,12 +102,12 @@ const OrcamentoListComponent = (props: any) => {
 
             <LoadingCard isLoading={isLoading}>
                 <>
-                    <CustomTable<OrcamentoStore.Orcamento>
+                    <CustomTable<Orcamento>
                         refresh={search}
                         columns={columns}
                         data={query =>
                             new Promise((resolve, reject) => {
-                                dispatch(OrcamentoStore.actionCreators.requestOrcamentos(callback, query, resolve));
+                                dispatch(orcamentoActions.requestOrcamentos(callback, query, resolve));
                             })
                         }
                         title="Resultado"
@@ -119,7 +120,7 @@ const OrcamentoListComponent = (props: any) => {
                                 icon: 'edit',
                                 tooltip: 'Editar',
                                 onClick: (event, rowData) => {
-                                    let orcamento = rowData as OrcamentoStore.Orcamento
+                                    let orcamento = rowData as Orcamento
                                     handleEdit(orcamento.id);
                                 }
                             },
@@ -128,7 +129,7 @@ const OrcamentoListComponent = (props: any) => {
                                 icon: 'delete',
                                 tooltip: 'Excluir',
                                 onClick: (event, rowData) => {
-                                    let orcamento = rowData as OrcamentoStore.Orcamento[]
+                                    let orcamento = rowData as Orcamento[]
                                     let ids = orcamento.map(e => e.id);
                                     handleDelete(ids);
                                 }

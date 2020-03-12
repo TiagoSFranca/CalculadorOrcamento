@@ -7,11 +7,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import HomeIcon from '@material-ui/icons/Home';
+import appActions from 'actions/appActions';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
 
 export interface DrawerRouteItem {
     title: string,
@@ -44,16 +44,6 @@ const DrawerMenu = (props: any) => {
             icon: <HomeIcon />
         },
         {
-            title: 'Contador',
-            path: '/counter',
-            icon: null
-        },
-        {
-            title: 'Obter Dados',
-            path: '/fetch-data/',
-            icon: null
-        },
-        {
             title: 'Orçamentos',
             path: '/orcamento/',
             icon: <AttachMoneyIcon />
@@ -75,7 +65,7 @@ const DrawerMenu = (props: any) => {
     };
 
     const toggle = () => {
-        dispatch(AppStore.actionCreators.toggleDrawerAction())
+        dispatch(appActions.toggleDrawerAction())
     }
 
     const sideList = () => (

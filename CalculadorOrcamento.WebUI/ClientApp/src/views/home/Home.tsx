@@ -1,14 +1,13 @@
-﻿import HomeComponent from 'components/home/HomeComponent';
+﻿import appActions from 'actions/appActions';
+import HomeComponent from 'components/home/HomeComponent';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import * as AppStore from 'store/AppStore';
-
 
 const Home = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(AppStore.actionCreators.changePageTitleAction("Início"))
+        dispatch(appActions.changePageTitleAction("Início"))
     }, []);
 
     return (
