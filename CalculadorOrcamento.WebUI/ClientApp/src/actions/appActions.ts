@@ -1,32 +1,23 @@
 ﻿import { ChangePageTitleAction, HideSnackBarAction, ToggleDrawerAction } from "store/app/reduceTypes";
 import { AppThunkAction } from 'store/index';
 import KnownAction from "store/reduceTypesIndex";
-import messages from "utils/messages";
-import { ISnackBar, ISnackBarType } from "utils/snackBar";
-import TratarErro from "utils/TratamentoErro";
+import { ISnackBar, dispatchSnackBar } from "utils/snackBar";
 
-const toggleDrawerAction = () => ({ type: 'TOGGLE_DRAWER' } as ToggleDrawerAction);
-
-const changePageTitleAction = (value: string) => ({ type: 'CHANGE_PAGE_TITLE', value: value } as ChangePageTitleAction);
-
-const showSnackBarAction = (data: ISnackBar | null, error?: any | null): AppThunkAction<KnownAction> => (dispatch) => {
-    if (data != null) {
-        dispatch({ type: 'SHOW_SNACK_BAR_ACTION', snack: data });
-    } else {
-        let mensagem: string = '';
-        if (error) {
-            mensagem = TratarErro(error);
-        }
-
-        if (mensagem.length <= 0)
-            mensagem = messages.ERRO_NAO_TRATADO;
-
-        dispatch({ type: 'SHOW_SNACK_BAR_ACTION', snack: { message: mensagem, type: ISnackBarType.erro, title: messages.TITULO_ERRO } });
-    }
-
+const toggleDrawerAction = (): AppThunkAction<KnownAction> => (dispatch) => {
+    dispatch({ type: 'TOGGLE_DRAWER' } as ToggleDrawerAction)
 };
 
-const hideSnackBarAction = () => ({ type: 'HIDE_SNACK_BAR_ACTION' } as HideSnackBarAction);
+const changePageTitleAction = (value: string): AppThunkAction<KnownAction> => (dispatch) => {
+    dispatch({ type: 'CHANGE_PAGE_TITLE', value: value } as ChangePageTitleAction);
+}
+
+const showSnackBarAction = (data: ISnackBar | null, error?: any | null): AppThunkAction<KnownAction> => (dispatch) => {
+    dispatch(dispatchSnackBar(data, error));
+};
+
+const hideSnackBarAction = (): AppThunkAction<KnownAction> => (dispatch) => {
+    dispatch({ type: 'HIDE_SNACK_BAR_ACTION' } as HideSnackBarAction);
+}
 
 export default {
     toggleDrawerAction,

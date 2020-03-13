@@ -5,6 +5,7 @@ import { AdicionarOrcamento, EditarOrcamento, FiltroOrcamento, Orcamento } from 
 import KnownAction from "store/reduceTypesIndex";
 import { ConsultaPaginada, QtdPadrao } from "utils/consultaPaginada";
 import formatter from "utils/formatter";
+import { dispatchSnackBar, sucessoPadrao, ISnackBarType } from 'utils/snackBar';
 
 const BASE_URL = "orcamentos";
 
@@ -49,7 +50,7 @@ const requestOrcamentos = (callback: Function, query: Query<Orcamento>, resolve?
         });
 };
 
-const adicionarOrcamento = (data: AdicionarOrcamento, callback: Function, loadingIdentifier: string): AppThunkAction<KnownAction> => (dispatch) => {
+const adicionarOrcamento = (data: AdicionarOrcamento, callback: (sucesso: boolean) => void, loadingIdentifier: string): AppThunkAction<KnownAction> => (dispatch) => {
     dispatch({ type: 'IS_LOADING_APP', value: true });
     dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: true } });
 
@@ -59,11 +60,15 @@ const adicionarOrcamento = (data: AdicionarOrcamento, callback: Function, loadin
             dispatch({ type: 'ADICIONAR_ORCAMENTO', orcamento: data });
             dispatch({ type: 'IS_LOADING_APP', value: false });
             dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: false } });
-            callback();
+            dispatch(sucessoPadrao());
+
+            callback(true);
         }, error => {
-            callback(error);
+            dispatch(dispatchSnackBar(null, error));
             dispatch({ type: 'IS_LOADING_APP', value: false });
             dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: false } });
+
+            callback(false);
         });
 };
 
@@ -83,7 +88,7 @@ const selecionarOrcamento = (id: number, callback: Function): AppThunkAction<Kno
         });
 };
 
-const editarOrcamento = (id: number, data: EditarOrcamento, callback: Function, loadingIdentifier: string): AppThunkAction<KnownAction> => (dispatch) => {
+const editarOrcamento = (id: number, data: EditarOrcamento, callback: (sucesso: boolean) => void, loadingIdentifier: string): AppThunkAction<KnownAction> => (dispatch) => {
     dispatch({ type: 'IS_LOADING_APP', value: true });
     dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: true } });
 
@@ -93,11 +98,15 @@ const editarOrcamento = (id: number, data: EditarOrcamento, callback: Function, 
             dispatch({ type: 'ADICIONAR_ORCAMENTO', orcamento: data });
             dispatch({ type: 'IS_LOADING_APP', value: false });
             dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: false } });
-            callback();
+            dispatch(sucessoPadrao());
+
+            callback(true);
         }, error => {
-            callback(error);
+            dispatch(dispatchSnackBar(null, error));
             dispatch({ type: 'IS_LOADING_APP', value: false });
             dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: false } });
+
+            callback(false);
         });
 };
 
@@ -105,7 +114,7 @@ const setTab = (prevTab: number, actTab: number): AppThunkAction<KnownAction> =>
     dispatch({ type: 'SET_TAB_ORCAMENTO', prevTab: prevTab, actTab: actTab });
 };
 
-const excluirOrcamento = (ids: number[], callback: (error: any, message: any) => void, loadingIdentifier: string): AppThunkAction<KnownAction> => (dispatch) => {
+const excluirOrcamento = (ids: number[], callback: (sucesso: boolean) => void, loadingIdentifier: string): AppThunkAction<KnownAction> => (dispatch) => {
     dispatch({ type: 'IS_LOADING_APP', value: true });
     dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: true } });
 
@@ -115,11 +124,18 @@ const excluirOrcamento = (ids: number[], callback: (error: any, message: any) =>
             dispatch({ type: 'IS_LOADING_APP', value: false });
             dispatch({ type: 'SET_SEARCH_ORCAMENTO', value: true });
             dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: false } });
-            callback(null, data);
+            if (data)
+                dispatch(dispatchSnackBar({ title: 'Info', message: data, type: ISnackBarType.info }))
+            else
+                dispatch(sucessoPadrao());
+
+            callback(true);
         }, error => {
-            callback(error, null);
+            dispatch(dispatchSnackBar(null, error));
             dispatch({ type: 'IS_LOADING_APP', value: false });
             dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: false } });
+
+            callback(false);
         });
 };
 

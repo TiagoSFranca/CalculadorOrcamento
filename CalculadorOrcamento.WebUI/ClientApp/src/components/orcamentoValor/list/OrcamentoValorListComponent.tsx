@@ -30,9 +30,7 @@ const OrcamentoValorListComponent = (props: any) => {
 
     const { orcamentoValores, search } = orcamentoValorStore;
 
-    const callback = (error: any) => {
-
-    }
+    const callback = (error: any) => { }
 
     useEffect(() => {
         dispatch(orcamentoValorActions.requestOrcamentoValores(callback, id))

@@ -1,7 +1,6 @@
 ﻿import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, InputAdornment, TextField } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
-import appActions from 'actions/appActions';
 import orcamentoValorActions from 'actions/orcamentoValorActions';
 import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
 import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
@@ -14,8 +13,6 @@ import { ApplicationState } from 'store';
 import { AdicionarOrcamentoValor } from 'store/orcamentoValor/models';
 import { greaterThanMessage, requiredMessage } from 'utils/hooksValidations';
 import loadingHelper from 'utils/loadingHelper';
-import messages from 'utils/messages';
-import { ISnackBarType } from 'utils/snackBar';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -59,14 +56,9 @@ const OrcamentoValorAdicionarComponent = (props: Props) => {
         setOpen(false);
     };
 
-    const callback = (error: any) => {
-        if (error) {
-            dispatch(appActions.showSnackBarAction(null, error))
-        }
-        else {
-            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+    const callback = (sucesso: boolean) => {
+        if (sucesso)
             setOpen(false);
-        }
     }
 
     const onSubmit = (data: OrcamentoValorAdicionarForm) => {

@@ -1,7 +1,6 @@
 ﻿import { Button, Divider, ExpansionPanel, ExpansionPanelActions, ExpansionPanelDetails, ExpansionPanelSummary, Grid, TextField, Typography } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import appActions from 'actions/appActions';
 import orcamentoItemAplicacaoActions from 'actions/orcamentoItemAplicacaoActions';
 import ConfirmDialog from 'components/common/confirmDialog/ConfirmDialogComponent';
 import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
@@ -15,8 +14,6 @@ import { EditarOrcamentoItemAplicacao, OrcamentoItemAplicacao } from 'store/orca
 import formatter from 'utils/formatter';
 import { maxLengthMessage, minValueMessage, requiredMessage } from 'utils/hooksValidations';
 import loadingHelper from 'utils/loadingHelper';
-import messages from 'utils/messages';
-import { ISnackBarType } from 'utils/snackBar';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -63,24 +60,14 @@ const OrcamentoItemAplicacaoItemComponent = (props: Props) => {
     const [edit, setEdit] = useState(false);
     const [openDialogDelete, setOpenDialogDelete] = useState(false);
 
-    const callback = (error: any) => {
-        if (error) {
-            dispatch(appActions.showSnackBarAction(null, error))
-        }
-        else {
-            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+    const callback = (sucesso: boolean) => {
+        if (sucesso)
             setEdit(false);
-        }
     }
 
-    const callbackDelete = (error: any) => {
-        if (error) {
-            dispatch(appActions.showSnackBarAction(null, error))
-        }
-        else {
-            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+    const callbackDelete = (sucesso: boolean) => {
+        if (sucesso)
             setOpenDialogDelete(false);
-        }
     }
 
     const onSubmit = (data: OrcamentoItemAplicacaoEditarForm) => {

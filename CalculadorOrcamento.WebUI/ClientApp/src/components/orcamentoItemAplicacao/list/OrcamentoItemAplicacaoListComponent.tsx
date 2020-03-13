@@ -30,9 +30,7 @@ const OrcamentoItemAplicacaoListComponent = (props: any) => {
 
     const { orcamentoItens, search } = orcamentoItemStore;
 
-    const callback = (error: any) => {
-
-    }
+    const callback = (error: any) => { }
 
     useEffect(() => {
         dispatch(orcamentoItemAplicacaoActions.requestOrcamentoItensAplicacao(callback, id))

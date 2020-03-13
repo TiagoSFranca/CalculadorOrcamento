@@ -1,7 +1,6 @@
 ﻿import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, TextField } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
-import appActions from 'actions/appActions';
 import orcamentoItemAplicacaoActions from 'actions/orcamentoItemAplicacaoActions';
 import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
 import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
@@ -14,8 +13,6 @@ import { ApplicationState } from 'store';
 import { AdicionarOrcamentoItem } from 'store/orcamentoItemAplicacao/models';
 import { maxLengthMessage, minValueMessage, requiredMessage } from 'utils/hooksValidations';
 import loadingHelper from 'utils/loadingHelper';
-import messages from 'utils/messages';
-import { ISnackBarType } from 'utils/snackBar';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -63,14 +60,9 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
         setOpen(false);
     };
 
-    const callback = (error: any) => {
-        if (error) {
-            dispatch(appActions.showSnackBarAction(null, error))
-        }
-        else {
-            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+    const callback = (sucesso: boolean) => {
+        if (sucesso)
             setOpen(false);
-        }
     }
 
     const onSubmit = (data: OrcamentoItemAplicacaoAdicionarForm) => {
@@ -94,14 +86,14 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
                             <Grid item xs={6} >
                                 <CustomController
                                     as={
-                                    <TextField label="Nome" error={errors.nome ? true : false}
-                                        fullWidth
-                                        helperText={
-                                            <ErrorMessage errors={errors} name="nome" >
-                                                {({ message }) => message}
-                                            </ErrorMessage>
-                                        }
-                                    />
+                                        <TextField label="Nome" error={errors.nome ? true : false}
+                                            fullWidth
+                                            helperText={
+                                                <ErrorMessage errors={errors} name="nome" >
+                                                    {({ message }) => message}
+                                                </ErrorMessage>
+                                            }
+                                        />
                                     }
                                     name="nome"
                                     control={control}

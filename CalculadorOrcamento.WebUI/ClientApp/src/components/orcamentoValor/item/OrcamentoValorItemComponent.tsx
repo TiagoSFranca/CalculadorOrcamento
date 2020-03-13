@@ -1,7 +1,6 @@
-﻿import { Card, CardActions, CardContent, Grid, InputAdornment, TextField, Button } from '@material-ui/core';
+﻿import { Button, Card, CardActions, CardContent, Grid, InputAdornment, TextField } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import appActions from 'actions/appActions';
 import orcamentoValorActions from 'actions/orcamentoValorActions';
 import ConfirmDialog from 'components/common/confirmDialog/ConfirmDialogComponent';
 import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
@@ -14,9 +13,7 @@ import { ApplicationState } from 'store';
 import { EditarOrcamentoValor, OrcamentoValor } from 'store/orcamentoValor/models';
 import formatter from 'utils/formatter';
 import { requiredMessage } from 'utils/hooksValidations';
-import messages from 'utils/messages';
-import { ISnackBarType } from 'utils/snackBar';
-import loadingHelper from '../../../utils/loadingHelper';
+import loadingHelper from 'utils/loadingHelper';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -62,24 +59,14 @@ const OrcamentoValorItemComponent = (props: Props) => {
     const [edit, setEdit] = useState(false);
     const [openDialogDelete, setOpenDialogDelete] = useState(false);
 
-    const callback = (error: any) => {
-        if (error) {
-            dispatch(appActions.showSnackBarAction(null, error))
-        }
-        else {
-            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+    const callback = (sucesso: boolean) => {
+        if (sucesso)
             setEdit(false);
-        }
     }
 
-    const callbackDelete = (error: any) => {
-        if (error) {
-            dispatch(appActions.showSnackBarAction(null, error))
-        }
-        else {
-            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+    const callbackDelete = (sucesso: boolean) => {
+        if (sucesso)
             setOpenDialogDelete(false);
-        }
     }
 
     const onSubmit = (data: OrcamentoValorEditarForm) => {

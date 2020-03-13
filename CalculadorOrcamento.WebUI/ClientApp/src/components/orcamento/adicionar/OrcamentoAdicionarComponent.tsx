@@ -2,7 +2,6 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import SaveIcon from '@material-ui/icons/Save';
-import appActions from 'actions/appActions';
 import orcamentoActions from 'actions/orcamentoActions';
 import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
@@ -13,8 +12,6 @@ import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
 import { AdicionarOrcamento } from "store/orcamento/models";
 import { maxLengthMessage, requiredMessage } from 'utils/hooksValidations';
-import messages from 'utils/messages';
-import { ISnackBarType } from 'utils/snackBar';
 import loadingHelper from "utils/loadingHelper";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -42,12 +39,8 @@ const OrcamentoAdicionarComponent = (props: any) => {
 
     const dispatch = useDispatch();
 
-    const callback = (error: any) => {
-        if (error) {
-            dispatch(appActions.showSnackBarAction(null, error))
-        }
-        else {
-            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+    const callback = (sucesso: boolean) => {
+        if (sucesso) {
             props.history.push('/orcamento');
         }
     }

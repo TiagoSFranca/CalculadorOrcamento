@@ -1,5 +1,4 @@
-﻿import appActions from 'actions/appActions';
-import orcamentoActions from 'actions/orcamentoActions';
+﻿import orcamentoActions from 'actions/orcamentoActions';
 import ConfirmDialog from 'components/common/confirmDialog/ConfirmDialogComponent';
 import CustomTable from 'components/common/customTable/CustomTableComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
@@ -13,8 +12,6 @@ import { ApplicationState } from 'store';
 import { Orcamento } from 'store/orcamento/models';
 import * as ConsultaPaginada from 'utils/consultaPaginada';
 import formatter from 'utils/formatter';
-import messages from 'utils/messages';
-import { ISnackBarType } from 'utils/snackBar';
 import loadingHelper from 'utils/loadingHelper';
 
 const LOADING_IDENTIFIER = "btnExcluirOrcamento";
@@ -55,19 +52,11 @@ const OrcamentoListComponent = (props: any) => {
     const [openDialogDelete, setOpenDialogDelete] = useState(false);
     const [idsSelecionados, setIdsSelecionados] = useState<number[]>([]);
 
-    const callback = (error: any) => {
+    const callback = (error: any) => { }
 
-    }
-
-    const callbackDelete = (error: any, message: any) => {
-        if (error)
-            dispatch(appActions.showSnackBarAction(null, error));
-        else if (message)
-            dispatch(appActions.showSnackBarAction({ title: 'Info', message: message, type: ISnackBarType.info }, error));
-        else {
-            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+    const callbackDelete = (sucesso: boolean) => {
+        if (sucesso)
             setOpenDialogDelete(false);
-        }
     }
 
     useEffect(() => {
