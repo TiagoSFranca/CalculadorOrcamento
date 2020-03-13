@@ -15,6 +15,7 @@ import { AdicionarOrcamento } from "store/orcamento/models";
 import { maxLengthMessage, requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
+import loadingHelper from "utils/loadingHelper";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -29,11 +30,13 @@ type OrcamentoAdicionarForm = {
     descricao: string;
 };
 
+const LOADING_IDENTIFIER = "btnAdicionarOrcamento";
+
 const OrcamentoAdicionarComponent = (props: any) => {
     const classes = useStyles();
 
-    const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
-    const { isLoading } = orcamentoStore;
+    const orcamentoStore = useSelector((s: ApplicationState) => s.app);
+    const { loading } = orcamentoStore;
 
     const { control, errors, handleSubmit, watch, setValue, triggerValidation } = useForm<OrcamentoAdicionarForm>();
 
@@ -50,7 +53,7 @@ const OrcamentoAdicionarComponent = (props: any) => {
     }
 
     const onSubmit = (data: any) => {
-        dispatch(orcamentoActions.adicionarOrcamento(data as AdicionarOrcamento, callback));
+        dispatch(orcamentoActions.adicionarOrcamento(data as AdicionarOrcamento, callback, LOADING_IDENTIFIER));
     };
 
     return (<>
@@ -114,7 +117,7 @@ const OrcamentoAdicionarComponent = (props: any) => {
                                 className={classes.container}>
                                 <Grid item xs={12} >
                                     <LoadingButton
-                                        isLoading={isLoading}
+                                        isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)}
                                         type="submit"
                                         variant="outlined"
                                         color="primary"

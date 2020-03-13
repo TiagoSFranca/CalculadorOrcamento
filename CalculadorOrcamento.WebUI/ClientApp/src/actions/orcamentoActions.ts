@@ -13,7 +13,7 @@ const filtrarOrcamentos = (filtro: FiltroOrcamento): AppThunkAction<KnownAction>
 };
 
 const requestOrcamentos = (callback: Function, query: Query<Orcamento>, resolve?: any): AppThunkAction<KnownAction> => (dispatch, getState) => {
-    dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
+    dispatch({ type: 'IS_LOADING_APP', value: true });
 
     let filtro = getState().orcamento.filtro;
     let qtdPorPagina = query.pageSize || query.pageSize >= QtdPadrao.qtd ? query.pageSize : QtdPadrao.qtd;
@@ -26,7 +26,7 @@ const requestOrcamentos = (callback: Function, query: Query<Orcamento>, resolve?
         .then(response => response.data as Promise<ConsultaPaginada<Orcamento>>)
         .then(result => {
             dispatch({ type: 'RECEIVE_ORCAMENTOS', orcamentos: result });
-            dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+            dispatch({ type: 'IS_LOADING_APP', value: false });
 
             if (resolve) {
                 resolve({
@@ -45,53 +45,59 @@ const requestOrcamentos = (callback: Function, query: Query<Orcamento>, resolve?
                     page: 0,
                     totalCount: 0,
                 })
-            dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+            dispatch({ type: 'IS_LOADING_APP', value: false });
         });
 };
 
-const adicionarOrcamento = (data: AdicionarOrcamento, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
-    dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
+const adicionarOrcamento = (data: AdicionarOrcamento, callback: Function, loadingIdentifier: string): AppThunkAction<KnownAction> => (dispatch) => {
+    dispatch({ type: 'IS_LOADING_APP', value: true });
+    dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: true } });
 
     HTTP.post(`/${BASE_URL}`, JSON.stringify(data))
         .then(response => response.data as Promise<Orcamento>)
         .then(data => {
             dispatch({ type: 'ADICIONAR_ORCAMENTO', orcamento: data });
-            dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+            dispatch({ type: 'IS_LOADING_APP', value: false });
+            dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: false } });
             callback();
         }, error => {
             callback(error);
-            dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+            dispatch({ type: 'IS_LOADING_APP', value: false });
+            dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: false } });
         });
 };
 
 const selecionarOrcamento = (id: number, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
-    dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
+    dispatch({ type: 'IS_LOADING_APP', value: true });
 
     HTTP.get(`/${BASE_URL}/${id}`)
         .then(response => response.data as Promise<Orcamento>)
         .then(result => {
             dispatch({ type: 'ADICIONAR_ORCAMENTO', orcamento: result });
-            dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+            dispatch({ type: 'IS_LOADING_APP', value: false });
 
             callback();
         }, error => {
             callback(error);
-            dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+            dispatch({ type: 'IS_LOADING_APP', value: false });
         });
 };
 
-const editarOrcamento = (id: number, data: EditarOrcamento, callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
-    dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
+const editarOrcamento = (id: number, data: EditarOrcamento, callback: Function, loadingIdentifier: string): AppThunkAction<KnownAction> => (dispatch) => {
+    dispatch({ type: 'IS_LOADING_APP', value: true });
+    dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: true } });
 
     HTTP.put(`/${BASE_URL}/${id}`, JSON.stringify(data))
         .then(response => response.data as Promise<Orcamento>)
         .then(data => {
             dispatch({ type: 'ADICIONAR_ORCAMENTO', orcamento: data });
-            dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+            dispatch({ type: 'IS_LOADING_APP', value: false });
+            dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: false } });
             callback();
         }, error => {
             callback(error);
-            dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+            dispatch({ type: 'IS_LOADING_APP', value: false });
+            dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: false } });
         });
 };
 
@@ -99,18 +105,21 @@ const setTab = (prevTab: number, actTab: number): AppThunkAction<KnownAction> =>
     dispatch({ type: 'SET_TAB_ORCAMENTO', prevTab: prevTab, actTab: actTab });
 };
 
-const excluirOrcamento = (ids: number[], callback: (error: any, message: any) => void): AppThunkAction<KnownAction> => (dispatch) => {
-    dispatch({ type: 'IS_LOADING_ORCAMENTO', value: true });
+const excluirOrcamento = (ids: number[], callback: (error: any, message: any) => void, loadingIdentifier: string): AppThunkAction<KnownAction> => (dispatch) => {
+    dispatch({ type: 'IS_LOADING_APP', value: true });
+    dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: true } });
 
     HTTP.post(`/${BASE_URL}/excluir`, { 'ids': ids })
         .then(response => response.data as Promise<string>)
         .then(data => {
-            dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+            dispatch({ type: 'IS_LOADING_APP', value: false });
             dispatch({ type: 'SET_SEARCH_ORCAMENTO', value: true });
+            dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: false } });
             callback(null, data);
         }, error => {
             callback(error, null);
-            dispatch({ type: 'IS_LOADING_ORCAMENTO', value: false });
+            dispatch({ type: 'IS_LOADING_APP', value: false });
+            dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: false } });
         });
 };
 

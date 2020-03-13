@@ -36,7 +36,7 @@ const OrcamentoFilter = (props: any) => {
 
     const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
     const dispatch = useDispatch();
-    const { isLoading, search } = orcamentoStore;
+    const { search } = orcamentoStore;
     const { control, handleSubmit, reset, getValues } = useForm<OrcamentoFiltrarForm>();
 
     const [dataCriacaoInicial, setDataCriacaoInicial] = React.useState<Date | null>(null);
@@ -175,7 +175,7 @@ const OrcamentoFilter = (props: any) => {
                                 <Grid item xs={12} >
                                     <LoadingButton
                                         text="Limpar"
-                                        isLoading={isLoading && search}
+                                        isLoading={search}
                                         variant="outlined"
                                         color="primary"
                                         size="large"
@@ -184,7 +184,7 @@ const OrcamentoFilter = (props: any) => {
                                     <LoadingButton
                                         className={classes.marginLeft}
                                         text="Pesquisar"
-                                        isLoading={isLoading && search}
+                                        isLoading={search}
                                         type="submit"
                                         variant="outlined"
                                         color="primary"

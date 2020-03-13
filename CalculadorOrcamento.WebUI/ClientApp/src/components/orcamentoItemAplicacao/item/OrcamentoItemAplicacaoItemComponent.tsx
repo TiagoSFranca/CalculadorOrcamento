@@ -1,12 +1,5 @@
-﻿import { Grid, TextField } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+﻿import { Button, Divider, ExpansionPanel, ExpansionPanelActions, ExpansionPanelDetails, ExpansionPanelSummary, Grid, TextField, Typography } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import appActions from 'actions/appActions';
 import orcamentoItemAplicacaoActions from 'actions/orcamentoItemAplicacaoActions';
@@ -18,9 +11,10 @@ import React, { useState } from 'react';
 import { ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
-import { OrcamentoItemAplicacao, EditarOrcamentoItemAplicacao } from 'store/orcamentoItemAplicacao/models';
+import { EditarOrcamentoItemAplicacao, OrcamentoItemAplicacao } from 'store/orcamentoItemAplicacao/models';
 import formatter from 'utils/formatter';
 import { maxLengthMessage, minValueMessage, requiredMessage } from 'utils/hooksValidations';
+import loadingHelper from 'utils/loadingHelper';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
 
@@ -53,13 +47,16 @@ type OrcamentoItemAplicacaoEditarForm = {
     duracaoTotal: number | null;
 };
 
+const LOADING_IDENTIFIER_DELETE = "btnExcluirOrcamentoItemAplicacao";
+const LOADING_IDENTIFIER_EDIT = "btnEditarOrcamentoItemAplicacao";
+
 const OrcamentoItemAplicacaoItemComponent = (props: Props) => {
     const classes = useStyles();
 
     const { control, errors, handleSubmit, watch, setValue, triggerValidation } = useForm<OrcamentoItemAplicacaoEditarForm>();
 
-    const orcamentoItemStore = useSelector((s: ApplicationState) => s.orcamentoItemAplicacao);
-    const { isLoading } = orcamentoItemStore;
+    const appStore = useSelector((s: ApplicationState) => s.app);
+    const { loading } = appStore;
 
     const dispatch = useDispatch();
 
@@ -93,23 +90,23 @@ const OrcamentoItemAplicacaoItemComponent = (props: Props) => {
         data.duracaoFront = data.duracaoFront != null && data.duracaoFront >= 0 ? +data.duracaoFront : null;
         data.duracaoTotal = data.duracaoTotal != null && data.duracaoTotal >= 0 ? +data.duracaoTotal : null;
 
-        dispatch(orcamentoItemAplicacaoActions.editarItem(data.id, data as EditarOrcamentoItemAplicacao, callback));
+        dispatch(orcamentoItemAplicacaoActions.editarOrcamentoItemAplicacao(data.id, data as EditarOrcamentoItemAplicacao, callback, LOADING_IDENTIFIER_EDIT));
     };
 
     const dialogActions = () => {
         return (<>
-            <LoadingButton size="small" onClick={onCloseDialog} color="inherit" text="Cancelar" isLoading={isLoading} />
-            <LoadingButton size="small" onClick={confirmDelete} color="secondary" text="Excluir" isLoading={isLoading} />
+            <LoadingButton size="small" onClick={onCloseDialog} color="inherit" text="Cancelar" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER_DELETE)} />
+            <LoadingButton size="small" onClick={confirmDelete} color="secondary" text="Excluir" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER_DELETE)} />
         </>)
     }
 
     const onCloseDialog = () => {
-        if (!isLoading)
+        if (!loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER_DELETE))
             setOpenDialogDelete(false);
     }
 
     const confirmDelete = () => {
-        dispatch(orcamentoItemAplicacaoActions.excluirItem(props.orcamentoItemAplicacao.id, callbackDelete));
+        dispatch(orcamentoItemAplicacaoActions.excluirOrcamentoItemAplicacao(props.orcamentoItemAplicacao.id, callbackDelete, LOADING_IDENTIFIER_DELETE));
     }
 
     const onExpansionPanelChange = (event: React.ChangeEvent<{}>, newExpanded: boolean) => {
@@ -322,8 +319,8 @@ const OrcamentoItemAplicacaoItemComponent = (props: Props) => {
                         )}
                         {edit && (
                             <>
-                                <LoadingButton size="small" onClick={() => setEdit(false)} color="inherit" text="Cancelar" isLoading={isLoading} />
-                                <LoadingButton size="small" color="primary" text="Salvar" isLoading={isLoading} type="submit" />
+                                <LoadingButton size="small" onClick={() => setEdit(false)} color="inherit" text="Cancelar" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER_EDIT)} />
+                                <LoadingButton size="small" color="primary" text="Salvar" type="submit" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER_EDIT)} />
                             </>
                         )}
                     </ExpansionPanelActions>

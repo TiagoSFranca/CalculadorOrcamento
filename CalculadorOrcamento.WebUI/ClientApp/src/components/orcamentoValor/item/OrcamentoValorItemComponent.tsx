@@ -1,5 +1,4 @@
-﻿import { Card, CardActions, CardContent, Grid, InputAdornment, TextField } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
+﻿import { Card, CardActions, CardContent, Grid, InputAdornment, TextField, Button } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import appActions from 'actions/appActions';
@@ -17,6 +16,7 @@ import formatter from 'utils/formatter';
 import { requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
+import loadingHelper from '../../../utils/loadingHelper';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -46,13 +46,16 @@ type OrcamentoValorEditarForm = {
     multiplicador: number;
 };
 
+const LOADING_IDENTIFIER_DELETE = "btnExcluirOrcamentoValor";
+const LOADING_IDENTIFIER_EDIT = "btnEditarOrcamentoValor";
+
 const OrcamentoValorItemComponent = (props: Props) => {
     const classes = useStyles();
 
     const { control, errors, handleSubmit, register, watch, setValue, triggerValidation } = useForm<OrcamentoValorEditarForm>();
 
-    const orcamentoValorStore = useSelector((s: ApplicationState) => s.orcamentoValor);
-    const { isLoading } = orcamentoValorStore;
+    const appStore = useSelector((s: ApplicationState) => s.app);
+    const { loading } = appStore;
 
     const dispatch = useDispatch();
 
@@ -85,23 +88,23 @@ const OrcamentoValorItemComponent = (props: Props) => {
         data.valorHora = +data.valorHora;
         data.multiplicador = +data.multiplicador;
 
-        dispatch(orcamentoValorActions.editarItem(data.id, data as EditarOrcamentoValor, callback));
+        dispatch(orcamentoValorActions.editarOrcamentoValor(data.id, data as EditarOrcamentoValor, callback, LOADING_IDENTIFIER_EDIT));
     };
 
     const dialogActions = () => {
         return (<>
-            <LoadingButton size="small" onClick={onCloseDialog} color="inherit" text="Cancelar" isLoading={isLoading} />
-            <LoadingButton size="small" onClick={confirmDelete} color="secondary" text="Excluir" isLoading={isLoading} />
+            <LoadingButton size="small" onClick={onCloseDialog} color="inherit" text="Cancelar" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER_DELETE)} />
+            <LoadingButton size="small" onClick={confirmDelete} color="secondary" text="Excluir" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER_DELETE)} />
         </>)
     }
 
     const onCloseDialog = () => {
-        if (!isLoading)
+        if (!loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER_DELETE))
             setOpenDialogDelete(false);
     }
 
     const confirmDelete = () => {
-        dispatch(orcamentoValorActions.excluirItem(props.orcamentoValor.id, callbackDelete));
+        dispatch(orcamentoValorActions.excluirOrcamentoValor(props.orcamentoValor.id, callbackDelete, LOADING_IDENTIFIER_DELETE));
     }
 
     return (
@@ -198,8 +201,8 @@ const OrcamentoValorItemComponent = (props: Props) => {
                             )}
                             {edit && (
                                 <>
-                                    <LoadingButton size="small" onClick={() => setEdit(false)} color="inherit" text="Cancelar" isLoading={isLoading} />
-                                    <LoadingButton size="small" color="primary" text="Salvar" isLoading={isLoading} type="submit" />
+                                    <LoadingButton size="small" onClick={() => setEdit(false)} color="inherit" text="Cancelar" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER_EDIT)} />
+                                    <LoadingButton size="small" color="primary" text="Salvar" type="submit" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER_EDIT)} />
                                 </>
                             )}
                         </Grid>

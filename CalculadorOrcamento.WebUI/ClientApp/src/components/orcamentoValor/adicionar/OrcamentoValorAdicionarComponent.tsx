@@ -1,10 +1,5 @@
-﻿import { Grid, IconButton, InputAdornment } from '@material-ui/core';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+﻿import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, InputAdornment, TextField } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import AddIcon from '@material-ui/icons/Add';
 import appActions from 'actions/appActions';
 import orcamentoValorActions from 'actions/orcamentoValorActions';
@@ -18,6 +13,7 @@ import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
 import { AdicionarOrcamentoValor } from 'store/orcamentoValor/models';
 import { greaterThanMessage, requiredMessage } from 'utils/hooksValidations';
+import loadingHelper from 'utils/loadingHelper';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
 
@@ -40,14 +36,16 @@ type OrcamentoValorAdicionarForm = {
     multiplicador: number;
 };
 
+const LOADING_IDENTIFIER = "btnAdicionarOrcamentoValor";
+
 const OrcamentoValorAdicionarComponent = (props: Props) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
     const { control, errors, handleSubmit, register, watch, setValue, triggerValidation } = useForm<OrcamentoValorAdicionarForm>();
 
-    const orcamentoValorStore = useSelector((s: ApplicationState) => s.orcamentoValor);
-    const { isLoading } = orcamentoValorStore;
+    const appStore = useSelector((s: ApplicationState) => s.app);
+    const { loading } = appStore;
 
     const dispatch = useDispatch();
 
@@ -75,7 +73,7 @@ const OrcamentoValorAdicionarComponent = (props: Props) => {
         data.idOrcamento = +id;
         data.valorHora = +data.valorHora;
         data.multiplicador = +data.multiplicador;
-        dispatch(orcamentoValorActions.adicionarItem(data as AdicionarOrcamentoValor, callback));
+        dispatch(orcamentoValorActions.adicionarOrcamentoValor(data as AdicionarOrcamentoValor, callback, LOADING_IDENTIFIER));
     };
 
     return (
@@ -152,8 +150,8 @@ const OrcamentoValorAdicionarComponent = (props: Props) => {
                         </Grid>
                     </DialogContent>
                     <DialogActions>
-                        <LoadingButton onClick={handleClose} color="primary" text="Cancelar" isLoading={isLoading} />
-                        <LoadingButton color="primary" text="Adicionar" isLoading={isLoading} type="submit" />
+                        <LoadingButton onClick={handleClose} color="primary" text="Cancelar" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)} />
+                        <LoadingButton color="primary" text="Adicionar" type="submit" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)} />
                     </DialogActions>
                 </form>
             </Dialog>

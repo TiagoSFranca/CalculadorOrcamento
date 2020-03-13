@@ -10,7 +10,8 @@ type Props<T extends object> = {
     isLoading: boolean,
     actions?: (Action<T> | ((rowData: T) => Action<T>))[],
     title?: string,
-    refresh: boolean
+    refresh: boolean,
+    removeOverlay?: boolean
 }
 
 export default function CustomTable<T extends object>(props: Props<T>) {
@@ -52,6 +53,14 @@ export default function CustomTable<T extends object>(props: Props<T>) {
         return props.actions;
     }
 
+    const getComponents = () => {
+        if (props.removeOverlay == true)
+            return {
+                OverlayLoading: () => <div />
+            };
+        return {};
+    }
+
     return (
         <>
             <MaterialTable
@@ -86,6 +95,7 @@ export default function CustomTable<T extends object>(props: Props<T>) {
                         }
                     }
                 }}
+                components={getComponents()}
             />
         </>
     );

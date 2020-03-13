@@ -4,7 +4,6 @@ import KnownAction from '../reduceTypesIndex';
 import { FiltroOrcamento, Orcamento } from './models';
 
 export interface OrcamentoState {
-    isLoading: boolean;
     orcamentos?: ConsultaPaginada<Orcamento>;
     orcamento?: Orcamento;
     filtro: FiltroOrcamento;
@@ -14,7 +13,6 @@ export interface OrcamentoState {
 }
 
 const unloadedState: OrcamentoState = {
-    isLoading: false,
     filtro: {
         codigo: '',
         nome: '',
@@ -46,11 +44,6 @@ export const reducer: Reducer<OrcamentoState> = (state: OrcamentoState | undefin
             return {
                 ...state,
                 orcamento: action.orcamento
-            }
-        case 'IS_LOADING_ORCAMENTO':
-            return {
-                ...state,
-                isLoading: action.value
             }
         case 'FILTAR_ORCAMENTO':
             return {

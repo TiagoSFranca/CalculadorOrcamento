@@ -10,11 +10,6 @@ export interface AdicionarOrcamentoItemAction {
     orcamentoItem?: OrcamentoItemAplicacao;
 }
 
-export interface IsLoadingOrcamentoItemAction {
-    type: 'IS_LOADING_ORCAMENTO_ITEM';
-    value: boolean;
-}
-
 export interface SetSearchOrcamentoItem {
     type: 'SET_SEARCH_ORCAMENTO_ITEM';
     value: boolean;

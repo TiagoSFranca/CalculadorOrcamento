@@ -16,6 +16,7 @@ import formatter from "utils/formatter";
 import { maxLengthMessage, requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
+import loadingHelper from 'utils/loadingHelper'
 
 type OrcamentoEditarForm = {
     id: number;
@@ -26,11 +27,16 @@ type OrcamentoEditarForm = {
     dataAtualizacao: string;
 };
 
+const LOADING_IDENTIFIER = "btnEditarOrcamento";
+
 const OrcamentoAdicionarComponent = (props: any) => {
     const id = props.match.params.id;
 
     const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
-    const { isLoading, orcamento } = orcamentoStore;
+    const appStore = useSelector((s: ApplicationState) => s.app);
+
+    const { orcamento } = orcamentoStore;
+    const { isLoading, loading } = appStore;
 
     const { control, errors, handleSubmit, reset, watch, setValue, triggerValidation } = useForm<OrcamentoEditarForm>();
 
@@ -46,7 +52,7 @@ const OrcamentoAdicionarComponent = (props: any) => {
     }
 
     const onSubmit = (data: any) => {
-        dispatch(orcamentoActions.editarOrcamento(id, data as EditarOrcamento, callback));
+        dispatch(orcamentoActions.editarOrcamento(id, data as EditarOrcamento, callback, LOADING_IDENTIFIER));
     };
 
     useEffect(() => {
@@ -65,7 +71,7 @@ const OrcamentoAdicionarComponent = (props: any) => {
     }
 
     return (<>
-        <LoadingCard isLoading={isLoading}>
+        <LoadingCard isLoading={isLoading && !loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)}>
             {orcamento &&
                 <form onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
                     <Grid container spacing={3}>
@@ -159,7 +165,7 @@ const OrcamentoAdicionarComponent = (props: any) => {
                         <Grid item xs={12} >
                             <LoadingButton
                                 text="Editar"
-                                isLoading={isLoading}
+                                isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)}
                                 type="submit"
                                 variant="outlined"
                                 color="primary"

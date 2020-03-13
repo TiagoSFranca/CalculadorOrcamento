@@ -11,11 +11,6 @@ export interface AdicionarOrcamentoAction {
     orcamento?: Orcamento;
 }
 
-export interface IsLoadingOrcamentoAction {
-    type: 'IS_LOADING_ORCAMENTO';
-    value: boolean;
-}
-
 export interface FiltrarOrcamentoAction {
     type: 'FILTAR_ORCAMENTO';
     filtro: FiltroOrcamento;

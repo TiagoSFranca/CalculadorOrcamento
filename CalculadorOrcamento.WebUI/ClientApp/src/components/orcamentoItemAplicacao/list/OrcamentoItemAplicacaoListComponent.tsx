@@ -28,24 +28,24 @@ const OrcamentoItemAplicacaoListComponent = (props: any) => {
     const orcamentoItemStore = useSelector((s: ApplicationState) => s.orcamentoItemAplicacao);
     const dispatch = useDispatch();
 
-    const { isLoading, orcamentoItens, search } = orcamentoItemStore;
+    const { orcamentoItens, search } = orcamentoItemStore;
 
     const callback = (error: any) => {
 
     }
 
     useEffect(() => {
-        dispatch(orcamentoItemAplicacaoActions.requestOrcamentos(callback, id))
+        dispatch(orcamentoItemAplicacaoActions.requestOrcamentoItensAplicacao(callback, id))
     }, []);
 
     useEffect(() => {
         if (search)
-            dispatch(orcamentoItemAplicacaoActions.requestOrcamentos(callback, id))
+            dispatch(orcamentoItemAplicacaoActions.requestOrcamentoItensAplicacao(callback, id))
     }, [search])
 
     return (
         <div className={classes.marginTop}>
-            <LoadingCard isLoading={isLoading}>
+            <LoadingCard isLoading={search}>
                 <Grid container justify="flex-end">
                     <OrcamentoItemAplicacaoAdicionar buttonClassName={classes.button} />
                 </Grid>

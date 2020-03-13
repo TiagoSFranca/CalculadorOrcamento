@@ -3,14 +3,12 @@ import KnownAction from '../reduceTypesIndex';
 import { OrcamentoValor } from './models';
 
 export interface OrcamentoValorState {
-    isLoading: boolean;
     orcamentoValores?: OrcamentoValor[];
     orcamentoValor?: OrcamentoValor;
     search: boolean;
 }
 
 const unloadedState: OrcamentoValorState = {
-    isLoading: false,
     search: true,
 };
 
@@ -32,11 +30,6 @@ export const reducer: Reducer<OrcamentoValorState> = (state: OrcamentoValorState
                 ...state,
                 orcamentoValor: action.orcamentoValor,
                 search: true
-            }
-        case 'IS_LOADING_ORCAMENTO_VALOR':
-            return {
-                ...state,
-                isLoading: action.value
             }
         case 'SET_SEARCH_ORCAMENTO_VALOR':
             return {

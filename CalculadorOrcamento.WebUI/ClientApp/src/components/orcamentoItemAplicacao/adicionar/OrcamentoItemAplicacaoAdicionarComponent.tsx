@@ -1,10 +1,5 @@
-﻿import { Grid, IconButton } from '@material-ui/core';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+﻿import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, TextField } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import AddIcon from '@material-ui/icons/Add';
 import appActions from 'actions/appActions';
 import orcamentoItemAplicacaoActions from 'actions/orcamentoItemAplicacaoActions';
@@ -18,6 +13,7 @@ import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
 import { AdicionarOrcamentoItem } from 'store/orcamentoItemAplicacao/models';
 import { maxLengthMessage, minValueMessage, requiredMessage } from 'utils/hooksValidations';
+import loadingHelper from 'utils/loadingHelper';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
 
@@ -44,14 +40,16 @@ type OrcamentoItemAplicacaoAdicionarForm = {
     duracaoTotal: number | null;
 };
 
+const LOADING_IDENTIFIER = "btnAdicionarOrcamentoItemAplicacao";
+
 const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
     const { control, errors, handleSubmit, watch, setValue, triggerValidation } = useForm<OrcamentoItemAplicacaoAdicionarForm>();
 
-    const orcamentoItemStore = useSelector((s: ApplicationState) => s.orcamentoItemAplicacao);
-    const { isLoading } = orcamentoItemStore;
+    const appStore = useSelector((s: ApplicationState) => s.app);
+    const { loading } = appStore;
 
     const dispatch = useDispatch();
 
@@ -80,7 +78,7 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
         data.duracaoBack = data.duracaoBack != null && data.duracaoBack >= 0 ? +data.duracaoBack : null;
         data.duracaoFront = data.duracaoFront != null && data.duracaoFront >= 0 ? +data.duracaoFront : null;
         data.duracaoTotal = data.duracaoTotal != null && data.duracaoTotal >= 0 ? +data.duracaoTotal : null;
-        dispatch(orcamentoItemAplicacaoActions.adicionarItem(data as AdicionarOrcamentoItem, callback));
+        dispatch(orcamentoItemAplicacaoActions.adicionarOrcamentoItemAplicacao(data as AdicionarOrcamentoItem, callback, LOADING_IDENTIFIER));
     };
 
     return (
@@ -246,8 +244,8 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
                         </Grid>
                     </DialogContent>
                     <DialogActions>
-                        <LoadingButton onClick={handleClose} color="primary" text="Cancelar" isLoading={isLoading} />
-                        <LoadingButton color="primary" text="Adicionar" isLoading={isLoading} type="submit" />
+                        <LoadingButton onClick={handleClose} color="primary" text="Cancelar" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)} />
+                        <LoadingButton color="primary" text="Adicionar" type="submit" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)} />
                     </DialogActions>
                 </form>
             </Dialog>

@@ -14,6 +14,7 @@ import LoadingButton from 'components/common/loadingButton/LoadingButtonComponen
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -30,6 +31,12 @@ const useStyles = makeStyles((theme: Theme) =>
         title: {
             flexGrow: 1,
             color: "#6c757d"
+        },
+        none: {
+            opacity: 0
+        },
+        default: {
+
         }
     }),
 );
@@ -94,6 +101,7 @@ const NavMenu = (props: any) => {
                             <ExitToAppIcon />
                         </IconButton>
                     </Toolbar >
+                    <LinearProgress color="secondary" className={appStore.isLoading ? classes.default : classes.none}/>
                 </AppBar>
             </ElevationScroll>
             <Toolbar id="back-to-top-anchor" />

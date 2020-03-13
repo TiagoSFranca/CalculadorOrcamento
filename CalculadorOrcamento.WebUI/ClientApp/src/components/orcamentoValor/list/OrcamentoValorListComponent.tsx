@@ -28,24 +28,24 @@ const OrcamentoValorListComponent = (props: any) => {
     const orcamentoValorStore = useSelector((s: ApplicationState) => s.orcamentoValor);
     const dispatch = useDispatch();
 
-    const { isLoading, orcamentoValores, search } = orcamentoValorStore;
+    const { orcamentoValores, search } = orcamentoValorStore;
 
     const callback = (error: any) => {
 
     }
 
     useEffect(() => {
-        dispatch(orcamentoValorActions.requestOrcamentos(callback, id))
+        dispatch(orcamentoValorActions.requestOrcamentoValores(callback, id))
     }, []);
 
     useEffect(() => {
         if (search)
-            dispatch(orcamentoValorActions.requestOrcamentos(callback, id))
+            dispatch(orcamentoValorActions.requestOrcamentoValores(callback, id))
     }, [search]);
 
     return (
         <div className={classes.marginTop}>
-            <LoadingCard isLoading={isLoading}>
+            <LoadingCard isLoading={search}>
                 <Grid container justify="flex-end">
                     <OrcamentoValorAdicionar buttonClassName={classes.button} />
                 </Grid>

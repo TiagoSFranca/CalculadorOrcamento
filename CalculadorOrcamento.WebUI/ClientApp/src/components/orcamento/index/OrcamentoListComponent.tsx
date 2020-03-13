@@ -15,7 +15,9 @@ import * as ConsultaPaginada from 'utils/consultaPaginada';
 import formatter from 'utils/formatter';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
+import loadingHelper from 'utils/loadingHelper';
 
+const LOADING_IDENTIFIER = "btnExcluirOrcamento";
 
 const OrcamentoListComponent = (props: any) => {
 
@@ -42,9 +44,12 @@ const OrcamentoListComponent = (props: any) => {
     ];
 
     const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
+    const appStore = useSelector((s: ApplicationState) => s.app);
+
     const dispatch = useDispatch();
 
-    const { isLoading, orcamentos, search } = orcamentoStore;
+    const { orcamentos, search } = orcamentoStore;
+    const { isLoading, loading } = appStore;
 
     const [pageSize, setPageSize] = useState(ConsultaPaginada.QtdPadrao.qtd);
     const [openDialogDelete, setOpenDialogDelete] = useState(false);
@@ -82,8 +87,8 @@ const OrcamentoListComponent = (props: any) => {
 
     const dialogActions = () => {
         return (<>
-            <LoadingButton size="small" onClick={onCloseDialog} color="inherit" text="Cancelar" isLoading={isLoading} />
-            <LoadingButton size="small" onClick={confirmDelete} color="secondary" text="Excluir" isLoading={isLoading} />
+            <LoadingButton size="small" onClick={onCloseDialog} color="inherit" text="Cancelar" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)} />
+            <LoadingButton size="small" onClick={confirmDelete} color="secondary" text="Excluir" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)} />
         </>)
     }
 
@@ -93,14 +98,14 @@ const OrcamentoListComponent = (props: any) => {
     }
 
     const confirmDelete = () => {
-        dispatch(orcamentoActions.excluirOrcamento(idsSelecionados, callbackDelete));
+        dispatch(orcamentoActions.excluirOrcamento(idsSelecionados, callbackDelete, LOADING_IDENTIFIER));
     }
 
     return (
         <div>
             <ConfirmDialog open={openDialogDelete} actions={dialogActions()} description={`Deseja excluir os orçamentos selecionados?`} onClose={onCloseDialog} title={"Excluir"} />
 
-            <LoadingCard isLoading={isLoading}>
+            <LoadingCard isLoading={isLoading && !loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)}>
                 <>
                     <CustomTable<Orcamento>
                         refresh={search}
@@ -114,6 +119,7 @@ const OrcamentoListComponent = (props: any) => {
                         pageSize={pageSize}
                         pageSizeOptions={ConsultaPaginada.Quantidades.map(e => e.qtd)}
                         isLoading={isLoading}
+                        removeOverlay={true}
                         actions={[
                             {
                                 position: "row",
