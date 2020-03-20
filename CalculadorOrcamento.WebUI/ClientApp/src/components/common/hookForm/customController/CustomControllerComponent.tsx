@@ -3,7 +3,7 @@ import { Controller, ControllerProps, FieldName, FieldValues } from 'react-hook-
 
 export type TrimType = "START" | "END" | "ALL";
 
-type Props = ControllerProps & {
+export type Props = ControllerProps & {
     trim?: TrimType;
     watch(): FieldValues;
     setValue: <Name extends FieldName<FieldValues>>(name: Name, value: FieldValues[Name], shouldValidate?: boolean) => void | Promise<boolean>;
