@@ -5,14 +5,13 @@ import Tabs from '@material-ui/core/Tabs';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import InfoTwoToneIcon from '@material-ui/icons/InfoTwoTone';
 import ListIcon from '@material-ui/icons/List';
+import PeopleAltTwoToneIcon from '@material-ui/icons/PeopleAltTwoTone';
 import TocIcon from '@material-ui/icons/Toc';
+import orcamentoActions from 'actions/orcamentoActions';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { ApplicationState } from 'store';
-import * as OrcamentoStore from 'store/OrcamentoStore';
-import PeopleAltTwoToneIcon from '@material-ui/icons/PeopleAltTwoTone';
-
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -84,7 +83,7 @@ const OrcamentoTabsComponent = (props: Props) => {
     const [value, setValue] = useState(editarTabPrev);
 
     const setTab = (prevTab: number, actTab: number) => {
-        dispatch(OrcamentoStore.actionCreators.setTab(prevTab, actTab));
+        dispatch(orcamentoActions.setTab(prevTab, actTab));
         setValue(actTab);
     }
 

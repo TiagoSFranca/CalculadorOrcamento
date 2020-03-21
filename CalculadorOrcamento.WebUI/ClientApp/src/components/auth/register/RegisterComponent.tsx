@@ -1,25 +1,24 @@
-﻿import { IconButton, InputAdornment } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
+﻿import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import appActions from 'actions/appActions';
+import authActions from 'actions/authActions';
 import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
-import * as AuthStore from 'store/AuthStore';
+import { CadastrarUsuario } from 'store/auth/models';
 import { maxLengthMessage, minLengthMessage, requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
+import PasswordInputComponent from '../../common/hookForm/passwordInput/PasswordInputComponent';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -62,27 +61,20 @@ const RegisterComponent = (props: any) => {
 
     const callback = (error: any) => {
         if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
+            dispatch(appActions.showSnackBarAction(null, error))
         }
         else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
             props.history.push('/login');
         }
     }
 
     const onSubmit = (data: any) => {
-        dispatch(AuthStore.actionCreators.cadastrarUsuario(data as AuthStore.CadastrarUsuario, callback));
+        dispatch(authActions.cadastrarUsuario(data as CadastrarUsuario, callback));
     };
-
-    const [showSenha, setShowSenha] = useState(false);
-    const [showConfirmarSenha, setShowConfirmarSenha] = useState(false);
 
     const password = useRef({});
     password.current = watch("senha", "");
-
-    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-    };
 
     return (
         <>
@@ -208,30 +200,9 @@ const RegisterComponent = (props: any) => {
                                     trim="ALL" />
                             </Grid>
                             <Grid item xs={6}>
-                                <CustomController
-                                    as={
-                                        <TextField label="Senha" error={errors.senha ? true : false}
-                                            fullWidth
-                                            type={showSenha ? 'text' : 'password'}
-                                            helperText={
-                                                <ErrorMessage errors={errors} name="senha" >
-                                                    {({ message }) => message}
-                                                </ErrorMessage>
-                                            }
-                                            InputProps={{
-                                                endAdornment: (
-                                                    <InputAdornment position="end">
-                                                        <IconButton
-                                                            aria-label="toggle password visibility"
-                                                            onClick={() => setShowSenha(!showSenha)}
-                                                            onMouseDown={handleMouseDownPassword}
-                                                        >
-                                                            {showSenha ? <Visibility /> : <VisibilityOff />}
-                                                        </IconButton>
-                                                    </InputAdornment>)
-                                            }}
-                                        />
-                                    }
+                                <PasswordInputComponent
+                                    label="Senha"
+                                    errors={errors}
                                     name="senha"
                                     control={control}
                                     defaultValue=""
@@ -243,37 +214,16 @@ const RegisterComponent = (props: any) => {
                                     watch={watch}
                                     setValue={setValue}
                                     triggerValidation={triggerValidation}
-                                    trim="ALL" />
+                                    trim="ALL"
+                                    hasError={errors.senha ? true : false}
+                                    as="Senha"
+                                    mostrarSenha={true}
+                                />
                             </Grid>
                             <Grid item xs={6}>
-                                <CustomController
-                                    as={
-                                        <TextField label="Confirmar Senha" error={errors.confirmarSenha ? true : false}
-                                            fullWidth
-                                            type={showConfirmarSenha ? 'text' : 'password'}
-                                            helperText={
-                                                <ErrorMessage errors={errors} name="confirmarSenha" >
-                                                    {({ message }) => message}
-                                                </ErrorMessage>
-                                            }
-                                            InputProps={{
-                                                endAdornment: (
-                                                    <InputAdornment position="end">
-                                                        <IconButton
-                                                            aria-label="toggle password visibility"
-                                                            onClick={() => setShowConfirmarSenha(!showConfirmarSenha)}
-                                                            onMouseDown={handleMouseDownPassword}
-                                                        >
-                                                            {showConfirmarSenha ? <Visibility /> : <VisibilityOff />}
-                                                        </IconButton>
-                                                    </InputAdornment>)
-                                            }}
-                                            inputRef={register({
-                                                validate: value =>
-                                                    password.current && value && value === password.current || "Senhas diferem"
-                                            })}
-                                        />
-                                    }
+                                <PasswordInputComponent
+                                    label="Confirmar Senha"
+                                    errors={errors}
                                     name="confirmarSenha"
                                     control={control}
                                     defaultValue=""
@@ -285,7 +235,15 @@ const RegisterComponent = (props: any) => {
                                     watch={watch}
                                     setValue={setValue}
                                     triggerValidation={triggerValidation}
-                                    trim="ALL" />
+                                    trim="ALL"
+                                    hasError={errors.confirmarSenha ? true : false}
+                                    as="Confirmar Senha"
+                                    inputRef={register({
+                                        validate: value =>
+                                            password.current && value && value === password.current || "Senhas diferem"
+                                    })}
+                                    mostrarSenha={true}
+                                />
                             </Grid>
                             <Grid item xs={12}>
                                 <LoadingButton

@@ -1,5 +1,7 @@
-﻿import { CardContent, LinearProgress, CardHeader } from '@material-ui/core';
+﻿import { CardContent, CardHeader } from '@material-ui/core';
+import Backdrop from '@material-ui/core/Backdrop';
 import Card from '@material-ui/core/Card';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React from 'react';
 
@@ -16,6 +18,18 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         default: {
 
+        },
+        backdrop: {
+            zIndex: 30,
+            color: theme.palette.primary.main,
+            position: "absolute",
+            backgroundColor: '#00000000'
+        },
+        rootBd: {
+            position: "relative"
+        },
+        opacity:{
+            opacity: .3
         }
     }),
 );
@@ -25,11 +39,15 @@ export default function LoadingCard(props: { children?: React.ReactNode, size?: 
     return (
         <>
             <Card variant="elevation">
-                <LinearProgress color="primary" className={props.isLoading ? classes.default : classes.none} />
-                {props.title && <CardHeader title={props.title} />}
-                <CardContent>
-                    {props.children}
-                </CardContent>
+                <div className={classes.rootBd}>
+                    <Backdrop className={classes.backdrop} open={props.isLoading === true ? true : false}>
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
+                    {props.title && <CardHeader title={props.title} />}
+                    <CardContent className={props.isLoading === true ? classes.opacity : ''}>
+                        {props.children}
+                    </CardContent>
+                </div>
             </Card>
         </>
     );

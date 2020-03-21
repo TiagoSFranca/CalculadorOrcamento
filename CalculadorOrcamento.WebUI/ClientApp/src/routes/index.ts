@@ -1,6 +1,4 @@
-﻿import Counter from "components/Counter";
-import FetchData from "components/FetchData";
-import Login from 'views/auth/login/Login';
+﻿import Login from 'views/auth/login/Login';
 import Register from 'views/auth/register/Register';
 import Home from "views/home/Home";
 import OrcamentoAdicionar from "views/orcamento/adicionar/OrcamentoAdicionar";
@@ -22,16 +20,6 @@ export const routes: RouteItem[] = [
         exact: true,
         path: '/',
         component: Home,
-        isPrivate: true
-    },
-    {
-        path: '/counter',
-        component: Counter,
-        isPrivate: false
-    },
-    {
-        path: '/fetch-data/:startDateIndex?',
-        component: FetchData,
         isPrivate: true
     },
     {

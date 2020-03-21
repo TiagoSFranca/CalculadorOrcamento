@@ -2,6 +2,7 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import SaveIcon from '@material-ui/icons/Save';
+import orcamentoActions from 'actions/orcamentoActions';
 import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import React from "react";
@@ -9,11 +10,9 @@ import { ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
-import * as OrcamentoStore from 'store/OrcamentoStore';
+import { AdicionarOrcamento } from "store/orcamento/models";
 import { maxLengthMessage, requiredMessage } from 'utils/hooksValidations';
-import messages from 'utils/messages';
-import { ISnackBarType } from 'utils/snackBar';
+import loadingHelper from "utils/loadingHelper";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -28,28 +27,26 @@ type OrcamentoAdicionarForm = {
     descricao: string;
 };
 
+const LOADING_IDENTIFIER = "btnAdicionarOrcamento";
+
 const OrcamentoAdicionarComponent = (props: any) => {
     const classes = useStyles();
 
-    const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
-    const { isLoading } = orcamentoStore;
+    const orcamentoStore = useSelector((s: ApplicationState) => s.app);
+    const { loading } = orcamentoStore;
 
     const { control, errors, handleSubmit, watch, setValue, triggerValidation } = useForm<OrcamentoAdicionarForm>();
 
     const dispatch = useDispatch();
 
-    const callback = (error: any) => {
-        if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
-        }
-        else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+    const callback = (sucesso: boolean) => {
+        if (sucesso) {
             props.history.push('/orcamento');
         }
     }
 
     const onSubmit = (data: any) => {
-        dispatch(OrcamentoStore.actionCreators.adicionarOrcamento(data as OrcamentoStore.AdicionarOrcamento, callback));
+        dispatch(orcamentoActions.adicionarOrcamento(data as AdicionarOrcamento, callback, LOADING_IDENTIFIER));
     };
 
     return (<>
@@ -113,7 +110,7 @@ const OrcamentoAdicionarComponent = (props: any) => {
                                 className={classes.container}>
                                 <Grid item xs={12} >
                                     <LoadingButton
-                                        isLoading={isLoading}
+                                        isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)}
                                         type="submit"
                                         variant="outlined"
                                         color="primary"

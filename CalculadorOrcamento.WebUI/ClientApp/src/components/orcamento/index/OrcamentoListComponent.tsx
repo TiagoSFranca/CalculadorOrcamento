@@ -1,4 +1,5 @@
-﻿import ConfirmDialog from 'components/common/confirmDialog/ConfirmDialogComponent';
+﻿import orcamentoActions from 'actions/orcamentoActions';
+import ConfirmDialog from 'components/common/confirmDialog/ConfirmDialogComponent';
 import CustomTable from 'components/common/customTable/CustomTableComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import LoadingCard from 'components/common/loadingCard/LoadingCardComponent';
@@ -8,17 +9,16 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
-import * as OrcamentoStore from 'store/OrcamentoStore';
+import { Orcamento } from 'store/orcamento/models';
 import * as ConsultaPaginada from 'utils/consultaPaginada';
 import formatter from 'utils/formatter';
-import { ISnackBarType } from 'utils/snackBar';
-import messages from 'utils/messages';
+import loadingHelper from 'utils/loadingHelper';
 
+const LOADING_IDENTIFIER = "btnExcluirOrcamento";
 
 const OrcamentoListComponent = (props: any) => {
 
-    const columns: Column<OrcamentoStore.Orcamento>[] = [
+    const columns: Column<Orcamento>[] = [
         {
             field: 'codigo',
             title: 'Código'
@@ -41,27 +41,22 @@ const OrcamentoListComponent = (props: any) => {
     ];
 
     const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
+    const appStore = useSelector((s: ApplicationState) => s.app);
+
     const dispatch = useDispatch();
 
-    const { isLoading, orcamentos, search } = orcamentoStore;
+    const { orcamentos, search } = orcamentoStore;
+    const { isLoading, loading } = appStore;
 
     const [pageSize, setPageSize] = useState(ConsultaPaginada.QtdPadrao.qtd);
     const [openDialogDelete, setOpenDialogDelete] = useState(false);
     const [idsSelecionados, setIdsSelecionados] = useState<number[]>([]);
 
-    const callback = (error: any) => {
+    const callback = (error: any) => { }
 
-    }
-
-    const callbackDelete = (error: any, message: any) => {
-        if (error)
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error));
-        else if (message)
-            dispatch(AppStore.actionCreators.showSnackBarAction({ title: 'Info', message: message, type: ISnackBarType.info }, error));
-        else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+    const callbackDelete = (sucesso: boolean) => {
+        if (sucesso)
             setOpenDialogDelete(false);
-        }
     }
 
     useEffect(() => {
@@ -81,8 +76,8 @@ const OrcamentoListComponent = (props: any) => {
 
     const dialogActions = () => {
         return (<>
-            <LoadingButton size="small" onClick={onCloseDialog} color="inherit" text="Cancelar" isLoading={isLoading} />
-            <LoadingButton size="small" onClick={confirmDelete} color="secondary" text="Excluir" isLoading={isLoading} />
+            <LoadingButton size="small" onClick={onCloseDialog} color="inherit" text="Cancelar" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)} />
+            <LoadingButton size="small" onClick={confirmDelete} color="secondary" text="Excluir" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)} />
         </>)
     }
 
@@ -92,34 +87,35 @@ const OrcamentoListComponent = (props: any) => {
     }
 
     const confirmDelete = () => {
-        dispatch(OrcamentoStore.actionCreators.excluirOrcamento(idsSelecionados, callbackDelete));
+        dispatch(orcamentoActions.excluirOrcamento(idsSelecionados, callbackDelete, LOADING_IDENTIFIER));
     }
 
     return (
         <div>
             <ConfirmDialog open={openDialogDelete} actions={dialogActions()} description={`Deseja excluir os orçamentos selecionados?`} onClose={onCloseDialog} title={"Excluir"} />
 
-            <LoadingCard isLoading={isLoading}>
+            <LoadingCard isLoading={isLoading && !loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)}>
                 <>
-                    <CustomTable<OrcamentoStore.Orcamento>
+                    <CustomTable<Orcamento>
                         refresh={search}
                         columns={columns}
                         data={query =>
                             new Promise((resolve, reject) => {
-                                dispatch(OrcamentoStore.actionCreators.requestOrcamentos(callback, query, resolve));
+                                dispatch(orcamentoActions.requestOrcamentos(callback, query, resolve));
                             })
                         }
                         title="Resultado"
                         pageSize={pageSize}
                         pageSizeOptions={ConsultaPaginada.Quantidades.map(e => e.qtd)}
                         isLoading={isLoading}
+                        removeOverlay={true}
                         actions={[
                             {
                                 position: "row",
                                 icon: 'edit',
                                 tooltip: 'Editar',
                                 onClick: (event, rowData) => {
-                                    let orcamento = rowData as OrcamentoStore.Orcamento
+                                    let orcamento = rowData as Orcamento
                                     handleEdit(orcamento.id);
                                 }
                             },
@@ -128,7 +124,7 @@ const OrcamentoListComponent = (props: any) => {
                                 icon: 'delete',
                                 tooltip: 'Excluir',
                                 onClick: (event, rowData) => {
-                                    let orcamento = rowData as OrcamentoStore.Orcamento[]
+                                    let orcamento = rowData as Orcamento[]
                                     let ids = orcamento.map(e => e.id);
                                     handleDelete(ids);
                                 }

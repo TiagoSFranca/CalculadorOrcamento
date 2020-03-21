@@ -3,6 +3,7 @@ import { Card, CardActions, CardContent, createStyles, Grid, makeStyles, TextFie
 import FindReplaceIcon from '@material-ui/icons/FindReplace';
 import SearchIcon from '@material-ui/icons/Search';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import orcamentoActions from 'actions/orcamentoActions';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import 'date-fns';
 import ptLocale from "date-fns/locale/pt-BR";
@@ -10,7 +11,7 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
-import * as OrcamentoStore from 'store/OrcamentoStore';
+import { FiltroOrcamento } from 'store/orcamento/models';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -35,7 +36,7 @@ const OrcamentoFilter = (props: any) => {
 
     const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
     const dispatch = useDispatch();
-    const { isLoading, search } = orcamentoStore;
+    const { search } = orcamentoStore;
     const { control, handleSubmit, reset, getValues } = useForm<OrcamentoFiltrarForm>();
 
     const [dataCriacaoInicial, setDataCriacaoInicial] = React.useState<Date | null>(null);
@@ -51,7 +52,7 @@ const OrcamentoFilter = (props: any) => {
             data.dataAtualizacaoFinal = dataAtualizacaoFinal;
         }
 
-        dispatch(OrcamentoStore.actionCreators.filtrarOrcamentos(data as OrcamentoStore.FiltroOrcamento));
+        dispatch(orcamentoActions.filtrarOrcamentos(data as FiltroOrcamento));
     };
 
     const onLimpar = () => {
@@ -174,7 +175,7 @@ const OrcamentoFilter = (props: any) => {
                                 <Grid item xs={12} >
                                     <LoadingButton
                                         text="Limpar"
-                                        isLoading={isLoading && search}
+                                        isLoading={search}
                                         variant="outlined"
                                         color="primary"
                                         size="large"
@@ -183,7 +184,7 @@ const OrcamentoFilter = (props: any) => {
                                     <LoadingButton
                                         className={classes.marginLeft}
                                         text="Pesquisar"
-                                        isLoading={isLoading && search}
+                                        isLoading={search}
                                         type="submit"
                                         variant="outlined"
                                         color="primary"

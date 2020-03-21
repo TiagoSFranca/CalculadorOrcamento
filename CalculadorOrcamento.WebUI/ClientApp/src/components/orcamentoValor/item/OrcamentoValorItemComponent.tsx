@@ -1,21 +1,19 @@
-﻿import { Card, CardActions, CardContent, Grid, InputAdornment, TextField } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
+﻿import { Button, Card, CardActions, CardContent, Grid, InputAdornment, TextField } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import orcamentoValorActions from 'actions/orcamentoValorActions';
 import ConfirmDialog from 'components/common/confirmDialog/ConfirmDialogComponent';
 import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
-import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
+import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import React, { useState } from 'react';
-import { Controller, ErrorMessage, useForm } from "react-hook-form";
+import { ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
-import * as OrcamentoValorStore from 'store/OrcamentoValorStore';
+import { EditarOrcamentoValor, OrcamentoValor } from 'store/orcamentoValor/models';
 import formatter from 'utils/formatter';
 import { requiredMessage } from 'utils/hooksValidations';
-import messages from 'utils/messages';
-import { ISnackBarType } from 'utils/snackBar';
+import loadingHelper from 'utils/loadingHelper';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -35,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = {
-    orcamentoValor: OrcamentoValorStore.OrcamentoValor
+    orcamentoValor: OrcamentoValor
 }
 
 type OrcamentoValorEditarForm = {
@@ -45,37 +43,30 @@ type OrcamentoValorEditarForm = {
     multiplicador: number;
 };
 
+const LOADING_IDENTIFIER_DELETE = "btnExcluirOrcamentoValor";
+const LOADING_IDENTIFIER_EDIT = "btnEditarOrcamentoValor";
+
 const OrcamentoValorItemComponent = (props: Props) => {
     const classes = useStyles();
 
     const { control, errors, handleSubmit, register, watch, setValue, triggerValidation } = useForm<OrcamentoValorEditarForm>();
 
-    const orcamentoValorStore = useSelector((s: ApplicationState) => s.orcamentoValor);
-    const { isLoading } = orcamentoValorStore;
+    const appStore = useSelector((s: ApplicationState) => s.app);
+    const { loading } = appStore;
 
     const dispatch = useDispatch();
 
     const [edit, setEdit] = useState(false);
     const [openDialogDelete, setOpenDialogDelete] = useState(false);
 
-    const callback = (error: any) => {
-        if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
-        }
-        else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+    const callback = (sucesso: boolean) => {
+        if (sucesso)
             setEdit(false);
-        }
     }
 
-    const callbackDelete = (error: any) => {
-        if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
-        }
-        else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+    const callbackDelete = (sucesso: boolean) => {
+        if (sucesso)
             setOpenDialogDelete(false);
-        }
     }
 
     const onSubmit = (data: OrcamentoValorEditarForm) => {
@@ -84,23 +75,23 @@ const OrcamentoValorItemComponent = (props: Props) => {
         data.valorHora = +data.valorHora;
         data.multiplicador = +data.multiplicador;
 
-        dispatch(OrcamentoValorStore.actionCreators.editarItem(data.id, data as OrcamentoValorStore.EditarOrcamentoValor, callback));
+        dispatch(orcamentoValorActions.editarOrcamentoValor(data.id, data as EditarOrcamentoValor, callback, LOADING_IDENTIFIER_EDIT));
     };
 
     const dialogActions = () => {
         return (<>
-            <LoadingButton size="small" onClick={onCloseDialog} color="inherit" text="Cancelar" isLoading={isLoading} />
-            <LoadingButton size="small" onClick={confirmDelete} color="secondary" text="Excluir" isLoading={isLoading} />
+            <LoadingButton size="small" onClick={onCloseDialog} color="inherit" text="Cancelar" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER_DELETE)} />
+            <LoadingButton size="small" onClick={confirmDelete} color="secondary" text="Excluir" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER_DELETE)} />
         </>)
     }
 
     const onCloseDialog = () => {
-        if (!isLoading)
+        if (!loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER_DELETE))
             setOpenDialogDelete(false);
     }
 
     const confirmDelete = () => {
-        dispatch(OrcamentoValorStore.actionCreators.excluirItem(props.orcamentoValor.id, callbackDelete));
+        dispatch(orcamentoValorActions.excluirOrcamentoValor(props.orcamentoValor.id, callbackDelete, LOADING_IDENTIFIER_DELETE));
     }
 
     return (
@@ -197,8 +188,8 @@ const OrcamentoValorItemComponent = (props: Props) => {
                             )}
                             {edit && (
                                 <>
-                                    <LoadingButton size="small" onClick={() => setEdit(false)} color="inherit" text="Cancelar" isLoading={isLoading} />
-                                    <LoadingButton size="small" color="primary" text="Salvar" isLoading={isLoading} type="submit" />
+                                    <LoadingButton size="small" onClick={() => setEdit(false)} color="inherit" text="Cancelar" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER_EDIT)} />
+                                    <LoadingButton size="small" color="primary" text="Salvar" type="submit" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER_EDIT)} />
                                 </>
                             )}
                         </Grid>

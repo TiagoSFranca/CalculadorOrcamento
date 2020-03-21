@@ -1,11 +1,7 @@
-﻿import { Grid, IconButton } from '@material-ui/core';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+﻿import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, TextField } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import AddIcon from '@material-ui/icons/Add';
+import orcamentoItemAplicacaoActions from 'actions/orcamentoItemAplicacaoActions';
 import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
 import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
@@ -14,11 +10,9 @@ import { ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
-import * as OrcamentoItemAplicacaoStore from 'store/OrcamentoItemAplicacaoStore';
+import { AdicionarOrcamentoItem } from 'store/orcamentoItemAplicacao/models';
 import { maxLengthMessage, minValueMessage, requiredMessage } from 'utils/hooksValidations';
-import messages from 'utils/messages';
-import { ISnackBarType } from 'utils/snackBar';
+import loadingHelper from 'utils/loadingHelper';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -43,14 +37,16 @@ type OrcamentoItemAplicacaoAdicionarForm = {
     duracaoTotal: number | null;
 };
 
+const LOADING_IDENTIFIER = "btnAdicionarOrcamentoItemAplicacao";
+
 const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
     const { control, errors, handleSubmit, watch, setValue, triggerValidation } = useForm<OrcamentoItemAplicacaoAdicionarForm>();
 
-    const orcamentoItemStore = useSelector((s: ApplicationState) => s.orcamentoItemAplicacao);
-    const { isLoading } = orcamentoItemStore;
+    const appStore = useSelector((s: ApplicationState) => s.app);
+    const { loading } = appStore;
 
     const dispatch = useDispatch();
 
@@ -64,14 +60,9 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
         setOpen(false);
     };
 
-    const callback = (error: any) => {
-        if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
-        }
-        else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+    const callback = (sucesso: boolean) => {
+        if (sucesso)
             setOpen(false);
-        }
     }
 
     const onSubmit = (data: OrcamentoItemAplicacaoAdicionarForm) => {
@@ -79,7 +70,7 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
         data.duracaoBack = data.duracaoBack != null && data.duracaoBack >= 0 ? +data.duracaoBack : null;
         data.duracaoFront = data.duracaoFront != null && data.duracaoFront >= 0 ? +data.duracaoFront : null;
         data.duracaoTotal = data.duracaoTotal != null && data.duracaoTotal >= 0 ? +data.duracaoTotal : null;
-        dispatch(OrcamentoItemAplicacaoStore.actionCreators.adicionarItem(data as OrcamentoItemAplicacaoStore.AdicionarOrcamentoItem, callback));
+        dispatch(orcamentoItemAplicacaoActions.adicionarOrcamentoItemAplicacao(data as AdicionarOrcamentoItem, callback, LOADING_IDENTIFIER));
     };
 
     return (
@@ -95,14 +86,14 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
                             <Grid item xs={6} >
                                 <CustomController
                                     as={
-                                    <TextField label="Nome" error={errors.nome ? true : false}
-                                        fullWidth
-                                        helperText={
-                                            <ErrorMessage errors={errors} name="nome" >
-                                                {({ message }) => message}
-                                            </ErrorMessage>
-                                        }
-                                    />
+                                        <TextField label="Nome" error={errors.nome ? true : false}
+                                            fullWidth
+                                            helperText={
+                                                <ErrorMessage errors={errors} name="nome" >
+                                                    {({ message }) => message}
+                                                </ErrorMessage>
+                                            }
+                                        />
                                     }
                                     name="nome"
                                     control={control}
@@ -245,8 +236,8 @@ const OrcamentoItemAplicacaoAdicionarComponent = (props: Props) => {
                         </Grid>
                     </DialogContent>
                     <DialogActions>
-                        <LoadingButton onClick={handleClose} color="primary" text="Cancelar" isLoading={isLoading} />
-                        <LoadingButton color="primary" text="Adicionar" isLoading={isLoading} type="submit" />
+                        <LoadingButton onClick={handleClose} color="primary" text="Cancelar" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)} />
+                        <LoadingButton color="primary" text="Adicionar" type="submit" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)} />
                     </DialogActions>
                 </form>
             </Dialog>

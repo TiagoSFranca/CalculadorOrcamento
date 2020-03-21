@@ -1,11 +1,7 @@
-﻿import { Grid, IconButton, InputAdornment } from '@material-ui/core';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+﻿import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, InputAdornment, TextField } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import AddIcon from '@material-ui/icons/Add';
+import orcamentoValorActions from 'actions/orcamentoValorActions';
 import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
 import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
@@ -14,11 +10,9 @@ import { ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
-import * as OrcamentoValorStore from 'store/OrcamentoValorStore';
+import { AdicionarOrcamentoValor } from 'store/orcamentoValor/models';
 import { greaterThanMessage, requiredMessage } from 'utils/hooksValidations';
-import messages from 'utils/messages';
-import { ISnackBarType } from 'utils/snackBar';
+import loadingHelper from 'utils/loadingHelper';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -39,14 +33,16 @@ type OrcamentoValorAdicionarForm = {
     multiplicador: number;
 };
 
+const LOADING_IDENTIFIER = "btnAdicionarOrcamentoValor";
+
 const OrcamentoValorAdicionarComponent = (props: Props) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
     const { control, errors, handleSubmit, register, watch, setValue, triggerValidation } = useForm<OrcamentoValorAdicionarForm>();
 
-    const orcamentoValorStore = useSelector((s: ApplicationState) => s.orcamentoValor);
-    const { isLoading } = orcamentoValorStore;
+    const appStore = useSelector((s: ApplicationState) => s.app);
+    const { loading } = appStore;
 
     const dispatch = useDispatch();
 
@@ -60,21 +56,16 @@ const OrcamentoValorAdicionarComponent = (props: Props) => {
         setOpen(false);
     };
 
-    const callback = (error: any) => {
-        if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
-        }
-        else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+    const callback = (sucesso: boolean) => {
+        if (sucesso)
             setOpen(false);
-        }
     }
 
     const onSubmit = (data: OrcamentoValorAdicionarForm) => {
         data.idOrcamento = +id;
         data.valorHora = +data.valorHora;
         data.multiplicador = +data.multiplicador;
-        dispatch(OrcamentoValorStore.actionCreators.adicionarItem(data as OrcamentoValorStore.AdicionarOrcamentoValor, callback));
+        dispatch(orcamentoValorActions.adicionarOrcamentoValor(data as AdicionarOrcamentoValor, callback, LOADING_IDENTIFIER));
     };
 
     return (
@@ -151,8 +142,8 @@ const OrcamentoValorAdicionarComponent = (props: Props) => {
                         </Grid>
                     </DialogContent>
                     <DialogActions>
-                        <LoadingButton onClick={handleClose} color="primary" text="Cancelar" isLoading={isLoading} />
-                        <LoadingButton color="primary" text="Adicionar" isLoading={isLoading} type="submit" />
+                        <LoadingButton onClick={handleClose} color="primary" text="Cancelar" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)} />
+                        <LoadingButton color="primary" text="Adicionar" type="submit" isLoading={loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)} />
                     </DialogActions>
                 </form>
             </Dialog>

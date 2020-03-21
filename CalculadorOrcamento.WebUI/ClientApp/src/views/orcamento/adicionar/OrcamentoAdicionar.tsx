@@ -1,16 +1,15 @@
-﻿import CustomBreadcrumbs from 'components/app/breadcrumbs/CustomBreadcrumbs';
+﻿import appActions from 'actions/appActions';
+import CustomBreadcrumbs from 'components/app/breadcrumbs/CustomBreadcrumbs';
 import OrcamentoAdicionarComponent from 'components/orcamento/adicionar/OrcamentoAdicionarComponent';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import * as AppStore from 'store/AppStore';
 import { OrcamentoAdicionarBreadcrumb, OrcamentoIndexBreadcrumb } from 'utils/breadcrumbs';
-
 
 const OrcamentoAdicionar = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(AppStore.actionCreators.changePageTitleAction("Novo Orçamento"))
+        dispatch(appActions.changePageTitleAction("Novo Orçamento"))
     }, []);
 
     return (

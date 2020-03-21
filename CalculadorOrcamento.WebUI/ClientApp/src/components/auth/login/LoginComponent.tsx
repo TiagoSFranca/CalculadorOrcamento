@@ -1,22 +1,21 @@
-﻿import { IconButton, InputAdornment } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
+﻿import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import appActions from 'actions/appActions';
+import authActions from 'actions/authActions';
 import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
+import PasswordInputComponent from 'components/common/hookForm/passwordInput/PasswordInputComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
-import React, { useState } from 'react';
+import React from 'react';
 import { ErrorMessage, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import { ApplicationState } from 'store';
-import * as AppStore from 'store/AppStore';
-import * as AuthStore from 'store/AuthStore';
+import { AutenticarUsuario } from 'store/auth/models';
 import { requiredMessage } from 'utils/hooksValidations';
 import messages from 'utils/messages';
 import { ISnackBarType } from 'utils/snackBar';
@@ -52,22 +51,16 @@ const LoginComponent = (props: any) => {
 
     const callback = (error: any) => {
         if (error) {
-            dispatch(AppStore.actionCreators.showSnackBarAction(null, error))
+            dispatch(appActions.showSnackBarAction(null, error))
         }
         else {
-            dispatch(AppStore.actionCreators.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
+            dispatch(appActions.showSnackBarAction({ message: messages.OPERACAO_SUCESSO, type: ISnackBarType.sucesso, title: messages.TITULO_SUCESSO }));
             props.history.push('/');
         }
     }
 
     const onSubmit = (data: any) => {
-        dispatch(AuthStore.actionCreators.autenticarUsuario(data as AuthStore.AutenticarUsuario, callback));
-    };
-
-    const [showSenha, setShowSenha] = useState(false);
-
-    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
+        dispatch(authActions.autenticarUsuario(data as AutenticarUsuario, callback));
     };
 
     return (
@@ -84,7 +77,7 @@ const LoginComponent = (props: any) => {
                             <Typography component="h1" variant="h5">Entrar</Typography>
                         </Grid>
                     </Grid>
-                    <form noValidate onSubmit={handleSubmit(onSubmit)}>
+                    <form noValidate onSubmit={handleSubmit(onSubmit)} autoComplete="off">
                         <Grid container justify="center" spacing={3}>
                             <Grid item xs={12}>
                                 <CustomController
@@ -109,30 +102,9 @@ const LoginComponent = (props: any) => {
                                     triggerValidation={triggerValidation} />
                             </Grid>
                             <Grid item xs={12}>
-                                <CustomController
-                                    as={
-                                        <TextField label="Senha" error={errors.senha ? true : false}
-                                            fullWidth
-                                            type={showSenha ? 'text' : 'password'}
-                                            helperText={
-                                                <ErrorMessage errors={errors} name="senha" >
-                                                    {({ message }) => message}
-                                                </ErrorMessage>
-                                            }
-                                            InputProps={{
-                                                endAdornment: (
-                                                    <InputAdornment position="end">
-                                                        <IconButton
-                                                            aria-label="toggle password visibility"
-                                                            onClick={() => setShowSenha(!showSenha)}
-                                                            onMouseDown={handleMouseDownPassword}
-                                                        >
-                                                            {showSenha ? <Visibility /> : <VisibilityOff />}
-                                                        </IconButton>
-                                                    </InputAdornment>)
-                                            }}
-                                        />
-                                    }
+                                <PasswordInputComponent
+                                    label="Senha"
+                                    errors={errors}
                                     name="senha"
                                     control={control}
                                     defaultValue=""
@@ -141,7 +113,11 @@ const LoginComponent = (props: any) => {
                                     }}
                                     watch={watch}
                                     setValue={setValue}
-                                    triggerValidation={triggerValidation} />
+                                    triggerValidation={triggerValidation}
+                                    hasError={errors.senha ? true : false}
+                                    as="Senha"
+                                    mostrarSenha={false}
+                                />
                             </Grid>
                             <Grid item xs={12}>
                                 <LoadingButton

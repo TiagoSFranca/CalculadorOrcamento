@@ -1,14 +1,13 @@
 ﻿import { Grid } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import orcamentoItemAplicacaoActions from 'actions/orcamentoItemAplicacaoActions';
 import LoadingCard from 'components/common/loadingCard/LoadingCardComponent';
 import OrcamentoItemAplicacaoAdicionar from 'components/orcamentoItemAplicacao/adicionar/OrcamentoItemAplicacaoAdicionarComponent';
+import OrcamentoItemAplicacaoComponent from 'components/orcamentoItemAplicacao/item/OrcamentoItemAplicacaoItemComponent';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
-import * as OrcamentoItemAplicacaoStore from 'store/OrcamentoItemAplicacaoStore';
-import OrcamentoItemAplicacaoComponent from 'components/orcamentoItemAplicacao/item/OrcamentoItemAplicacaoItemComponent';
-
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -29,24 +28,22 @@ const OrcamentoItemAplicacaoListComponent = (props: any) => {
     const orcamentoItemStore = useSelector((s: ApplicationState) => s.orcamentoItemAplicacao);
     const dispatch = useDispatch();
 
-    const { isLoading, orcamentoItens, search } = orcamentoItemStore;
+    const { orcamentoItens, search } = orcamentoItemStore;
 
-    const callback = (error: any) => {
-
-    }
+    const callback = (error: any) => { }
 
     useEffect(() => {
-        dispatch(OrcamentoItemAplicacaoStore.actionCreators.requestOrcamentos(callback, id))
+        dispatch(orcamentoItemAplicacaoActions.requestOrcamentoItensAplicacao(callback, id))
     }, []);
 
     useEffect(() => {
         if (search)
-            dispatch(OrcamentoItemAplicacaoStore.actionCreators.requestOrcamentos(callback, id))
+            dispatch(orcamentoItemAplicacaoActions.requestOrcamentoItensAplicacao(callback, id))
     }, [search])
 
     return (
         <div className={classes.marginTop}>
-            <LoadingCard isLoading={isLoading}>
+            <LoadingCard isLoading={search}>
                 <Grid container justify="flex-end">
                     <OrcamentoItemAplicacaoAdicionar buttonClassName={classes.button} />
                 </Grid>
