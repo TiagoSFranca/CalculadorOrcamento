@@ -5,7 +5,6 @@ import { OrcamentoPermissao } from './models';
 export interface OrcamentoPermissaoState {
     isLoading: boolean;
     orcamentoPermissoes?: OrcamentoPermissao[];
-    orcamentoPermissao?: OrcamentoPermissao;
     search: boolean;
 }
 

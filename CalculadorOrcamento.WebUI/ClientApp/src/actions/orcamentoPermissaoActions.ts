@@ -5,7 +5,7 @@ import KnownAction from 'store/reduceTypesIndex';
 
 const BASE_URL = "orcamentoPermissoes";
 
-const requestOrcamentos = (callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
+const requestOrcamentoPermissoes = (callback: Function): AppThunkAction<KnownAction> => (dispatch) => {
     dispatch({ type: 'IS_LOADING_ORCAMENTO_PERMISSAO', value: true });
 
     HTTP.get(`/${BASE_URL}`)
@@ -22,5 +22,5 @@ const requestOrcamentos = (callback: Function): AppThunkAction<KnownAction> => (
 };
 
 export default {
-    requestOrcamentos
+    requestOrcamentoPermissoes
 }
