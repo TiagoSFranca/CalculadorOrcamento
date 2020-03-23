@@ -45,6 +45,11 @@ export const reducer: Reducer<OrcamentoUsuarioState> = (state: OrcamentoUsuarioS
                 ...state,
                 search: action.value
             }
+        case 'RECEIVE_USUARIOS_ORCAMENTO_USUARIO':
+            return {
+                ...state,
+                usuarios: action.usuarios,
+            };
         default:
             return state;
     }

@@ -1,6 +1,7 @@
 ﻿import { OrcamentoUsuario } from "./models";
+import { Usuario } from "store/auth/models";
 
-export interface ReceiveOrcamentoItensAction {
+export interface ReceiveOrcamentoUsuariosAction {
     type: 'RECEIVE_ORCAMENTO_USUARIOS';
     orcamentoUsuarios: OrcamentoUsuario[];
 }
@@ -18,4 +19,9 @@ export interface IsLoadingOrcamentoUsuarioAction {
 export interface SetSearchOrcamentoUsuario {
     type: 'SET_SEARCH_ORCAMENTO_USUARIO';
     value: boolean;
+}
+
+export interface ReceiveUsuariosOrcamentoUsuarioAction {
+    type: 'RECEIVE_USUARIOS_ORCAMENTO_USUARIO';
+    usuarios: Usuario[];
 }

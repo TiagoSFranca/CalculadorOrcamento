@@ -21,8 +21,8 @@ type KnownAction =
     OrcamentoPermissaoActions.ReceiveOrcamentoPermissoesAction | OrcamentoPermissaoActions.IsLoadingOrcamentoPermissaoAction |
     OrcamentoPermissaoActions.SetSearchOrcamentoPermissao |
 
-    OrcamentoUsuarioActions.ReceiveOrcamentoItensAction | OrcamentoUsuarioActions.AdicionarOrcamentoUsuarioAction | OrcamentoUsuarioActions.IsLoadingOrcamentoUsuarioAction |
-    OrcamentoUsuarioActions.SetSearchOrcamentoUsuario |
+    OrcamentoUsuarioActions.ReceiveOrcamentoUsuariosAction | OrcamentoUsuarioActions.AdicionarOrcamentoUsuarioAction | OrcamentoUsuarioActions.IsLoadingOrcamentoUsuarioAction |
+    OrcamentoUsuarioActions.SetSearchOrcamentoUsuario | OrcamentoUsuarioActions.ReceiveUsuariosOrcamentoUsuarioAction |
 
     OrcamentoValorActions.ReceiveOrcamentoItensAction | OrcamentoValorActions.AdicionarOrcamentoItemAction | OrcamentoValorActions.SetSearchOrcamentoItem;
 

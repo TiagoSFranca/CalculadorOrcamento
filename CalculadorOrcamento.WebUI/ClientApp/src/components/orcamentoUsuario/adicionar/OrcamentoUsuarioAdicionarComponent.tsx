@@ -19,6 +19,7 @@ import { ApplicationState } from 'store';
 import { AdicionarOrcamentoUsuario } from 'store/orcamentoUsuario/models';
 import { greaterThanMessage, requiredMessage } from 'utils/hooksValidations';
 import loadingHelper from 'utils/loadingHelper';
+import UsuarioAutoComplete from 'components/orcamentoUsuario/UsuarioAutoComplete'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -107,6 +108,9 @@ const OrcamentoUsuarioAdicionarComponent = (props: Props) => {
                     <DialogTitle id="form-dialog-title">Adicionar Usuario</DialogTitle>
                     <DialogContent>
                         <Grid container spacing={3} className={classes.noMargin}>
+                            <Grid item xs={12}>
+                                <UsuarioAutoComplete />
+                                </Grid>
                             <Grid item xs={12}>
                                 <CustomController
                                     as={
