@@ -51,7 +51,7 @@ namespace CalculadorOrcamento.Application.OrcamentoUsuarios.Commands.Adicionar
             if (permissoesInvalidas.Count() > 0)
                 throw new BusinessException(string.Format("Permissões ([{0}]) inválidas", string.Join(", ", permissoesInvalidas)));
 
-            var entidade = new OrcamentoUsuario();
+            var entidade = _mapper.Map<OrcamentoUsuario>(request);
 
             try
             {

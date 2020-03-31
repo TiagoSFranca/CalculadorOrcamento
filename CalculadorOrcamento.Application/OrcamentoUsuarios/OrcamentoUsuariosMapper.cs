@@ -20,6 +20,8 @@ namespace CalculadorOrcamento.Application.OrcamentoUsuarios
             profile.CreateMap<AdicionarOrcamentoUsuario, AdicionarOrcamentoUsuarioCommand>();
 
             profile.CreateMap<EditarOrcamentoUsuario, EditarOrcamentoUsuarioCommand>();
+
+            profile.CreateMap<AdicionarOrcamentoUsuarioCommand, OrcamentoUsuario>();
         }
     }
 }

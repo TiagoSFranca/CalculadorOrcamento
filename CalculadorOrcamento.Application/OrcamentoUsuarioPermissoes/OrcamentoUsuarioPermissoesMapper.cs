@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CalculadorOrcamento.Application.OrcamentoPermissoes.Models;
+using CalculadorOrcamento.Application.OrcamentoUsuarioPermissoes.Models;
 using CalculadorOrcamento.Application.Settings.AutoMapper;
 using CalculadorOrcamento.Domain.Entities;
 
@@ -13,7 +13,7 @@ namespace CalculadorOrcamento.Application.OrcamentoUsuarioPermissoes
 
         protected override void Map(Profile profile)
         {
-            profile.CreateMap<OrcamentoUsuarioPermissao, OrcamentoPermissaoViewModel>();
+            profile.CreateMap<OrcamentoUsuarioPermissao, OrcamentoUsuarioPermissaoViewModel>();
         }
     }
 }

@@ -5,6 +5,7 @@
     sobrenome: string;
     email: string;
     login: string;
+    nomeCompleto: string;
 }
 
 export interface UsuarioAutenticado extends Usuario {
