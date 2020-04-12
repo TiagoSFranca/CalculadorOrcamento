@@ -1,18 +1,13 @@
-﻿import { Button, Card, CardActions, CardContent, Grid, InputAdornment, TextField } from '@material-ui/core';
+﻿import { Button, Card, CardActions, CardContent, Grid } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import orcamentoUsuarioActions from 'actions/orcamentoUsuarioActions';
 import ConfirmDialog from 'components/common/confirmDialog/ConfirmDialogComponent';
-import NumberFormat from 'components/common/customNumberFormat/CustomNumberFormat';
-import CustomController from 'components/common/hookForm/customController/CustomControllerComponent';
 import LoadingButton from 'components/common/loadingButton/LoadingButtonComponent';
 import React, { useState } from 'react';
-import { ErrorMessage, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'store';
 import { EditarOrcamentoUsuario, OrcamentoUsuario } from 'store/orcamentoUsuario/models';
-import formatter from 'utils/formatter';
-import { requiredMessage } from 'utils/hooksValidations';
 import loadingHelper from 'utils/loadingHelper';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -49,7 +44,7 @@ const LOADING_IDENTIFIER_EDIT = "btnEditarOrcamentoUsuario";
 const OrcamentoUsuarioItemComponent = (props: Props) => {
     const classes = useStyles();
 
-    const { control, errors, handleSubmit, register, watch, setValue, triggerValidation } = useForm<OrcamentoUsuarioEditarForm>();
+    const { handleSubmit } = useForm<OrcamentoUsuarioEditarForm>();
 
     const appStore = useSelector((s: ApplicationState) => s.app);
     const { loading } = appStore;

@@ -8,7 +8,7 @@ const Home = () => {
 
     useEffect(() => {
         dispatch(appActions.changePageTitleAction("Início"))
-    }, []);
+    }, [dispatch]);
 
     return (
         <>

@@ -34,12 +34,12 @@ const OrcamentoValorListComponent = (props: any) => {
 
     useEffect(() => {
         dispatch(orcamentoValorActions.requestOrcamentoValores(callback, id))
-    }, []);
+    }, [dispatch, id]);
 
     useEffect(() => {
         if (search)
             dispatch(orcamentoValorActions.requestOrcamentoValores(callback, id))
-    }, [search]);
+    }, [search, dispatch, id]);
 
     return (
         <div className={classes.marginTop}>

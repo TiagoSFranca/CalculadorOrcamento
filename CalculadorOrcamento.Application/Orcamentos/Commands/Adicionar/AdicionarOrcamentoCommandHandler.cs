@@ -29,7 +29,7 @@ namespace CalculadorOrcamento.Application.Orcamentos.Commands.Adicionar
         {
             var id = _authBaseApplication.GetId();
 
-            var existe = await _context.Orcamentos.AnyAsync(e => e.Nome.ToLower().Equals(request.Nome.ToLower()));
+            var existe = await _context.Orcamentos.AnyAsync(e => e.Nome.ToLower().Equals(request.Nome.ToLower()) && e.IdUsuario == id);
             if (existe)
                 throw new BusinessException(string.Format("Orçamento já cadastrado com esse nome [{0}]", request.Nome));
 

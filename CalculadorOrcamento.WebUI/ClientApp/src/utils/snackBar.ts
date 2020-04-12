@@ -26,7 +26,7 @@ const tratarErro = (erro: any) => {
 
                     let errors: any[] = [];
 
-                    Object.keys(failures).map(key => {
+                    Object.keys(failures).forEach(key => {
                         errors = errors.concat(failures[key])
                     });
 

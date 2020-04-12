@@ -25,7 +25,7 @@ const OrcamentoIndex = () => {
 
     useEffect(() => {
         dispatch(appActions.changePageTitleAction("Orçamentos"))
-    }, []);
+    }, [dispatch]);
 
     return (
         <>

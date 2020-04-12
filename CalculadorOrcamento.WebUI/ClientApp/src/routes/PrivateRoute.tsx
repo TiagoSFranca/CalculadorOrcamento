@@ -11,7 +11,7 @@ const PrivateRoute = (props: any) => {
 
     useEffect(() => {
         dispatch(authActions.checkIsAuthAction())
-    }, [])
+    }, [dispatch])
 
     return (
         <Route

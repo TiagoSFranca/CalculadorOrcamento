@@ -76,6 +76,10 @@ const RegisterComponent = (props: any) => {
     const password = useRef({});
     password.current = watch("senha", "");
 
+    const checkPassword = (value: any) => {
+        return password.current && value && value === password.current
+    }
+
     return (
         <>
             <Grid container justify="center" spacing={3} className={classes.paper}>
@@ -240,7 +244,7 @@ const RegisterComponent = (props: any) => {
                                     as="Confirmar Senha"
                                     inputRef={register({
                                         validate: value =>
-                                            password.current && value && value === password.current || "Senhas diferem"
+                                            checkPassword(value) || "Senhas diferem"
                                     })}
                                     mostrarSenha={true}
                                 />

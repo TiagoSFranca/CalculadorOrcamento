@@ -10,7 +10,7 @@ const OrcamentoAdicionar = () => {
 
     useEffect(() => {
         dispatch(appActions.changePageTitleAction("Novo Orçamento"))
-    }, []);
+    }, [dispatch]);
 
     return (
         <>

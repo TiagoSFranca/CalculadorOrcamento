@@ -107,18 +107,17 @@ const OrcamentoUsuarioAdicionarComponent = (props: Props) => {
 
     useEffect(() => {
         dispatch(orcamentoPermissaoActions.requestOrcamentoPermissoes(() => { }));
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         setValue("permissoes", permissoesSelecionadas, true)
         triggerValidation("permissoes")
-    }, [permissoesSelecionadas])
+    }, [permissoesSelecionadas, setValue, triggerValidation])
 
     useEffect(() => {
         setValue("idUsuario", usuarioSelecionado, true)
         triggerValidation("idUsuario")
-        console.log(usuarioSelecionado)
-    }, [usuarioSelecionado]);
+    }, [usuarioSelecionado, setValue, triggerValidation]);
 
     const renderUsuarioOptions = (option: Usuario, state: RenderOptionState) => {
         const { inputValue } = state;

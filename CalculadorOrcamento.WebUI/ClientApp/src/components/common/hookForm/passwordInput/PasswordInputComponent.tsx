@@ -55,10 +55,8 @@ const PasswordInputComponent = (props: Props) => {
                                 >
                                     {showSenha ? <Visibility /> : <VisibilityOff />}
                                 </IconButton>
-                            </InputAdornment>)
-                    }}
-                    inputProps={{
-                        autoComplete: 'new-password',
+                            </InputAdornment>),
+                            autoComplete: 'new-password'
                     }}
                     inputRef={inputRef}
                 />

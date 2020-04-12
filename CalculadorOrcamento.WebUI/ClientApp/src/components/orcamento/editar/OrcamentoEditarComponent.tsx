@@ -46,19 +46,19 @@ const OrcamentoAdicionarComponent = (props: any) => {
     };
 
     useEffect(() => {
-        setForm();
-    }, [orcamento]);
+        const setForm = () => {
+            if (orcamento)
+                reset({
+                    codigo: orcamento.codigo,
+                    nome: orcamento.nome,
+                    descricao: orcamento.descricao,
+                    dataCriacao: formatter.formatarData(orcamento.dataCriacao),
+                    dataAtualizacao: formatter.formatarData(orcamento.dataAtualizacao)
+                })
+        }
 
-    const setForm = () => {
-        if (orcamento)
-            reset({
-                codigo: orcamento.codigo,
-                nome: orcamento.nome,
-                descricao: orcamento.descricao,
-                dataCriacao: formatter.formatarData(orcamento.dataCriacao),
-                dataAtualizacao: formatter.formatarData(orcamento.dataAtualizacao)
-            })
-    }
+        setForm();
+    }, [orcamento, reset]);
 
     return (<>
         <LoadingCard isLoading={isLoading && !loadingHelper.checkIsLoading(loading, LOADING_IDENTIFIER)}>

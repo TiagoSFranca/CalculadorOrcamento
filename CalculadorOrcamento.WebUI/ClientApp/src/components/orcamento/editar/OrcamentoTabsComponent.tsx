@@ -8,7 +8,7 @@ import ListIcon from '@material-ui/icons/List';
 import PeopleAltTwoToneIcon from '@material-ui/icons/PeopleAltTwoTone';
 import TocIcon from '@material-ui/icons/Toc';
 import orcamentoActions from 'actions/orcamentoActions';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { ApplicationState } from 'store';
@@ -74,6 +74,7 @@ const OrcamentoTabsComponent = (props: Props) => {
     const classes = useStyles();
 
     const id = props.match.params.id;
+    const { tab } = props;
 
     const orcamentoStore = useSelector((s: ApplicationState) => s.orcamento);
     const dispatch = useDispatch();
@@ -82,19 +83,19 @@ const OrcamentoTabsComponent = (props: Props) => {
 
     const [value, setValue] = useState(editarTabPrev);
 
-    const setTab = (prevTab: number, actTab: number) => {
+    const setTab = useCallback((prevTab: number, actTab: number) => {
         dispatch(orcamentoActions.setTab(prevTab, actTab));
         setValue(actTab);
-    }
+    }, [dispatch])
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-        setTab(props.tab.value, newValue);
+        setTab(tab.value, newValue);
     };
 
     useEffect(() => {
-        if (props.tab && editarTabPrev !== props.tab.value)
-            setTab(editarTabPrev, props.tab.value);
-    }, []);
+        if (tab && editarTabPrev !== tab.value)
+            setTab(editarTabPrev, tab.value);
+    }, [tab, editarTabPrev, setTab]);
 
     return (
         <Paper square className={classes.root}>

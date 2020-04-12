@@ -1,6 +1,6 @@
 import Layout from 'components/app/Layout';
 import * as React from 'react';
-import { Route, withRouter, Switch } from 'react-router';
+import { Route, withRouter } from 'react-router';
 import { routes } from 'routes';
 import PrivateRoute from 'routes/PrivateRoute';
 

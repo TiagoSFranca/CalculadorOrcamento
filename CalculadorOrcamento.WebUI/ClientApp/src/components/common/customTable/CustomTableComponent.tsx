@@ -1,6 +1,6 @@
 ﻿import MaterialTable, { Action, Column, Query, QueryResult, MaterialTableProps } from 'material-table';
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 
 type Props<T extends object> = {
     columns: Column<T>[],
@@ -16,25 +16,28 @@ type Props<T extends object> = {
 
 export default function CustomTable<T extends object>(props: Props<T>) {
     const tableRef = React.createRef();
+    const { columns, data, pageSize,
+        pageSizeOptions, isLoading, actions,
+        title, refresh, removeOverlay } = props;
 
-    const refresh = () => {
+    const handleRefresh = useCallback(() => {
         let t = tableRef.current as MaterialTableProps<T>;
         if (t && t.onQueryChange)
             t.onQueryChange({
                 page: 0,
-                pageSize: props.pageSize,
+                pageSize: pageSize,
                 filters: [],
                 orderBy: {
                 },
                 orderDirection: "asc",
                 search: ''
             })
-    }
+    }, [pageSize, tableRef])
 
     useEffect(() => {
-        if (props.refresh)
-            refresh();
-    }, [props.refresh]);
+        if (refresh)
+            handleRefresh();
+    }, [refresh, handleRefresh]);
 
     const mountActions = () => {
 
@@ -42,19 +45,19 @@ export default function CustomTable<T extends object>(props: Props<T>) {
             icon: 'refresh',
             tooltip: 'Recarregar',
             isFreeAction: true,
-            onClick: () => { refresh() },
+            onClick: () => { handleRefresh() },
         };
 
-        if (!props.actions)
+        if (!actions)
             return [refreshAction];
 
-        props.actions.push(refreshAction);
+        actions.push(refreshAction);
 
-        return props.actions;
+        return actions;
     }
 
     const getComponents = () => {
-        if (props.removeOverlay == true)
+        if (removeOverlay === true)
             return {
                 OverlayLoading: () => <div />
             };
@@ -64,18 +67,18 @@ export default function CustomTable<T extends object>(props: Props<T>) {
     return (
         <>
             <MaterialTable
-                columns={props.columns}
-                data={props.data}
+                columns={columns}
+                data={data}
                 tableRef={tableRef}
-                title={props.title ? props.title : "Resultado"}
+                title={title ? title : "Resultado"}
                 options={{
                     search: false,
                     exportButton: true,
                     selection: true,
-                    pageSize: props.pageSize,
-                    pageSizeOptions: props.pageSizeOptions,
+                    pageSize: pageSize,
+                    pageSizeOptions: pageSizeOptions,
                 }}
-                isLoading={props.isLoading}
+                isLoading={isLoading}
                 actions={mountActions()}
                 localization={{
                     pagination: {

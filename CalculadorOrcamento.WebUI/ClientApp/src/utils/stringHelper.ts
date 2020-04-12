@@ -1,6 +1,6 @@
 ﻿export const getIndicesOf = (searchStr: string, str: string, caseSensitive: boolean) => {
     var searchStrLen = searchStr.length;
-    if (searchStrLen == 0) {
+    if (searchStrLen === 0) {
         return [];
     }
     var startIndex = 0, index, indices = [];

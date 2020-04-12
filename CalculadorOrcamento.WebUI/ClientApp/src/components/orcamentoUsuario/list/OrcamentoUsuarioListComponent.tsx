@@ -34,12 +34,12 @@ const OrcamentoUsuarioListComponent = (props: any) => {
 
     useEffect(() => {
         dispatch(orcamentoUsuarioActions.requestOrcamentoUsuarios(callback, id))
-    }, []);
+    }, [dispatch, id]);
 
     useEffect(() => {
         if (search)
             dispatch(orcamentoUsuarioActions.requestOrcamentoUsuarios(callback, id))
-    }, [search]);
+    }, [search, dispatch, id]);
 
     return (
         <div className={classes.marginTop}>
