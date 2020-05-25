@@ -27,6 +27,6 @@ export interface AdicionarOrcamentoUsuario {
 export interface EditarOrcamentoUsuario {
     id: number;
     idOrcamento: number;
-    valorHora: number;
-    multiplicador: number;
+    idUsuario: number;
+    permissoes: number[];
 }

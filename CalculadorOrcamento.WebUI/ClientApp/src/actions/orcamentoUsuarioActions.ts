@@ -57,9 +57,9 @@ const editarOrcamentoUsuario = (id: number, data: EditarOrcamentoUsuario, callba
     HTTP.put(`/${BASE_URL}/${id}`, JSON.stringify(data))
         .then(response => response.data as Promise<OrcamentoUsuario>)
         .then(data => {
-            dispatch({ type: 'ADICIONAR_ORCAMENTO_USUARIO', orcamentoUsuario: data });
             dispatch({ type: 'IS_LOADING_APP', value: false });
             dispatch({ type: 'SET_LOADING_COMPONENT', item: { name: loadingIdentifier, loading: false } });
+            dispatch({ type: 'SET_SEARCH_ORCAMENTO_USUARIO', value: true });
             dispatch(sucessoPadrao());
 
             callback(true);

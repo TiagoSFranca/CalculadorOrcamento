@@ -55,7 +55,7 @@ const OrcamentoUsuarioListComponent = (props: any) => {
                         {
                             orcamentoUsuarios.map((el, index) => (
                                 <>
-                                    <Grid item xs={3}>
+                                    <Grid item xs={12} sm={6} md={6} lg={6}>
                                         <OrcamentoUsuarioItemComponent orcamentoUsuario={el} key={el.id} />
                                     </Grid>
                                 </>

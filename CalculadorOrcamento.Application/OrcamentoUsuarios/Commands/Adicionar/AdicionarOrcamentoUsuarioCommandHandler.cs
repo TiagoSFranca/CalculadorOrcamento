@@ -20,12 +20,14 @@ namespace CalculadorOrcamento.Application.OrcamentoUsuarios.Commands.Adicionar
         private readonly CalculadorOrcamentoContext _context;
         private readonly IMapper _mapper;
         private readonly IOrcamentoAuthBaseApplication _orcamentoAuthBaseApplication;
+        private readonly IAuthBaseApplication _authBaseApplication;
 
-        public AdicionarOrcamentoUsuarioCommandHandler(CalculadorOrcamentoContext context, IMapper mapper, IOrcamentoAuthBaseApplication orcamentoAuthBaseApplication)
+        public AdicionarOrcamentoUsuarioCommandHandler(CalculadorOrcamentoContext context, IMapper mapper, IOrcamentoAuthBaseApplication orcamentoAuthBaseApplication, IAuthBaseApplication authBaseApplication)
         {
             _context = context;
             _mapper = mapper;
             _orcamentoAuthBaseApplication = orcamentoAuthBaseApplication;
+            _authBaseApplication = authBaseApplication;
         }
 
         public async Task<OrcamentoUsuarioViewModel> Handle(AdicionarOrcamentoUsuarioCommand request, CancellationToken cancellationToken)
@@ -43,6 +45,10 @@ namespace CalculadorOrcamento.Application.OrcamentoUsuarios.Commands.Adicionar
             var existe = await _context.OrcamentoUsuarios.AnyAsync(e => e.IdOrcamento == request.IdOrcamento && e.IdUsuario == request.IdUsuario);
             if (existe)
                 throw new BusinessException("Usuário já adicionado ao orçamento");
+
+            var dono = await _context.Orcamentos.AnyAsync(e => e.Id == request.IdOrcamento && e.IdUsuario == request.IdUsuario);
+            if (dono)
+                throw new BusinessException("Usuário proprietário do orçamento");
 
             var permissoes = (request.Permissoes ?? new List<int>()).Distinct().ToList();
 

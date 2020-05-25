@@ -49,6 +49,8 @@ namespace CalculadorOrcamento.Application.OrcamentoUsuarios.Commands.Editar
 
             try
             {
+                permissoes = MontarListaPermissoes(permissoes);
+
                 permissoesEntidades.ForEach(x => x.Permite = permissoes.Contains(x.IdPermissao));
 
                 _context.OrcamentoUsuarioPermissoes.UpdateRange(permissoesEntidades);
@@ -63,6 +65,14 @@ namespace CalculadorOrcamento.Application.OrcamentoUsuarios.Commands.Editar
             }
 
             return _mapper.Map<OrcamentoUsuarioViewModel>(entidade);
+        }
+
+        private List<int> MontarListaPermissoes(List<int> permissoes)
+        {
+            if ((permissoes.Contains(OrcamentoPermissaoSeed.Editar.Id) || permissoes.Contains(OrcamentoPermissaoSeed.Excluir.Id)) && !permissoes.Contains(OrcamentoPermissaoSeed.Visualizar.Id))
+                permissoes.Add(OrcamentoPermissaoSeed.Visualizar.Id);
+
+            return permissoes;
         }
     }
 }
