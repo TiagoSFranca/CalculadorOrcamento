@@ -125,11 +125,13 @@ const OrcamentoUsuarioItemComponent = (props: Props) => {
     }, [permissoesSelecionadas, setValue, triggerValidation])
 
 
-    useEffect(() => { console.log("PERMISSOES", permissoesSelecionadas) }, [permissoesSelecionadas])
+    useEffect(() => { console.log("PERMISSOES", permissoesSelecionadas) }, [permissoesSelecionadas]);
+
+    const DELETE_MESSAGE = (<span>Deseja excluir o usuário <strong>{orcamentoUsuario.usuario.nomeCompleto}</strong>?</span>)
 
     return (
         <>
-            <ConfirmDialog open={openDialogDelete} actions={dialogActions()} description={`Deseja excluir o item?`} onClose={onCloseDialog} title={"Excluir"} />
+            <ConfirmDialog open={openDialogDelete} actions={dialogActions()} description={DELETE_MESSAGE} onClose={onCloseDialog} title={"Excluir"} />
 
             <Card >
                 <form onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
@@ -209,19 +211,6 @@ const OrcamentoUsuarioItemComponent = (props: Props) => {
                                     setValue={setValue}
                                     triggerValidation={triggerValidation} />
                             </Grid>
-
-                            {
-                                //    orcamentoUsuario.orcamentoUsuarioPermissoes.map(permissao =>
-                                //    (<Grid item xs={12} className={classes.noPadding}>
-
-                                //        <FormControlLabel disabled control={<Checkbox name="permissoes" checked={permissao.permite} />} label={(
-                                //            <Typography variant="caption">
-                                //                {permissao.permissao.nome}
-                                //            </Typography>
-                                //        )} />
-                                //    </Grid>)
-                                //)
-                            }
                         </Grid>
                     </CardContent>
                     <CardActions>

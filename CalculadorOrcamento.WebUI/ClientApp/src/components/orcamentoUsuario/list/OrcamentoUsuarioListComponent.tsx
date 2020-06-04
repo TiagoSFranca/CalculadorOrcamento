@@ -8,6 +8,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ApplicationState } from 'store';
+import { randomNumber } from 'utils/randomizer'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -56,7 +57,7 @@ const OrcamentoUsuarioListComponent = (props: any) => {
                             orcamentoUsuarios.map((el, index) => (
                                 <>
                                     <Grid item xs={12} sm={6} md={6} lg={6}>
-                                        <OrcamentoUsuarioItemComponent orcamentoUsuario={el} key={el.id} />
+                                        <OrcamentoUsuarioItemComponent orcamentoUsuario={el} key={`${el.id}_${randomNumber()}`} />
                                     </Grid>
                                 </>
                             ))

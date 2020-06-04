@@ -9,7 +9,7 @@ type Props = {
     open: boolean;
     onClose: Function;
     title: string;
-    description: string;
+    description: any;
     actions: any
 }
 
